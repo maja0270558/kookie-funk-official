@@ -33,7 +33,7 @@ export const Layout = ({ children }: Props) => {
     const maskClasses = classNames(
         "absolute top-0 right-0 bottom-0 left-0 w-full h-full overflow-hidden bg-fixed bg-gray-400",
         {
-            ["opacity-0"]: collapse,
+            ["opacity-0 z-0"]: collapse,
             ["opacity-50 lg:opacity-0"]: !collapse,
         }
     );
@@ -43,10 +43,8 @@ export const Layout = ({ children }: Props) => {
             <div className={slidebarClasses}>
                 <Sidebar />
             </div>
-            <div className={childrenClasses}>
-                <div className={maskClasses}></div>
-                {children}
-            </div>
+            <div className={childrenClasses}>{children}</div>
+            <div className={maskClasses}></div>
         </div>
     );
 };
