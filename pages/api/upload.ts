@@ -11,8 +11,10 @@ export default async function handle(
         data: {
             title: "my first data2",
             image_path: "https//:ioumage.com",
-            nail_image_path: "https//:ioumage.com.nail",
+            nail_image_path: "asdwoldow",
             desc: "HERE COMES THE DESCRIPTION",
+            display: 1,
+            cat_id: 6,
         },
     });
 

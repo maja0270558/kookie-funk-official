@@ -7,10 +7,22 @@ datasource db {
   url      = env("LOCAL_DATABASE_URL")
 }
 
+model categorize {
+  id      Int     @id @default(autoincrement())
+  section String  @db.VarChar(100)
+  works   works[]
+}
+
 model works {
-  id              Int    @id @default(autoincrement())
-  title           String @db.VarChar(100)
-  image_path      String @db.VarChar(100)
-  nail_image_path String @db.VarChar(100)
-  desc            String @db.VarChar(10000)
+  id              Int        @id @default(autoincrement())
+  image_path      String?    @db.VarChar(255)
+  nail_image_path String?    @db.VarChar(255)
+  title           String?    @db.VarChar(255)
+  desc            String?    @db.VarChar(5000)
+  display         Int?       @db.TinyInt
+  ts              DateTime?  @default(now()) @db.Timestamp(0)
+  cat_id          Int
+  categorize      categorize @relation(fields: [cat_id], references: [id], onDelete: Cascade, map: "works_ibfk_1")
+
+  @@index([cat_id], map: "cat_id")
 }
