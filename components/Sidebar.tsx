@@ -71,11 +71,12 @@ const Sidebar = () => {
                 <div className={sideBarClasses}>
                     <div className="pb-16">
                         <Image
-                            className=""
+                            className=" w-auto h-auto"
                             src={profileImage}
                             alt={"profile"}
                             width={120}
                             height={0}
+                            priority={true}
                         ></Image>
                     </div>
 
@@ -83,15 +84,17 @@ const Sidebar = () => {
                         {menuItems.map(({ ...menu }) => {
                             const isSelected = router.pathname == menu.link;
                             return (
-                                <Link href={`${menu.link}`}>
-                                    <p
-                                        className={getLinkItemClasses(
-                                            isSelected
-                                        )}
-                                    >
-                                        {menu.label}
-                                    </p>
-                                </Link>
+                                <div key={menu.label}>
+                                    <Link href={`${menu.link}`}>
+                                        <p
+                                            className={getLinkItemClasses(
+                                                isSelected
+                                            )}
+                                        >
+                                            {menu.label}
+                                        </p>
+                                    </Link>
+                                </div>
                             );
                         })}
                     </div>
@@ -113,9 +116,9 @@ const Footer = () => {
                     <a className="text-gray-500">
                         <svg
                             fill="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             className="w-5 h-5"
                             viewBox="0 0 24 24"
                         >
@@ -126,9 +129,9 @@ const Footer = () => {
                         <svg
                             fill="none"
                             stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             className="w-5 h-5"
                             viewBox="0 0 24 24"
                         >
@@ -146,9 +149,9 @@ const Footer = () => {
                     <a className="ml-3 text-gray-500">
                         <svg
                             fill="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth="2"
                             className="w-5 h-5"
                             viewBox="0 0 24 24"
                         >
