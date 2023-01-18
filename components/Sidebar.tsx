@@ -20,7 +20,7 @@ const Sidebar = () => {
         link: string;
     }
     const menuItems: MenuItem[] = [
-        { label: "home", link: "/home" },
+        { label: "home", link: "/" },
         { label: "works", link: "/works" },
         { label: "store", link: "/store" },
         { label: "course", link: "/course" },

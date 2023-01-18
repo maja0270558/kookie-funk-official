@@ -14,7 +14,7 @@ export default async function handle(
             nail_image_path: "asdwoldow",
             desc: "HERE COMES THE DESCRIPTION",
             display: 1,
-            cat_id: 6,
+            cat_id: 1,
         },
     });
 

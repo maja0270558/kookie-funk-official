@@ -26,3 +26,12 @@ model works {
 
   @@index([cat_id], map: "cat_id")
 }
+
+model user {
+  id          Int   @id @unique(map: "id") @default(autoincrement())
+  user_name   String   @db.Text
+  password    String   @db.Text
+  email    String   @db.Text
+  create_date DateTime @default(now()) @db.Timestamp(0)
+  update_date DateTime @default(now()) @db.Timestamp(0)
+}
