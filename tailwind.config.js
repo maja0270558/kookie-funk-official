@@ -18,4 +18,20 @@ module.exports = {
         require("@tailwindcss/typography"),
         require("daisyui"),
     ],
+    daisyui: {
+        themes: [
+            {
+                kookielight: {
+                    primary: "#66DC5A",
+                    secondary: "#f6d860",
+                    accent: "#37cdbe",
+                    neutral: "#3d4451",
+                    "base-100": "#ffffff",
+                },
+            },
+            "cupcake",
+            "lemonade",
+            "forest",
+        ],
+    },
 };

@@ -5,7 +5,7 @@ export interface sliderState {
 }
 
 const initialState: sliderState = {
-    toggleCollapse: true,
+    toggleCollapse: false,
 };
 
 export const sliderSlice = createSlice({

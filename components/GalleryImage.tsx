@@ -7,7 +7,7 @@ type GalleryImageProps = {
 function GalleryImage(props: GalleryImageProps) {
     return (
         <a href="#" className="group">
-            <div className="aspect-w-1 aspect-h-1 bg-gray-200 rounded-lg overflow-hidden group-hover:drop-shadow-lg">
+            <div className="aspect-w-1 aspect-h-1 bg-gray-200 overflow-hidden group-hover:drop-shadow-lg">
                 <img
                     alt=""
                     src={props.path}

@@ -1,83 +1,83 @@
-import React, { useMemo } from "react";
+import React, { ReactNode } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import classNames from "classnames";
-import CollapsIcon from "./icons/CollapseIcon";
-/// Redux import
-import { useSelector, useDispatch } from "react-redux";
-import { clickCollapse } from "../slices/sidebarSlice";
-import { RootState } from "../store";
 
-const Sidebar = () => {
+/// Next-auth
+import { useSession } from "next-auth/react"
+
+type Props = {
+    children: ReactNode;
+};
+
+const Sidebar = ({ children }: Props) => {
+    // login data
+    const { data: session } = useSession()
+    // get path router
     const router = useRouter();
-    const dispatch = useDispatch();
-    const collapse = useSelector(
-        (state: RootState) => state.slider.toggleCollapse
-    );
+
     interface MenuItem {
         label: string;
         link: string;
     }
+
     const menuItems: MenuItem[] = [
-        { label: "home", link: "/" },
         { label: "works", link: "/works" },
         { label: "store", link: "/store" },
         { label: "course", link: "/course" },
-        { label: "contact", link: "/contact" },
     ];
 
-    const wrapperClasses = classNames(
-        "min-h-screen flex justify-between flex-col ease-in-out duration-300  min-w-full ",
-        {
-            ["w-80 pl-10 lg:pr-32"]: !collapse,
-            ["w-20"]: collapse,
-        }
-    );
-
-    const collapseIconClasses = classNames(
-        "p-4 rounded bg-light-lighter absolute right-0 top-5 ease-in-out duration-300",
-        {
-            "rotate-180": collapse,
-        }
-    );
-
-    const sideBarClasses = classNames(
-        "pt-6 lg:pt-10 flex-col flex ease-in-out duration-300",
-        {
-            "opacity-0 invisible": collapse,
-            "opacity-100": !collapse,
-        }
-    );
+    if (session) {
+        menuItems.push({ label: "signout", link: "/api/auth/signout" })
+    }
 
     const getLinkItemClasses = (isSelected: boolean) => {
-        return classNames("uppercase mb-3 pl-1 rounded text-sm", {
-            ["text-white bg-[#66DC5A]"]: isSelected,
-            ["text-black bg-white hover:bg-lime-200"]: !isSelected,
+        return classNames("btn btn-xs btn-block btn-ghost uppercase mb-3 pl-0 pr-4 rounded text-sm", {
+            ["text-base-100 bg-primary"]: isSelected,
+            ["bg-base-100 hover:bg-base-100"]: !isSelected,
         });
     };
 
     const profileImage = "/profile.jpg";
 
     return (
-        <div className={wrapperClasses}>
-            <div className="">
-                <button
-                    className={collapseIconClasses}
-                    onClick={() => dispatch(clickCollapse())}
-                >
-                    <CollapsIcon />
-                </button>
-                <div className={sideBarClasses}>
+        <div className="drawer drawer-mobile">
+            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+            <div className="drawer-content flex flex-col">
+                {/* nav bar on */}
+                <div className="navbar bg-base-100 lg:hidden">
+                    <label htmlFor="my-drawer-2" className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16">
+                            </path>
+                        </svg>
+                    </label>
+
+                    <div className="flex-1">
+                        <a className="btn btn-ghost normal-case text-xl">KOOKIE OFFICAL</a>
+                    </div>
+                </div>
+                {children}
+
+            </div>
+            <div className="drawer-side">
+                <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+                <ul className="menu w-60 pl-20 pt-8 pr-10 bg-base-100 text-base-content">
+                    {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
-                        <Image
-                            className=" w-auto h-auto"
-                            src={profileImage}
-                            alt={"profile"}
-                            width={120}
-                            height={0}
-                            priority={true}
-                        ></Image>
+                        <Link href="./">
+                            <Image
+                                className=""
+                                src={profileImage}
+                                alt={"profile"}
+                                // 用來決定圖片的比例
+                                width={100}
+                                height={100}
+                                priority={true}
+                            ></Image>
+                        </Link>
+
                     </div>
 
                     <div className="flex-grow w-24">
@@ -99,10 +99,10 @@ const Sidebar = () => {
                         })}
                     </div>
                     <div className="absolute bottom-0">
-                        {" "}
-                        <Footer />{" "}
+                        <Footer />
                     </div>
-                </div>
+                </ul>
+
             </div>
         </div>
     );
