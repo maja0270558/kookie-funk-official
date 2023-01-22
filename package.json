@@ -7,14 +7,15 @@
     },
     "dependencies": {
         "@prisma/client": "4.6.1",
-        "prisma": "^4.6.1",
         "@reduxjs/toolkit": "^1.9.0",
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "bcrypt": "^5.1.0",
         "classnames": "^2.3.2",
+        "daisyui": "^2.47.0",
         "next": "latest",
         "next-auth": "^4.18.8",
         "next-redux-wrapper": "^8.0.0",
+        "prisma": "^4.6.1",
         "react": "18.2.0",
         "react-dom": "18.2.0",
         "react-loader-spinner": "^5.3.4",
@@ -23,7 +24,6 @@
     },
     "devDependencies": {
         "@prisma/client": "4.6.1",
-        "prisma": "^4.6.1",
         "@tailwindcss/typography": "^0.5.8",
         "@types/bcrypt": "^5.0.0",
         "@types/node": "18.11.3",
@@ -31,6 +31,7 @@
         "@types/react-dom": "18.0.6",
         "autoprefixer": "^10.4.12",
         "postcss": "^8.4.18",
+        "prisma": "^4.6.1",
         "tailwindcss": "^3.2.1",
         "typescript": "4.8.4"
     }
