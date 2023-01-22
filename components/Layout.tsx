@@ -10,8 +10,10 @@ type Props = {
 };
 
 export const Layout = ({ children }: Props) => {
+    const themeDark = "forest"
+    const themeLight = "lemonade"
     return (
-        <div className="relative" data-theme="forest">
+        <div className="relative" data-theme={themeLight}>
             <Sidebar>
                 {children}
             </Sidebar>

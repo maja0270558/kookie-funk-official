@@ -1,101 +1,26 @@
 import React from "react";
 import Gallery from "../components/Gallery";
 import useSWR from 'swr'
+import { WorksData } from "./api/get/works";
 
-/*
-{
-    data: [
-        {
-            cat: "photoshop",
-            imgs: [
-                {
-                    id: 0,
-                    url: ""
-                }
-            ]
-        }
-    ]
-}
 
-*/
 const works = () => {
-    return (
-        <div className="grow h-full min-h-screen">
-            <Gallery
-                sectionTitle="photoshop"
-                imagePath={[
-                    "https://picsum.photos/200/302",
-                    "https://picsum.photos/200/303",
-                    "https://picsum.photos/200/304",
-                    "https://picsum.photos/200/305",
-                    "https://picsum.photos/200/312",
-                    "https://picsum.photos/200/313",
-                    "https://picsum.photos/200/314",
-                    "https://picsum.photos/200/315",
-                    "https://picsum.photos/200/306",
-                    "https://picsum.photos/200/307",
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                    "https://picsum.photos/200/313",
-                    "https://picsum.photos/200/314",
-                    "https://picsum.photos/200/315",
-                    "https://picsum.photos/200/306",
-                    "https://picsum.photos/200/307",
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                    "https://picsum.photos/200/313",
-                    "https://picsum.photos/200/314",
-                    "https://picsum.photos/200/315",
-                    "https://picsum.photos/200/306",
-                    "https://picsum.photos/200/307",
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                    "https://picsum.photos/200/313",
-                    "https://picsum.photos/200/314",
-                    "https://picsum.photos/200/315",
-                    "https://picsum.photos/200/306",
-                    "https://picsum.photos/200/307",
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                    "https://picsum.photos/200/313",
-                    "https://picsum.photos/200/314",
-                    "https://picsum.photos/200/315",
-                    "https://picsum.photos/200/306",
-                    "https://picsum.photos/200/307",
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                ]}
-            />
+    const { data, error, isLoading } = useSWR('/api/get/works', (url) => fetch(url).then(res => res.json()));
 
-            <Gallery
-                sectionTitle="Illustrator"
-                imagePath={[
-                    "https://picsum.photos/200/302",
-                    "https://picsum.photos/200/303",
-                    "https://picsum.photos/200/304",
-                    "https://picsum.photos/200/305",
-                ]}
-            />
+    if (error) return <div>failed to load</div>
+    if (isLoading) return (
 
-            <Gallery
-                sectionTitle="XD"
-                imagePath={[
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                ]}
-            />
-
-            <Gallery
-                sectionTitle="AE"
-                imagePath={[
-                    "https://picsum.photos/200/308",
-                    "https://picsum.photos/200/301",
-                    "https://picsum.photos/200/322",
-                    "https://picsum.photos/200/310",
-                ]}
-            />
+        <div className="flex items-center justify-center space-x-2 min-h-full">
+            <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
+            <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
+            <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
         </div>
-    );
+
+    )
+
+    const compoment = data.data.map((workData: WorksData) => <Gallery works={workData} />);
+
+    return data ? <div>{compoment}</div> : <div>Loading...</div>;
 };
 
 export default works;

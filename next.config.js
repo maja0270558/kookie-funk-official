@@ -9,6 +9,9 @@ module.exports = {
             {
                 hostname: "scontent-tpe1-1.xx.fbcdn.net",
             },
+            {
+                hostname: "picsum.photos",
+            },
         ],
     },
 };

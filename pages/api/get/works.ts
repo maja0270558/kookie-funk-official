@@ -1,17 +1,18 @@
 import { PrismaClient } from "@prisma/client";
-
 const prisma = new PrismaClient();
 import type { NextApiRequest, NextApiResponse } from "next";
 import _ from 'lodash'
+
+export interface WorksData {
+    section_name: string;
+    imgs: { img: string, id: number }[];
+}
 
 export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    interface WorksData {
-        section_name: string;
-        imgs: { img: string, id: number }[];
-    }
+
 
     const works = await prisma.works.findMany();
     const worksById = _.groupBy(works, 'cat_id');
