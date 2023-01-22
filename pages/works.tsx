@@ -1,6 +1,23 @@
 import React from "react";
 import Gallery from "../components/Gallery";
+import useSWR from 'swr'
 
+/*
+{
+    data: [
+        {
+            cat: "photoshop",
+            imgs: [
+                {
+                    id: 0,
+                    url: ""
+                }
+            ]
+        }
+    ]
+}
+
+*/
 const works = () => {
     return (
         <div className="grow h-full min-h-screen">
