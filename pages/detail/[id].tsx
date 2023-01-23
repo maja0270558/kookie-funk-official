@@ -8,50 +8,7 @@ const works = () => {
 
 
 
-    const content = `---
-## Links
-
-[link text](http://dev.nodeca.com)
-
-[link with title](http://nodeca.github.io/pica/demo/ "title text!")
-
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
-
-## Images
-
-![Minion](https://octodex.github.com/images/minion.png)
-![Stormtroopocat](https://octodex.github.com/images/stormtroopocat.jpg "The Stormtroopocat")
-
-Like links, Images also have a footnote style syntax
-
-![Alt text][id]
-
-With a reference later in the document defining the URL location:
-
-[id]: https://octodex.github.com/images/dojocat.jpg  "The Dojocat"
-
-
-## Plugins
-
-The killer feature of  is very effective support of
-[syntax plugins](https://www.npmjs.org/browse/keyword/markdown-it-plugin).
-
-
-### [Emojies](https://github.com/markdown-it/markdown-it-emoji)
-
-> Classic markup: :wink: :crush: :cry: :tear: :laughing: :yum:
->
-> Shortcuts (emoticons): :-) :-( 8-) ;)
-
-see [how to change output](https://github.com/markdown-it/markdown-it-emoji#change-output) with twemoji.
-
-
-### [Subscript](https://github.com/markdown-it/markdown-it-sub) / [Superscript](https://github.com/markdown-it/markdown-it-sup)
-
-- 19^th^
-- H~2~O
-
+    const content = `
 # h1 Heading 8-)
 ## h2 Heading
 ### h3 Heading
@@ -75,25 +32,30 @@ see [how to change output](https://github.com/markdown-it/markdown-it-emoji#chan
     // const compoment = data.data.map((workData: WorksData) => <Gallery works={workData} />);
 
     return (
-        <div className="flex-row min-h-full min-w-full bg-yellow-200">
-            <div className="flex flex-col lg:flex-row ">
-                <div className="flex flex-0">
-                    <div className="flex w-full bg-slate-600 justify-center">
+        <div className="flex-row min-h-full min-w-full bg-yello-50">
+            <div className="flex flex-col lg:flex-row min-h-full bg-green-100">
+                {/* Image PART */}
+
+                <div className="flex grow-[1] lg:grow-[5] max-h-screen bg-blue-200">
+                    <div className="flex items-center flex-1 justify-center bg-pink-300">
                         <Image
-                            className="p-4 bg-slate-400"
-                            src={"/profile.jpg"}
-                            alt={"profile"}
-                            // 用來決定圖片的比例
-                            width={450}
-                            height={100}
-                            priority={true}
-                        ></Image>
+                            alt=""
+                            src={"/2.jpeg"}
+                            width="0"
+                            height="0"
+                            sizes="(max-width: 1024px) 90vw, 60vw"
+                            className=" object-fill w-auto h-auto aspect-auto max-w-[768px] sm: min-w-[368px]"
+                        />
+
+
                     </div>
 
                 </div>
-                <div className="flex flex-1 bg-slate-400">
-                    <div className="flex flex-col lg:flex-col-reverse bg-stone-500 w-full">
-                        <div className="bg-stone-400 editor">
+                {/* MARK PART */}
+
+                <div className="flex grow-[5] lg:grow-[1] bg-slate-500">
+                    <div className="flex flex-col lg:flex-col-reverse w-full bg-slate-600">
+                        <div className=" editor">
                             <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                 {content}
                             </ReactMarkdown>
