@@ -5,6 +5,14 @@ import { Layout } from "../components/Layout";
 import { store } from "..//store";
 import { Provider } from "react-redux";
 
+// mantine
+import { MantineProvider } from '@mantine/core';
+import resolveConfig from 'tailwindcss/resolveConfig'
+import tailwindConfig from '../tailwind.config';
+
+// Grabs the full Tailwind CSS object
+const fullConfig = resolveConfig(tailwindConfig)
+
 function MyApp({ Component, pageProps }: AppProps) {
     return (
         <SessionProvider
@@ -14,7 +22,31 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
             <Provider store={store}>
                 <Layout>
-                    <Component {...pageProps} />{" "}
+                    <MantineProvider
+                        withGlobalStyles
+                        withNormalizeCSS
+                        theme={{
+                            components: {
+                                RichTextEditor: {
+                                    classNames: {
+                                        root: 'bg-base-300 border-base-100',
+                                        toolbar: 'bg-base-300 border-base-100 ',
+                                        controlsGroup: '',
+                                        control: 'text-base-content border-base-100',
+                                        content: 'bg-base-300 text-base-content',
+                                        typographyStylesProvider: 'prose',
+                                        linkEditor: '',
+                                        linkEditorSave: 'bg-base-100 text-base-content',
+                                        linkEditorInput: 'bg-base-100 text-base-content',
+                                        linkEditorExternalControl: 'bg-base-100 text-base-content'
+                                    },
+                                },
+                            },
+                            /** Put your mantine theme override here */
+                        }}
+                    >
+                        <Component {...pageProps} />
+                    </MantineProvider>
                 </Layout>
             </Provider>
         </SessionProvider>
@@ -22,3 +54,4 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
+

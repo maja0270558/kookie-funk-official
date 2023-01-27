@@ -1,43 +1,23 @@
-import React from "react";
+import React, { useRef } from "react";
 import useSWR from 'swr'
 import Image from "next/image";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from 'remark-gfm';
+
+
+import PostEditor from "../../components/RichTextEditor";
+import editor from "../../components/TipTapEditor";
+import { useState } from 'react';
+import { TypographyStylesProvider } from '@mantine/core';
+
+
+import { useRouter } from 'next/router'
+import { Editor } from "@tiptap/react";
+
+
 
 const works = () => {
-
-
-
-    const content = `
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
-3. Integer molestie lorem at massa
-1. You can use sequential numbers...
-1. ...or keep all the numbers as 
-
-| Option | Description |
-| ------ | ----------- |
-| data   | path to data files to supply the data that will be passed into templates. |
-| engine | engine to be used for processing templates. Handlebars is the default. |
-| ext    | extension to be used for dest files. |
-## Links
-
-[link text](http://dev.nodeca.com)
-
-[link with title](http://nodeca.github.io/pica/demo/ "title text!")
-
-Autoconverted link https://github.com/nodeca/pica (enable linkify to see)
-
-**This is bold text**
-
-__This is bold text__
-
-*This is italic text*
-
-_This is italic text_
-
-`
-
+    const router = useRouter()
+    const { id } = router.query
+    const tiptapEditor: Editor | null = editor()
     const detail = `path to data files to supply the data that will be passed into templates.`
     // const { data, error, isLoading } = useSWR('/api/get/works', (url) => fetch(url).then(res => res.json()));
 
@@ -54,6 +34,19 @@ _This is italic text_
 
 
     // const compoment = data.data.map((workData: WorksData) => <Gallery works={workData} />);
+    const initialValue =
+        '<p>Your initial <b>html value</b> or an empty string to init editor without value</p>';
+    const [value, onChange] = useState(initialValue);
+    const [detailvalue, onDetailChange] = useState(initialValue);
+
+    const carousel = useRef<HTMLDivElement>(null);
+
+    const handleDrag = (e: DragEvent) => {
+        if (carousel.current) {
+            carousel.current.scrollLeft = e.pageX;
+        }
+    };
+
 
 
     return (
@@ -74,32 +67,46 @@ _This is italic text_
 
                     <div className="flex lg:flex-1 p-8">
                         <div className="flex lg:items-end editor">
-                            <ReactMarkdown className="flex flex-col" remarkPlugins={[remarkGfm]}>
-                                {detail}
-                            </ReactMarkdown>
+                            <TypographyStylesProvider className="text-base-content">
+                                <div dangerouslySetInnerHTML={{ __html: tiptapEditor?.getHTML() ?? "" }} />
+                            </TypographyStylesProvider>
+                            {id}
                         </div>
                     </div>
 
                 </div>
             </div>
             <div className="flex flex-1 p-8">
-                <div className="flex lg:items-end editor">
-                    <ReactMarkdown className="flex flex-col" remarkPlugins={[remarkGfm]}>
-                        {content}
-                    </ReactMarkdown>
+                <div className="flex flex-1">
+
                 </div>
             </div>
+
+            <PostEditor editor={tiptapEditor}></PostEditor>
+
             <div className="flex flex-1 p-2">
-                <div className="carousel carousel-center w-full p-4 space-x-4  ">
-                    <div className="carousel-item">
-                        <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    </div>
-                    <div className="carousel-item">
-                        <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    </div>
-                    <div className="carousel-item">
-                        <img src="/profile.jpg" className=" object-cover w-36 h-36" />
-                    </div>
+                <div className="flex flex-row space-x-4 scroll-smooth overflow-x-scroll" ref={carousel} onDrag={(e) => {
+                    if (carousel.current) {
+                        console.log(carousel.current.scrollLeft);
+                        carousel.current.scrollLeft = e.pageX;
+                    }
+                }}>
+
+                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />
+                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />  <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
+                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />
+
                 </div>
             </div>
         </div>
