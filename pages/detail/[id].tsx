@@ -60,7 +60,7 @@ const works = () => {
 
     return (
         <div className="flex flex-col p-4" >
-            <div className="flex flex-row  place-content-center min-h-screen">
+            <div className="flex flex-row  place-content-center min-h-[95vh]">
                 <div className="flex flex-col lg:flex-row flex-1 ">
                     <div className="relative flex flex-auto justify-center min-w-[368]">
                         <Image
@@ -87,9 +87,9 @@ const works = () => {
             </div>
 
 
-            <div className="pt-4">
+            {/* <div className="pt-4">
                 <PostEditor editor={tiptapEditor}></PostEditor>
-            </div>
+            </div> */}
 
             <div className="pt-4">
                 <div ref={ref} className="keen-slider max-w-screen " style={{ maxHeight: cellSize, minHeight: cellSize }}>
