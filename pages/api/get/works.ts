@@ -12,8 +12,6 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-
-
     const works = await prisma.works.findMany();
     const worksById = _.groupBy(works, 'cat_id');
 

@@ -2,14 +2,14 @@ import React from "react";
 
 const home = () => {
     return (
-        <section className="overflow-hidden bg-gray-50 sm:grid sm:grid-cols-2 items-center max-h-screen">
+        <section className="overflow-hidden bg-base-100 sm:grid sm:grid-cols-2 items-center max-h-screen">
             <div className="p-8">
                 <div className="mx-auto max-w-xl text-center sm:text-left">
-                    <h2 className="text-2xl font-bold text-gray-900 md:text-3xl">
+                    <h2 className="text-2xl font-bold md:text-3xl">
                         KOOKIE FUNK.
                     </h2>
 
-                    <div className="text-gray-500 md:mt-4 md:block">
+                    <div className="md:mt-4 md:block">
                         <p>
                             Hi，我是曲奇放克，這是一個正經的網站，相關合作歡迎詢問。
                         </p>

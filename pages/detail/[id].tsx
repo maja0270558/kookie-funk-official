@@ -67,7 +67,6 @@ const works = () => {
                             <TypographyStylesProvider className="text-base-content">
                                 <div dangerouslySetInnerHTML={{ __html: tiptapEditor?.getHTML() ?? "" }} />
                             </TypographyStylesProvider>
-                            {id}
                         </div>
                     </div>
 
