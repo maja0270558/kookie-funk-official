@@ -41,22 +41,10 @@ const works = () => {
 
     // )
 
-
     // const compoment = data.data.map((workData: WorksData) => <Gallery works={workData} />);
     const initialValue =
         '<p>Your initial <b>html value</b> or an empty string to init editor without value</p>';
-    const [value, onChange] = useState(initialValue);
-    const [detailvalue, onDetailChange] = useState(initialValue);
     const cellSize = 150
-    const carousel = useRef<HTMLDivElement>(null);
-
-    const handleDrag = (e: DragEvent) => {
-        if (carousel.current) {
-            carousel.current.scrollLeft = e.pageX;
-        }
-    };
-
-
 
     return (
         <div className="flex flex-col p-4" >
@@ -87,13 +75,12 @@ const works = () => {
             </div>
 
 
-            {/* <div className="pt-4">
+            <div className="pt-4">
                 <PostEditor editor={tiptapEditor}></PostEditor>
-            </div> */}
+            </div>
 
             <div className="pt-4">
                 <div ref={ref} className="keen-slider max-w-screen " style={{ maxHeight: cellSize, minHeight: cellSize }}>
-
                     <div className="keen-slider__slide" style={{ maxWidth: cellSize, minWidth: cellSize, maxHeight: cellSize, minHeight: cellSize }}>
                         <img src="/1.jpeg" className="object-cover h-48 w-48" />
                     </div>
