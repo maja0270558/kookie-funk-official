@@ -32,7 +32,7 @@ const works = () => {
         )
     })
 
-    return data ? <div>{compoment}</div> : <div>Loading...</div>;
+    return compoment ? <div>{compoment}</div> : <div>Loading...</div>;
 };
 
 export default works;

@@ -2,24 +2,45 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 import type { NextApiRequest, NextApiResponse } from "next";
 
+
+import Bold from '@tiptap/extension-bold'
+// Option 2: Browser-only (lightweight)
+// import { generateHTML } from '@tiptap/core'
+import Document from '@tiptap/extension-document'
+import Paragraph from '@tiptap/extension-paragraph'
+import Text from '@tiptap/extension-text'
+// Option 1: Browser + server-side
+import { generateHTML } from '@tiptap/html'
+import React, { useMemo } from 'react'
+import console from "console";
+
+export interface PostDetail {
+    post: {
+        title: string;
+        description: string;
+        image: string;
+    }
+    otherPosts: { img: string, id: string }
+}
+
 export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
     switch (req.method) {
         case "GET":
-            const id = req.query.id;
+            const id: number = parseInt(req.query.id as string)
             if (id) {
                 const result = await prisma.works.findFirst({
                     where: {
-                        id: Number(id),
+                        id: id,
                     },
                 });
 
                 const othersResult = await prisma.works.findMany({
                     where: {
                         NOT: {
-                            id: Number(id),
+                            id: id,
                         },
                     },
                     take: 100,
