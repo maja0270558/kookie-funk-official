@@ -14,7 +14,7 @@ export const Layout = ({ children }: Props) => {
     const light = "lemonade"
     const dark = "dark"
     return (
-        <div className="relative" data-theme={dark}>
+        <div className="relative" data-theme={forest}>
             <Sidebar>
                 {children}
             </Sidebar>

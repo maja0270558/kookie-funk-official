@@ -1,5 +1,4 @@
-import { PrismaClient } from "@prisma/client";
-const prisma = new PrismaClient();
+import { prisma } from '../../api/db'
 import type { NextApiRequest, NextApiResponse } from "next";
 import _ from 'lodash'
 
@@ -41,7 +40,7 @@ export default async function handle(
             )
         }
     });
-
+    console.log(data)
     res.json({
         data
     });

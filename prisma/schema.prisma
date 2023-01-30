@@ -17,8 +17,8 @@ model works {
   id              Int        @id @default(autoincrement())
   image_path      String?    @db.VarChar(1000)
   nail_image_path String?    @db.VarChar(1000)
-  title           Json?
-  desc            Json?
+  title           String     @db.Text
+  desc            String     @db.Text
   display         Int?       @db.TinyInt
   ts              DateTime?  @default(now()) @db.Timestamp(0)
   cat_id          Int

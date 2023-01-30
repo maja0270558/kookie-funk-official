@@ -9,15 +9,15 @@ type GalleryImageProps = {
 
 function GalleryImage(props: GalleryImageProps) {
     return (
-        <Link href={`./detail/${props.id}`} className="group">
-            <div className="aspect-w-1 aspect-h-1 bg-gray-200 overflow-hidden group-hover:drop-shadow-lg">
+        <Link href={`../detail/${props.id}`} className="group">
+            <div className="duration-100 ease-in-out aspect-w-1 aspect-h-1 overflow-hidden group-hover:drop-shadow-lg">
                 <Image
-                    className="group-hover:scale-110 transition duration-300 ease-in-out"
                     src={props.path}
                     alt={""}
-                    // 用來決定圖片的比例
-                    width={100}
-                    height={100}
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="group-hover:scale-110 transition object-cover h-48 w-48"
                     priority={true}
                 ></Image>
             </div>
