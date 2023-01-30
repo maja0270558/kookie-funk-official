@@ -10,14 +10,12 @@ type Props = {
 };
 
 export const Layout = ({ children }: Props) => {
-    const forest = "forest"
-    const light = "lemonade"
-    const dark = "dark"
+    const forest = "forest";
+    const light = "lemonade";
+    const dark = "dark";
     return (
-        <div className="relative" data-theme={forest}>
-            <Sidebar>
-                {children}
-            </Sidebar>
+        <div className="relative" data-theme={light}>
+            <Sidebar>{children}</Sidebar>
         </div>
     );
 };

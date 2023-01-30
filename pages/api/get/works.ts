@@ -1,6 +1,6 @@
-import { prisma } from '../../api/db'
+import { prisma } from "../../api/db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import _ from 'lodash'
+import _ from "lodash";
 
 export interface WorkImageData {
     img: string;
@@ -17,31 +17,28 @@ export default async function handle(
     res: NextApiResponse
 ) {
     const works = await prisma.works.findMany();
-    const worksById = _.groupBy(works, 'cat_id');
+    const worksById = _.groupBy(works, "cat_id");
 
-    const cats = await prisma.categorize.findMany()
-    const data: WorksData[] = []
+    const cats = await prisma.categorize.findMany();
+    const data: WorksData[] = [];
 
     cats.forEach((cat) => {
-        let seperateWork = worksById[cat.id]
+        let seperateWork = worksById[cat.id];
         if (seperateWork) {
             const imageData = seperateWork.map((work) => {
                 return {
                     img: work.image_path!,
-                    id: work.id
-                }
-            })
+                    id: work.id,
+                };
+            });
 
-            data.push(
-                {
-                    section_name: cat.section,
-                    imgs: imageData
-                }
-            )
+            data.push({
+                section_name: cat.section,
+                imgs: imageData,
+            });
         }
     });
-    console.log(data)
     res.json({
-        data
+        data,
     });
 }
