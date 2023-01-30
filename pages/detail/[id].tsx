@@ -70,7 +70,7 @@ const works = () => {
             </div>
         ) : null;
 
-        const compoment = data.post ? (
+        const compoment = data ? (
             <div className="flex flex-col p-4">
                 <div className="flex flex-row  place-content-center min-h-[95vh]">
                     <div className="flex flex-col lg:flex-row flex-1 ">
