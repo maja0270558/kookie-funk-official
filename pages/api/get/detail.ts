@@ -42,11 +42,11 @@ export default async function handle(
                     });
                 } else {
                     res.status(500).json({
-                        error: "No such post",
+                        error: "There nothing here.",
                     });
                 }
             } else {
-                res.status(500).json({ error: "Invalid request para" });
+                res.status(500).json({ error: "There nothing here." });
             }
         default:
             res.status(500);

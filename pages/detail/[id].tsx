@@ -1,5 +1,6 @@
 import React from "react";
 import Image from "next/image";
+import Error from "next/error";
 // fetch library
 import useSWR from "swr";
 import { useRouter } from "next/router";
@@ -29,7 +30,6 @@ const works = () => {
         (url) => fetch(url).then((res) => res.json())
     );
 
-    if (error) return <div>failed to load</div>;
     if (isLoading)
         return (
             <div className="flex items-center justify-center space-x-2 min-h-full">
@@ -40,7 +40,10 @@ const works = () => {
         );
 
     if (data) {
-        const otherPostsSection = data.others ? (
+        // error handling
+        if (data.error) return <Error statusCode={404} title={data.error} />;
+
+        const otherPostsSection = data.others && (
             <div className="pt-4">
                 <div
                     ref={ref}
@@ -68,54 +71,62 @@ const works = () => {
                     })}
                 </div>
             </div>
-        ) : null;
+        );
 
-        const compoment = data ? (
+        const compomentImage = data.post?.image && (
+            <Image
+                alt=""
+                // src={"/profile.jpg"}
+                src={data.post.image}
+                width="0"
+                height="0"
+                sizes="100vw"
+                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
+            />
+        );
+
+        const compomentTitle = data.post?.title && (
+            <TypographyStylesProvider className="text-base-content">
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: data.post.title ?? "",
+                    }}
+                />
+            </TypographyStylesProvider>
+        );
+
+        const compomentDesc = data.post?.description && (
+            <TypographyStylesProvider className="text-base-content">
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: data.post.description ?? "",
+                    }}
+                />
+            </TypographyStylesProvider>
+        );
+
+        return (
             <div className="flex flex-col p-4">
                 <div className="flex flex-row  place-content-center min-h-[95vh]">
                     <div className="flex flex-col lg:flex-row flex-1 ">
                         <div className="relative flex flex-auto justify-center min-w-[368] max-w-[70%] pr-8">
-                            <Image
-                                alt=""
-                                // src={"/profile.jpg"}
-                                src={data.post.image}
-                                width="0"
-                                height="0"
-                                sizes="100vw"
-                                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
-                            />
+                            {compomentImage}
                         </div>
 
                         <div className="flex lg:flex-1">
                             <div className="flex lg:items-end editor">
-                                <TypographyStylesProvider className="text-base-content">
-                                    <div
-                                        dangerouslySetInnerHTML={{
-                                            __html: data.post.title ?? "",
-                                        }}
-                                    />
-                                </TypographyStylesProvider>
+                                {compomentTitle}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="flex flex-1 lg:items-end editor p-4">
-                    <TypographyStylesProvider className="text-base-content">
-                        <div
-                            dangerouslySetInnerHTML={{
-                                __html: data.post.description ?? "",
-                            }}
-                        />
-                    </TypographyStylesProvider>
+                    {compomentDesc}
                 </div>
-
                 {otherPostsSection}
             </div>
-        ) : (
-            <div>Loading...</div>
         );
-        return compoment;
     }
 };
 
