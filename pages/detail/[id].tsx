@@ -109,7 +109,7 @@ const works = () => {
             <div className="flex flex-col p-4">
                 <div className="flex flex-row  place-content-center min-h-[95vh]">
                     <div className="flex flex-col lg:flex-row flex-1 ">
-                        <div className="relative flex flex-auto justify-center min-w-[368] max-w-[70%] pr-8">
+                        <div className="relative flex flex-auto justify-center min-w-[368] lg:max-w-[70%] pr-8">
                             {compomentImage}
                         </div>
 

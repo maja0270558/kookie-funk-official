@@ -1,6 +1,73 @@
 import React from "react";
+import Image from "next/image";
 
 const home = () => {
+    return (
+        <div className="flex flex-col p-4">
+            <div className="flex flex-row  place-content-center min-h-[95vh]">
+                <div className="flex flex-col lg:flex-row-reverse flex-1 ">
+                    <div className="relative flex flex-auto justify-center min-w-[368] lg:max-w-[50%]">
+                        {
+                            <Image
+                                alt=""
+                                // src={"/profile.jpg"}
+                                src={"/profile.jpg"}
+                                width="0"
+                                height="0"
+                                sizes="100vw"
+                                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
+                            />
+                        }
+                    </div>
+
+                    <div className="flex lg:flex-1 pt-4 items-end justify-center">
+                        <div className="flex">
+                            <div className="grow-1 text-base-content prose-sm lg:prose-lg  lg:pb-8">
+                                <h1 className="text-3xl font-bold text-center lg:text-left">
+                                    曲奇放克
+                                </h1>
+                                <p className="">台灣人｜A型</p>
+                                <p className="">
+                                    業務範圍包括但不限於 ：<br></br> 插畫 / 動畫
+                                    / 繪畫教學 / Youtube相關
+                                </p>
+                                <p className="">
+                                    歡迎各種合作來信詢問 。<br></br>{" "}
+                                    a88115146@gmail.com
+                                </p>
+                            </div>{" "}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    return (
+        <div className="hero min-h-screen bg-base-200">
+            <div className="flex items-center justify-center gap-1 flex-col lg:flex-row-reverse bg-slate-600 min-h-screen min-w-full">
+                <div className="grow-1">
+                    <img
+                        src="/profile.jpg"
+                        className="max-w-sm rounded-lg shadow-2xl"
+                    />
+                </div>
+
+                <div className=" bg-green-300 grow-1">
+                    <h1 className="text-3xl font-bold">曲奇放克</h1>
+                    台灣人｜A型
+                    <p className="py-6">
+                        業務範圍包括但不限於 ：<br></br> 插畫 / 動畫 / 繪畫教學
+                        / Youtube相關
+                    </p>
+                    <p className="py-6">
+                        歡迎各種合作來信詢問 。<br></br> a88115146@gmail.com
+                    </p>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <section className="overflow-hidden bg-base-100 sm:grid sm:grid-cols-2 items-center max-h-screen">
             <div className="p-8">
