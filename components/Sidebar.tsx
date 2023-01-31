@@ -5,7 +5,7 @@ import Link from "next/link";
 import classNames from "classnames";
 
 /// Next-auth
-import { useSession } from "next-auth/react"
+import { useSession } from "next-auth/react";
 
 type Props = {
     children: ReactNode;
@@ -13,32 +13,41 @@ type Props = {
 
 const Sidebar = ({ children }: Props) => {
     // login data
-    const { data: session } = useSession()
+    const { data: session } = useSession();
     // get path router
     const router = useRouter();
 
     interface MenuItem {
         label: string;
         link: string;
+        enable: boolean;
     }
 
     const menuItems: MenuItem[] = [
-        { label: "works", link: "/works" },
-        { label: "store", link: "/store" },
-        { label: "course", link: "/course" },
+        { label: "works", link: "/works", enable: true },
+        { label: "store", link: "", enable: false },
+        { label: "tutorials", link: "/tutorial", enable: true },
     ];
 
     if (session) {
-        menuItems.push({ label: "signout", link: "/api/auth/signout" })
+        menuItems.push({
+            label: "signout",
+            link: "/api/auth/signout",
+            enable: true,
+        });
     }
 
-    const getLinkItemClasses = (isSelected: boolean) => {
-        return classNames("btn btn-xs btn-block btn-ghost uppercase mb-3 pl-0 pr-4 rounded text-sm", {
-            ["text-base-100 bg-primary"]: isSelected,
-            ["bg-base-100 hover:bg-base-100"]: !isSelected,
-        });
+    const getLinkItemClasses = (isSelected: boolean, enable: boolean) => {
+        return classNames(
+            "btn-xs btn-block uppercase mb-1 font-medium text-xs text-left",
+            {
+                ["text-base-100 bg-primary"]: isSelected && enable,
+                ["btn-ghost bg-base-100 hover:bg-base-200"]:
+                    !isSelected && enable,
+                ["text-base-300"]: !enable,
+            }
+        );
     };
-
     const profileImage = "/profile.jpg";
 
     return (
@@ -47,19 +56,32 @@ const Sidebar = ({ children }: Props) => {
             <div className="drawer-content flex flex-col">
                 {/* nav bar on */}
                 <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden ">
-                    <label htmlFor="my-drawer-2" className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" className="inline-block w-5 h-5 stroke-current">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16">
-                            </path>
+                    <label
+                        htmlFor="my-drawer-2"
+                        className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            className="inline-block w-5 h-5 stroke-current"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M4 6h16M4 12h16M4 18h16"
+                            ></path>
                         </svg>
                     </label>
 
                     <div className="flex-1">
-                        <a className="btn btn-ghost normal-case text-xl">KOOKIE OFFICAL</a>
+                        <a className="btn btn-ghost normal-case text-xl">
+                            KOOKIE OFFICAL
+                        </a>
                     </div>
                 </div>
                 {children}
-
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
@@ -70,14 +92,12 @@ const Sidebar = ({ children }: Props) => {
                             <Image
                                 className=""
                                 src={profileImage}
-                                alt={"profile"}
-                                // 用來決定圖片的比例
+                                alt={"kookie"}
                                 width={100}
                                 height={100}
                                 priority={true}
                             ></Image>
                         </Link>
-
                     </div>
 
                     <div className="flex-grow w-24">
@@ -86,13 +106,14 @@ const Sidebar = ({ children }: Props) => {
                             return (
                                 <div key={menu.label}>
                                     <Link href={`${menu.link}`}>
-                                        <p
+                                        <button
                                             className={getLinkItemClasses(
-                                                isSelected
+                                                isSelected,
+                                                menu.enable
                                             )}
                                         >
                                             {menu.label}
-                                        </p>
+                                        </button>
                                     </Link>
                                 </div>
                             );
@@ -102,7 +123,6 @@ const Sidebar = ({ children }: Props) => {
                         <Footer />
                     </div>
                 </ul>
-
             </div>
         </div>
     );

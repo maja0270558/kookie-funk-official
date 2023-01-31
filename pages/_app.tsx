@@ -6,12 +6,13 @@ import { store } from "..//store";
 import { Provider } from "react-redux";
 
 // mantine
-import { MantineProvider } from '@mantine/core';
-import resolveConfig from 'tailwindcss/resolveConfig'
-import tailwindConfig from '../tailwind.config';
+import { MantineProvider } from "@mantine/core";
+import resolveConfig from "tailwindcss/resolveConfig";
+import tailwindConfig from "../tailwind.config";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 // Grabs the full Tailwind CSS object
-const fullConfig = resolveConfig(tailwindConfig)
+const fullConfig = resolveConfig(tailwindConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
     return (
@@ -29,23 +30,30 @@ function MyApp({ Component, pageProps }: AppProps) {
                             components: {
                                 RichTextEditor: {
                                     classNames: {
-                                        root: 'bg-base-300 border-base-100',
-                                        toolbar: 'bg-base-300 border-base-100 ',
-                                        controlsGroup: '',
-                                        control: 'text-base-content border-base-100',
-                                        content: 'bg-base-300 text-base-content',
-                                        typographyStylesProvider: 'prose',
-                                        linkEditor: '',
-                                        linkEditorSave: 'bg-base-100 text-base-content',
-                                        linkEditorInput: 'bg-base-100 text-base-content',
-                                        linkEditorExternalControl: 'bg-base-100 text-base-content'
+                                        root: "bg-base-300 border-base-100",
+                                        toolbar: "bg-base-300 border-base-100 ",
+                                        controlsGroup: "",
+                                        control:
+                                            "text-base-content border-base-100",
+                                        content:
+                                            "bg-base-300 text-base-content",
+                                        typographyStylesProvider: "prose",
+                                        linkEditor: "",
+                                        linkEditorSave:
+                                            "bg-base-100 text-base-content",
+                                        linkEditorInput:
+                                            "bg-base-100 text-base-content",
+                                        linkEditorExternalControl:
+                                            "bg-base-100 text-base-content",
                                     },
                                 },
                             },
                             /** Put your mantine theme override here */
                         }}
                     >
-                        <Component {...pageProps} />
+                        <ErrorBoundary>
+                            <Component {...pageProps} />
+                        </ErrorBoundary>
                     </MantineProvider>
                 </Layout>
             </Provider>
@@ -54,4 +62,3 @@ function MyApp({ Component, pageProps }: AppProps) {
 }
 
 export default MyApp;
-

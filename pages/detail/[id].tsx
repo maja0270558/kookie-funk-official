@@ -1,119 +1,133 @@
-import React, { useRef } from "react";
-import useSWR from 'swr'
+import React from "react";
 import Image from "next/image";
-
-
-import PostEditor from "../../components/RichTextEditor";
-import editor from "../../components/TipTapEditor";
-import { useState } from 'react';
-import { TypographyStylesProvider } from '@mantine/core';
-
-
-import { useRouter } from 'next/router'
-import { Editor } from "@tiptap/react";
-
-
+import Error from "next/error";
+// fetch library
+import useSWR from "swr";
+import { useRouter } from "next/router";
+// rich text
+import { TypographyStylesProvider } from "@mantine/core";
+// slider
+import "keen-slider/keen-slider.min.css";
+import { useKeenSlider } from "keen-slider/react";
+// custom image
+import GalleryImage from "../../components/GalleryImage";
 
 const works = () => {
-    const router = useRouter()
-    const { id } = router.query
-    const tiptapEditor: Editor | null = editor()
-    const detail = `path to data files to supply the data that will be passed into templates.`
-    // const { data, error, isLoading } = useSWR('/api/get/works', (url) => fetch(url).then(res => res.json()));
+    const cellSize = 150;
+    const [ref] = useKeenSlider<HTMLDivElement>({
+        loop: false,
+        mode: "free",
+        slides: {
+            perView: "auto",
+            spacing: 12,
+        },
+    });
 
-    // if (error) return <div>failed to load</div>
-    // if (isLoading) return (
+    const router = useRouter();
+    const { id } = router.query;
+    const { data, error, isLoading } = useSWR(
+        id ? `/api/get/detail?id=${id}` : null,
+        (url) => fetch(url).then((res) => res.json())
+    );
 
-    //     <div className="flex items-center justify-center space-x-2 min-h-full">
-    //         <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-    //         <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-    //         <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-    //     </div>
+    if (isLoading)
+        return (
+            <div className="flex items-center justify-center space-x-2 min-h-full">
+                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
+                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
+                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
+            </div>
+        );
 
-    // )
+    if (data) {
+        // error handling
+        if (data.error) return <Error statusCode={404} title={data.error} />;
 
+        const otherPostsSection = data.others && (
+            <div className="pt-4">
+                <div
+                    ref={ref}
+                    className="keen-slider max-w-screen "
+                    style={{ maxHeight: cellSize, minHeight: cellSize }}
+                >
+                    {data.others.map((value: { img: string; id: string }) => {
+                        return (
+                            <div
+                                className="keen-slider__slide"
+                                style={{
+                                    maxWidth: cellSize,
+                                    minWidth: cellSize,
+                                    maxHeight: cellSize,
+                                    minHeight: cellSize,
+                                }}
+                            >
+                                <GalleryImage
+                                    path={value.img}
+                                    id={value.id.toString()}
+                                />
+                                ;
+                            </div>
+                        );
+                    })}
+                </div>
+            </div>
+        );
 
-    // const compoment = data.data.map((workData: WorksData) => <Gallery works={workData} />);
-    const initialValue =
-        '<p>Your initial <b>html value</b> or an empty string to init editor without value</p>';
-    const [value, onChange] = useState(initialValue);
-    const [detailvalue, onDetailChange] = useState(initialValue);
+        const compomentImage = data.post?.image && (
+            <Image
+                alt=""
+                // src={"/profile.jpg"}
+                src={data.post.image}
+                width="0"
+                height="0"
+                sizes="100vw"
+                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
+            />
+        );
 
-    const carousel = useRef<HTMLDivElement>(null);
+        const compomentTitle = data.post?.title && (
+            <TypographyStylesProvider className="text-base-content">
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: data.post.title ?? "",
+                    }}
+                />
+            </TypographyStylesProvider>
+        );
 
-    const handleDrag = (e: DragEvent) => {
-        if (carousel.current) {
-            carousel.current.scrollLeft = e.pageX;
-        }
-    };
+        const compomentDesc = data.post?.description && (
+            <TypographyStylesProvider className="text-base-content">
+                <div
+                    dangerouslySetInnerHTML={{
+                        __html: data.post.description ?? "",
+                    }}
+                />
+            </TypographyStylesProvider>
+        );
 
+        return (
+            <div className="flex flex-col p-4">
+                <div className="flex flex-row  place-content-center min-h-[95vh] max-h-[95vh]">
+                    <div className="flex flex-col lg:flex-row flex-1 ">
+                        <div className="relative flex flex-auto justify-center min-w-[368] lg:max-w-[70%] pr-8">
+                            {compomentImage}
+                        </div>
 
-
-    return (
-        <div className="flex flex-col" >
-            <div className="flex flex-row  place-content-center min-h-screen p-2">
-                <div className="flex flex-col lg:flex-row flex-1 ">
-                    <div className="relative flex flex-auto justify-center min-w-[368]">
-                        <Image
-                            alt=""
-                            // src={"/profile.jpg"}
-                            src={"/1.jpeg"}
-                            width="0"
-                            height="0"
-                            sizes="100vw"
-                            className="object-contain lg:object-contain w-auto h-auto aspect-auto p-2"
-                        />
-                    </div>
-
-                    <div className="flex lg:flex-1 p-8">
-                        <div className="flex lg:items-end editor">
-                            <TypographyStylesProvider className="text-base-content">
-                                <div dangerouslySetInnerHTML={{ __html: tiptapEditor?.getHTML() ?? "" }} />
-                            </TypographyStylesProvider>
-                            {id}
+                        <div className="flex lg:flex-1">
+                            <div className="flex lg:items-end editor">
+                                {compomentTitle}
+                            </div>
                         </div>
                     </div>
-
                 </div>
-            </div>
-            <div className="flex flex-1 p-8">
-                <div className="flex flex-1">
 
+                <div className="flex flex-1 lg:items-end editor p-4">
+                    {compomentDesc}
                 </div>
+                {otherPostsSection}
             </div>
-
-            <PostEditor editor={tiptapEditor}></PostEditor>
-
-            <div className="flex flex-1 p-2">
-                <div className="flex flex-row space-x-4 scroll-smooth overflow-x-scroll" ref={carousel} onDrag={(e) => {
-                    if (carousel.current) {
-                        console.log(carousel.current.scrollLeft);
-                        carousel.current.scrollLeft = e.pageX;
-                    }
-                }}>
-
-                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />
-                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />  <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/1.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/2.jpeg" className=" object-cover w-36 h-36" />
-                    <img src="/profile.jpg" className=" object-cover w-36 h-36" />
-
-                </div>
-            </div>
-        </div>
-
-    )
-
+        );
+    }
 };
-
 
 export default works;

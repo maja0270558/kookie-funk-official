@@ -15,10 +15,10 @@ model categorize {
 
 model works {
   id              Int        @id @default(autoincrement())
-  image_path      String?    @db.VarChar(255)
-  nail_image_path String?    @db.VarChar(255)
-  title           String?    @db.VarChar(255)
-  desc            String?    @db.VarChar(5000)
+  image_path      String?    @db.VarChar(1000)
+  nail_image_path String?    @db.VarChar(1000)
+  title           String     @db.Text
+  desc            String     @db.Text
   display         Int?       @db.TinyInt
   ts              DateTime?  @default(now()) @db.Timestamp(0)
   cat_id          Int
@@ -28,10 +28,10 @@ model works {
 }
 
 model user {
-  id          Int   @id @unique(map: "id") @default(autoincrement())
+  id          Int      @id @unique(map: "id") @default(autoincrement())
   user_name   String   @db.Text
   password    String   @db.Text
-  email    String   @db.Text
+  email       String   @db.Text
   create_date DateTime @default(now()) @db.Timestamp(0)
   update_date DateTime @default(now()) @db.Timestamp(0)
 }
