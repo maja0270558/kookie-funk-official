@@ -15,7 +15,7 @@ const home = () => {
                                 width="0"
                                 height="0"
                                 sizes="100vw"
-                                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
+                                className="object-contain lg:object-cover w-auto h-auto aspect-auto"
                             />
                         }
                     </div>
