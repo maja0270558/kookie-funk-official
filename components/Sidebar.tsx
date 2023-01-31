@@ -20,24 +20,31 @@ const Sidebar = ({ children }: Props) => {
     interface MenuItem {
         label: string;
         link: string;
+        enable: boolean;
     }
 
     const menuItems: MenuItem[] = [
-        { label: "works", link: "/works" },
-        { label: "store", link: "/store" },
-        { label: "course", link: "/course" },
+        { label: "works", link: "/works", enable: true },
+        { label: "store", link: "", enable: false },
+        { label: "tutorials", link: "/tutorial", enable: true },
     ];
 
     if (session) {
-        menuItems.push({ label: "signout", link: "/api/auth/signout" });
+        menuItems.push({
+            label: "signout",
+            link: "/api/auth/signout",
+            enable: true,
+        });
     }
 
-    const getLinkItemClasses = (isSelected: boolean) => {
+    const getLinkItemClasses = (isSelected: boolean, enable: boolean) => {
         return classNames(
-            "btn-primary btn btn-xs btn-block uppercase mb-3 pl-0 pr-4 rounded text-sm",
+            "btn-xs btn-block uppercase mb-1 font-medium text-xs text-left",
             {
-                ["text-base-100 bg-primary"]: isSelected,
-                ["btn-ghost bg-base-100 hover:bg-base-100"]: !isSelected,
+                ["text-base-100 bg-primary"]: isSelected && enable,
+                ["btn-ghost bg-base-100 hover:bg-base-200"]:
+                    !isSelected && enable,
+                ["text-base-300"]: !enable,
             }
         );
     };
@@ -85,8 +92,7 @@ const Sidebar = ({ children }: Props) => {
                             <Image
                                 className=""
                                 src={profileImage}
-                                alt={"profile"}
-                                // 用來決定圖片的比例
+                                alt={"kookie"}
                                 width={100}
                                 height={100}
                                 priority={true}
@@ -102,7 +108,8 @@ const Sidebar = ({ children }: Props) => {
                                     <Link href={`${menu.link}`}>
                                         <button
                                             className={getLinkItemClasses(
-                                                isSelected
+                                                isSelected,
+                                                menu.enable
                                             )}
                                         >
                                             {menu.label}
