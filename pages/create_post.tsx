@@ -62,13 +62,15 @@ const create_post = () => {
     ]);
     const [value, setValue] = useState<string | null>(null);
 
+    function Title(props: { title: string }) {
+        return <h4 className="prose uppercase my-2">{props.title}</h4>;
+    }
+
     return (
         <div className="p-8 flex flex-col">
             <Stepper active={active} onStepClick={setActive}>
                 <Stepper.Step label="Context" className="uppercase">
-                    <h1 className="prose uppercase my-2">
-                        Select your Categorize
-                    </h1>
+                    <Title title="Select your categorize" />
                     <Select
                         value={value}
                         data={data}
@@ -85,9 +87,9 @@ const create_post = () => {
                         }}
                         dropdownComponent="div"
                     />
-                    <h1 className="prose uppercase my2">Title</h1>
+                    <Title title="Detail title" />
                     <PostEditor editor={titleEditor}></PostEditor>
-                    <h1 className="prose uppercase my-2">desc</h1>
+                    <Title title="Detail description" />
                     <PostEditor editor={contentEditor}></PostEditor>
                     <div className="flex place-content-end mt-4">
                         <button
@@ -102,9 +104,7 @@ const create_post = () => {
                 </Stepper.Step>
 
                 <Stepper.Step label="File" className="uppercase">
-                    <h1 className="prose uppercase my-2">
-                        Select your hard work
-                    </h1>
+                    <Title title="Select your hard work" />
                     <FilePond
                         imagePreviewMinHeight={80}
                         credits={false}
@@ -140,9 +140,7 @@ const create_post = () => {
                     </div>
                 </Stepper.Step>
                 <Stepper.Step label="Crop" className=" uppercase">
-                    <h1 className="prose uppercase my-2">
-                        Crop your shit here
-                    </h1>
+                    <Title title="Crop your shit here" />
                     <div className="flex flex-row gap-4">
                         <div className="flex-1 border-dashed border border-base-content rounded-xl p-4">
                             <h1 className="prose-sm base-300 uppercase">
@@ -155,7 +153,7 @@ const create_post = () => {
                                 // style={{ height: "100%", width: "100%" }}
                                 // zoomTo={0.5}
                                 // initialAspectRatio={1}
-                                preview=".img-preview1"
+                                preview=".detail"
                                 src={image}
                                 viewMode={1}
                                 minCropBoxHeight={10}
@@ -199,7 +197,57 @@ const create_post = () => {
                         </div>
                     </div>
                     {image != "" && (
-                        <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-8">
+                        <div className="flex flex-col">
+                            <Title title="Detail preview" />
+                            <div
+                                className="detail overflow-hidden"
+                                style={{
+                                    width: "100%",
+                                    float: "left",
+                                    height: "200px",
+                                }}
+                            />
+
+                            <Title title="Section preview" />
+                            <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-2 w-[100%]">
+                                <div className="uppercase pb-4 pl-4 prose">
+                                    <h2>{"Section Preview"}</h2>
+                                </div>
+                                <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
+                                    {[
+                                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
+                                        13, 14,
+                                    ].map(() => {
+                                        return (
+                                            <div
+                                                className="nail overflow-hidden"
+                                                style={{
+                                                    width: "100%",
+                                                    float: "left",
+                                                    height: "200px",
+                                                }}
+                                            />
+                                        );
+                                    })}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                    {/* {image != "" && <Title title="Detail preview" />}
+                    {image != "" && (
+                        <div
+                            className="detail overflow-hidden"
+                            style={{
+                                width: "100%",
+                                float: "left",
+                                height: "200px",
+                            }}
+                        />
+                    )}
+                    {image != "" && <Title title="Section preview" />}
+
+                    {image != "" && (
+                        <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-2">
                             <div className="uppercase pb-4 pl-4 prose">
                                 <h2>{"Section Preview"}</h2>
                             </div>
@@ -221,7 +269,8 @@ const create_post = () => {
                                 })}
                             </div>
                         </div>
-                    )}
+                    )} */}
+
                     <div className="flex place-content-end mt-2">
                         <button
                             className="btn btn-primary"
