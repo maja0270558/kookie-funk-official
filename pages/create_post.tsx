@@ -57,7 +57,7 @@ const create_post = () => {
                 imagePreviewMarkupShow={true}
                 instantUpload={false}
                 files={files}
-                onupdatefiles={(fileItems) => {
+                onupdatefiles={(fileItems: any) => {
                     console.log("😘");
                     if (fileItems.length > 0) {
                         setImage(URL.createObjectURL(fileItems[0].file) as any);
