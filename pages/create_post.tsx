@@ -21,9 +21,15 @@ import "cropperjs/dist/cropper.css";
 import GalleryImage from "../components/GalleryImage";
 // steper
 import { Stepper, Select } from "@mantine/core";
-import TipTapEditor from "../components/TipTapEditor";
+// editor
+import { Editor } from "@tiptap/react";
+import editor from "../components/TipTapEditor";
+import PostEditor from "../components/RichTextEditor";
 
 const create_post = () => {
+    const titleEditor: Editor | null = editor();
+    const contentEditor: Editor | null = editor();
+
     // filepond
     const [files, setFiles] = useState([]);
     // cropper
@@ -48,28 +54,57 @@ const create_post = () => {
 
     // steper
     const [active, setActive] = useState(0);
+    // selector
+
+    const [data, setData] = useState([
+        { value: "react", label: "React" },
+        { value: "ng", label: "Angular" },
+    ]);
+    const [value, setValue] = useState<string | null>(null);
 
     return (
-        <div className="p-8 flex flex-col gap-10">
+        <div className="p-8 flex flex-col">
             <Stepper active={active} onStepClick={setActive}>
                 <Stepper.Step label="Context" className="uppercase">
-                    <h1 className="prose">Select your Categorize</h1>
+                    <h1 className="prose uppercase my-2">
+                        Select your Categorize
+                    </h1>
                     <Select
-                        placeholder="Pick one"
-                        data={[
-                            { value: "react", label: "React" },
-                            { value: "ng", label: "Angular" },
-                            { value: "svelte", label: "Svelte" },
-                            { value: "vue", label: "Vue" },
-                        ]}
+                        value={value}
+                        data={data}
+                        placeholder="Select items"
+                        nothingFound="Nothing found"
+                        searchable
+                        creatable
+                        getCreateLabel={(query) => `+ Create ${query}`}
+                        onChange={setValue}
+                        onCreate={(query) => {
+                            const item = { value: query, label: query };
+                            setData((current) => [...current, item]);
+                            return item;
+                        }}
+                        dropdownComponent="div"
                     />
-                    <h1 className="prose">Title</h1>
-                    {/* <TipTapEditor /> */}
-                    <h1 className="prose">desc</h1>
+                    <h1 className="prose uppercase my2">Title</h1>
+                    <PostEditor editor={titleEditor}></PostEditor>
+                    <h1 className="prose uppercase my-2">desc</h1>
+                    <PostEditor editor={contentEditor}></PostEditor>
+                    <div className="flex place-content-end mt-4">
+                        <button
+                            className="btn btn-primary"
+                            onClick={() => {
+                                setActive(active + 1);
+                            }}
+                        >
+                            Next
+                        </button>
+                    </div>
                 </Stepper.Step>
 
                 <Stepper.Step label="File" className="uppercase">
-                    <h1 className="prose">Select your hard work</h1>
+                    <h1 className="prose uppercase my-2">
+                        Select your hard work
+                    </h1>
                     <FilePond
                         imagePreviewMinHeight={80}
                         credits={false}
@@ -93,7 +128,7 @@ const create_post = () => {
                         name="files" /* sets the file input name, it's filepond by default */
                         labelIdle='<div class="text-5xl font-bold">Drag & Drop your files or <span class="filepond--label-action">Browse</span></div>'
                     />
-                    <div className="flex place-content-end">
+                    <div className="flex place-content-end mt-4">
                         <button
                             className="btn btn-primary"
                             onClick={() => {
@@ -105,7 +140,9 @@ const create_post = () => {
                     </div>
                 </Stepper.Step>
                 <Stepper.Step label="Crop" className=" uppercase">
-                    <h1 className="prose">Crop your shit here</h1>
+                    <h1 className="prose uppercase my-2">
+                        Crop your shit here
+                    </h1>
                     <div className="flex flex-row gap-4">
                         <div className="flex-1 border-dashed border border-base-content rounded-xl p-4">
                             <h1 className="prose-sm base-300 uppercase">
@@ -162,7 +199,7 @@ const create_post = () => {
                         </div>
                     </div>
                     {image != "" && (
-                        <div className="mx-auto px-4 py-8 bg-slate-100 rounded-lg mt-8">
+                        <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-8">
                             <div className="uppercase pb-4 pl-4 prose">
                                 <h2>{"Section Preview"}</h2>
                             </div>
@@ -185,7 +222,7 @@ const create_post = () => {
                             </div>
                         </div>
                     )}
-                    <div className="flex place-content-end mt-3">
+                    <div className="flex place-content-end mt-2">
                         <button
                             className="btn btn-primary"
                             onClick={() => {
