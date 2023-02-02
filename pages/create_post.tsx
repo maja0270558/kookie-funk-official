@@ -23,7 +23,8 @@ const create_post = () => {
     const [files, setFiles] = useState([]);
 
     return (
-        <div className="p-8">
+        <div className="p-8 flex flex-col">
+            <h2>Select your hard work</h2>
             <FilePond
                 imagePreviewMinHeight={80}
                 credits={false}
@@ -31,7 +32,12 @@ const create_post = () => {
                 imagePreviewMarkupShow={true}
                 instantUpload={false}
                 files={files}
-                onupdatefiles={(fileItems) => {}}
+                onupdatefiles={(fileItems) => {
+                    console.log("😘");
+                    console.log(fileItems);
+
+                    setFiles;
+                }}
                 allowMultiple={false}
                 maxFiles={1}
                 name="files" /* sets the file input name, it's filepond by default */
