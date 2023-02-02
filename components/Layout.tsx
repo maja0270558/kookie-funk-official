@@ -17,7 +17,7 @@ export const Layout = ({ children }: Props) => {
     const cupcake = "cupcake";
 
     return (
-        <div className="relative" data-theme={light}>
+        <div className="relative" data-theme={forest}>
             <Sidebar>{children}</Sidebar>
         </div>
     );

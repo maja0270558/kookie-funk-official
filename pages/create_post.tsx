@@ -23,20 +23,21 @@ const create_post = () => {
     const [files, setFiles] = useState([]);
 
     return (
-        <FilePond
-            imagePreviewMinHeight={80}
-            credits={false}
-            allowProcess={false}
-            imagePreviewMarkupShow={true}
-            instantUpload={false}
-            files={files}
-            onupdatefiles={(fileItems) => {}}
-            allowMultiple={false}
-            maxFiles={1}
-            server="/api"
-            name="files" /* sets the file input name, it's filepond by default */
-            labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
-        />
+        <div className="p-8">
+            <FilePond
+                imagePreviewMinHeight={80}
+                credits={false}
+                allowProcess={false}
+                imagePreviewMarkupShow={true}
+                instantUpload={false}
+                files={files}
+                onupdatefiles={(fileItems) => {}}
+                allowMultiple={false}
+                maxFiles={1}
+                name="files" /* sets the file input name, it's filepond by default */
+                labelIdle='<div class="text-5xl font-bold">Drag & Drop your files or <span class="filepond--label-action">Browse</span></div>'
+            />
+        </div>
     );
     return (
         <div className="hero min-h-screen bg-base-200">
