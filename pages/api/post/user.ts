@@ -45,7 +45,7 @@ export default async function handle(
             }
             break;
         default:
-            res.status(405).end("Invalid request type");
+            res.status(405);
             break;
     }
 }

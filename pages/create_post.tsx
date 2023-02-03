@@ -1,6 +1,7 @@
 import React from "react";
 import Error from "next/error";
 import useSWR from "swr";
+import useSWRMutation from "swr/mutation";
 
 import { useState, useRef } from "react";
 // Import React FilePond
@@ -68,8 +69,7 @@ const create_post = () => {
     const [catData, setCatData] = useState<any[]>([]);
     const [value, setValue] = useState<string | null>(null);
     const [gloableError, setGloableError] = useState<string | null>(null);
-    const [shouldFetchCat, setshouldFetchCat] = React.useState(false);
-    const { data, error, isLoading } = useSWR("/api/get/categorize", (url) =>
+    const categorizeDataRequest = useSWR("/api/get/categorize", (url) =>
         fetch(url)
             .then((res) => res.json())
             .then((jsonData) => {
@@ -77,6 +77,29 @@ const create_post = () => {
                 setCatData(jsonData);
                 return jsonData;
             })
+    );
+
+    const createCategorizeRequest = useSWRMutation(
+        "/api/post/create_cat",
+        (url, { arg }) =>
+            fetch(url, {
+                method: "POST",
+                body: arg,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((jsonData) => {
+                    const item = {
+                        value: jsonData.section,
+                        label: jsonData.section,
+                        id: jsonData.id,
+                    };
+                    setCatData((current) => [...current, item]);
+                    setValue(item.value);
+                    return jsonData;
+                })
     );
 
     // segement
@@ -138,7 +161,7 @@ const create_post = () => {
 
     return (
         <div className="p-8 flex flex-col">
-            {error && (
+            {gloableError && (
                 <Alert
                     className="text-xl mb-10"
                     icon={<IconAlertCircle size={16} />}
@@ -162,19 +185,34 @@ const create_post = () => {
                         getCreateLabel={(query) => `+ Create ${query}`}
                         onChange={setValue}
                         onCreate={(query) => {
-                            const item = { value: query, label: query };
-                            setCatData((current) => [...current, item]);
-                            return item;
+                            createCategorizeRequest.trigger(
+                                JSON.stringify({
+                                    section: query,
+                                })
+                            );
+                            return value;
                         }}
-                        onDropdownOpen={() => {
-                            setshouldFetchCat(true);
-                        }}
+                        onDropdownOpen={() => {}}
                         dropdownComponent="div"
                         inputContainer={(child: React.ReactNode) => {
-                            if (isLoading) {
+                            if (categorizeDataRequest.isLoading) {
                                 return <Loader />;
                             }
-                            if (data) {
+                            if (categorizeDataRequest.error) {
+                                setGloableError(categorizeDataRequest.error);
+                            }
+                            if (createCategorizeRequest.isMutating) {
+                                return (
+                                    <div className="relative">
+                                        <div className="pr-10">{child}</div>
+                                        <Loader className="absolute bottom-0 right-0" />
+                                    </div>
+                                );
+                            }
+                            if (
+                                categorizeDataRequest.data ||
+                                createCategorizeRequest.data
+                            ) {
                                 return child;
                             }
                         }}

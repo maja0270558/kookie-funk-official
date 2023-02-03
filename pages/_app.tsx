@@ -28,7 +28,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         [`${lofi}`, "light"],
         [`${cupcake}`, "light"],
     ]);
-    const currentTheme = dark;
+    const currentTheme = light;
     const mantineTheme: ColorScheme = themeMap.get(
         `${currentTheme}`
     ) as ColorScheme;
