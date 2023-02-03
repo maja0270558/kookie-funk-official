@@ -1,5 +1,6 @@
 import React from "react";
 import Error from "next/error";
+import useSWR from "swr";
 
 import { useState, useRef } from "react";
 // Import React FilePond
@@ -31,6 +32,8 @@ import { Alert } from "@mantine/core";
 import { IconAlertCircle } from "@tabler/icons";
 // segement
 import { SegmentedControl } from "@mantine/core";
+// loader
+import { Loader } from "@mantine/core";
 
 const create_post = () => {
     const titleEditor: Editor | null = editor();
@@ -59,15 +62,22 @@ const create_post = () => {
     };
 
     // steper
-    const [active, setActive] = useState(2);
+    const [active, setActive] = useState(0);
     // selector
 
-    const [data, setData] = useState([
-        { value: "react", label: "React" },
-        { value: "ng", label: "Angular" },
-    ]);
+    const [catData, setCatData] = useState<any[]>([]);
     const [value, setValue] = useState<string | null>(null);
-    const [error, setError] = useState<string | null>(null);
+    const [gloableError, setGloableError] = useState<string | null>(null);
+    const [shouldFetchCat, setshouldFetchCat] = React.useState(false);
+    const { data, error, isLoading } = useSWR("/api/get/categorize", (url) =>
+        fetch(url)
+            .then((res) => res.json())
+            .then((jsonData) => {
+                console.log(jsonData);
+                setCatData(jsonData);
+                return jsonData;
+            })
+    );
 
     // segement
     const [segmentedValue, setSegmentedValue] = useState("free");
@@ -110,19 +120,19 @@ const create_post = () => {
 
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
         if (!value) {
-            setError("Categorize not set");
+            setGloableError("Categorize not set");
             return;
         }
-        setError(null);
+        setGloableError(null);
         setActive(active + 1);
     }
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
         if (!image) {
-            setError("File not select");
+            setGloableError("File not select");
             return;
         }
-        setError(null);
+        setGloableError(null);
         setActive(active + 1);
     }
 
@@ -135,7 +145,7 @@ const create_post = () => {
                     title="🫵😩🍆🍑💦 Something you forgot here"
                     color="red"
                 >
-                    <p> {error} </p>
+                    <p> {gloableError} </p>
                 </Alert>
             )}
 
@@ -144,7 +154,7 @@ const create_post = () => {
                     <Title title="Select your categorize" />
                     <Select
                         value={value}
-                        data={data}
+                        data={catData}
                         placeholder="Select categorize"
                         nothingFound="Nothing found"
                         searchable
@@ -153,10 +163,21 @@ const create_post = () => {
                         onChange={setValue}
                         onCreate={(query) => {
                             const item = { value: query, label: query };
-                            setData((current) => [...current, item]);
+                            setCatData((current) => [...current, item]);
                             return item;
                         }}
+                        onDropdownOpen={() => {
+                            setshouldFetchCat(true);
+                        }}
                         dropdownComponent="div"
+                        inputContainer={(child: React.ReactNode) => {
+                            if (isLoading) {
+                                return <Loader />;
+                            }
+                            if (data) {
+                                return child;
+                            }
+                        }}
                     />
                     <Title title="Detail title" />
                     <PostEditor editor={titleEditor}></PostEditor>
@@ -216,22 +237,25 @@ const create_post = () => {
                                 }}
                                 guides={true}
                             />
-                            <SegmentedControl
-                                className="absolute inset-x-12 bottom-0 mt-2"
-                                size="xs"
-                                value={segmentedValue}
-                                onChange={(v) => {
-                                    setSegmentedValue(v);
-                                    cropper.setAspectRatio(
-                                        converSegmentedToRatio(v)
-                                    );
-                                }}
-                                data={[
-                                    { label: "Free", value: "free" },
-                                    { label: "1:1", value: "1" },
-                                    { label: "16:9", value: "169" },
-                                ]}
-                            />
+                            {image && (
+                                <SegmentedControl
+                                    className="absolute inset-x-12 bottom-0 mt-2"
+                                    size="xs"
+                                    value={segmentedValue}
+                                    onChange={(v) => {
+                                        setSegmentedValue(v);
+                                        cropper.setAspectRatio(
+                                            converSegmentedToRatio(v)
+                                        );
+                                    }}
+                                    data={[
+                                        { label: "Free", value: "free" },
+                                        { label: "1:1", value: "1" },
+                                        { label: "16:9", value: "169" },
+                                    ]}
+                                />
+                            )}
+
                             <Cropper />
                         </div>
 
@@ -288,8 +312,6 @@ const create_post = () => {
                     label="Confirm"
                     className="uppercase"
                 ></Stepper.Step>
-                <Stepper.Step label="Text" className="uppercase"></Stepper.Step>
-                <Stepper.Step label="Desc" className="uppercase"></Stepper.Step>
             </Stepper>
         </div>
     );
