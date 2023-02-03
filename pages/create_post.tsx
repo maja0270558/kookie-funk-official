@@ -25,6 +25,12 @@ import { Stepper, Select } from "@mantine/core";
 import { Editor } from "@tiptap/react";
 import editor from "../components/TipTapEditor";
 import PostEditor from "../components/RichTextEditor";
+import { constant } from "lodash";
+// alert
+import { Alert } from "@mantine/core";
+import { IconAlertCircle } from "@tabler/icons";
+// segement
+import { SegmentedControl } from "@mantine/core";
 
 const create_post = () => {
     const titleEditor: Editor | null = editor();
@@ -33,7 +39,7 @@ const create_post = () => {
     // filepond
     const [files, setFiles] = useState([]);
     // cropper
-    const [image, setImage] = useState("");
+    const [image, setImage] = useState<string | null>(null);
     const [cropData, setCropData] = useState("#");
     const [thumbnailCropData, setThumbnailCropData] = useState("#");
 
@@ -53,7 +59,7 @@ const create_post = () => {
     };
 
     // steper
-    const [active, setActive] = useState(0);
+    const [active, setActive] = useState(2);
     // selector
 
     const [data, setData] = useState([
@@ -61,20 +67,85 @@ const create_post = () => {
         { value: "ng", label: "Angular" },
     ]);
     const [value, setValue] = useState<string | null>(null);
+    const [error, setError] = useState<string | null>(null);
+
+    // segement
+    const [segmentedValue, setSegmentedValue] = useState("free");
+    const [ratioValue, setRatioValue] = useState(16 / 9);
+
+    function converSegmentedToRatio(value: string) {
+        if (value === "1") {
+            return 1;
+        } else if (value === "169") {
+            return 16 / 9;
+        }
+
+        return NaN;
+    }
 
     function Title(props: { title: string }) {
         return <h4 className="prose uppercase my-2">{props.title}</h4>;
     }
 
+    function InnerTitle(props: { title: string }) {
+        return (
+            <h1 className="prose-sm base-300 uppercase h-9">{props.title}</h1>
+        );
+    }
+
+    function NextButton(props: {
+        click: (e: React.MouseEvent<HTMLElement>) => void;
+    }) {
+        return (
+            <div className="flex place-content-end mt-4">
+                <button
+                    className="uppercase btn btn-primary"
+                    onClick={props.click}
+                >
+                    {"Next"}
+                </button>
+            </div>
+        );
+    }
+
+    function handleContextStep(event: React.MouseEvent<HTMLElement>) {
+        if (!value) {
+            setError("Categorize not set");
+            return;
+        }
+        setError(null);
+        setActive(active + 1);
+    }
+
+    function handleFileStep(event: React.MouseEvent<HTMLElement>) {
+        if (!image) {
+            setError("File not select");
+            return;
+        }
+        setError(null);
+        setActive(active + 1);
+    }
+
     return (
         <div className="p-8 flex flex-col">
+            {error && (
+                <Alert
+                    className="text-xl mb-10"
+                    icon={<IconAlertCircle size={16} />}
+                    title="🫵😩🍆🍑💦 Something you forgot here"
+                    color="red"
+                >
+                    <p> {error} </p>
+                </Alert>
+            )}
+
             <Stepper active={active} onStepClick={setActive}>
                 <Stepper.Step label="Context" className="uppercase">
                     <Title title="Select your categorize" />
                     <Select
                         value={value}
                         data={data}
-                        placeholder="Select items"
+                        placeholder="Select categorize"
                         nothingFound="Nothing found"
                         searchable
                         creatable
@@ -91,16 +162,7 @@ const create_post = () => {
                     <PostEditor editor={titleEditor}></PostEditor>
                     <Title title="Detail description" />
                     <PostEditor editor={contentEditor}></PostEditor>
-                    <div className="flex place-content-end mt-4">
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                                setActive(active + 1);
-                            }}
-                        >
-                            Next
-                        </button>
-                    </div>
+                    <NextButton click={handleContextStep} />
                 </Stepper.Step>
 
                 <Stepper.Step label="File" className="uppercase">
@@ -113,82 +175,80 @@ const create_post = () => {
                         instantUpload={false}
                         files={files}
                         onupdatefiles={(fileItems: any) => {
-                            console.log("😘");
-                            if (fileItems.length > 0) {
-                                setImage(
-                                    URL.createObjectURL(
-                                        fileItems[0].file
-                                    ) as any
-                                );
-                                setFiles(fileItems);
+                            setFiles(fileItems);
+                            if (fileItems.length <= 0) {
+                                setImage(null);
+                                return;
                             }
+                            setImage(
+                                URL.createObjectURL(fileItems[0].file) as any
+                            );
                         }}
                         allowMultiple={false}
                         maxFiles={1}
                         name="files" /* sets the file input name, it's filepond by default */
                         labelIdle='<div class="text-5xl font-bold">Drag & Drop your files or <span class="filepond--label-action">Browse</span></div>'
                     />
-                    <div className="flex place-content-end mt-4">
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                                setActive(active + 1);
-                            }}
-                        >
-                            Next
-                        </button>
-                    </div>
+                    <NextButton click={handleFileStep} />
                 </Stepper.Step>
                 <Stepper.Step label="Crop" className=" uppercase">
                     <Title title="Crop your shit here" />
-                    <div className="flex flex-row gap-4">
-                        <div className="flex-1 border-dashed border border-base-content rounded-xl p-4">
-                            <h1 className="prose-sm base-300 uppercase">
-                                Detail Image
-                            </h1>
+                    <div className="flex flex-row gap-4 ">
+                        <div className="relative flex-1 border-dashed border border-base-content rounded-xl p-4">
+                            <InnerTitle title="Detail Image" />
 
                             <Cropper
+                                className=" relative"
                                 dragMode="move"
+                                aspectRatio={NaN}
                                 scalable={false}
-                                // style={{ height: "100%", width: "100%" }}
-                                // zoomTo={0.5}
-                                // initialAspectRatio={1}
                                 preview=".detail"
-                                src={image}
-                                viewMode={1}
+                                src={image ?? ""}
+                                viewMode={2}
                                 minCropBoxHeight={10}
                                 minCropBoxWidth={10}
                                 background={false}
                                 responsive={true}
                                 autoCropArea={1}
-                                checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+                                checkOrientation={false}
                                 onInitialized={(instance) => {
                                     setCropper(instance);
                                 }}
                                 guides={true}
                             />
+                            <SegmentedControl
+                                className="absolute inset-x-12 bottom-0 mt-2"
+                                size="xs"
+                                value={segmentedValue}
+                                onChange={(v) => {
+                                    setSegmentedValue(v);
+                                    cropper.setAspectRatio(
+                                        converSegmentedToRatio(v)
+                                    );
+                                }}
+                                data={[
+                                    { label: "Free", value: "free" },
+                                    { label: "1:1", value: "1" },
+                                    { label: "16:9", value: "169" },
+                                ]}
+                            />
+                            <Cropper />
                         </div>
 
                         <div className="flex flex-col flex-1 border-dashed border border-base-content rounded-xl p-4">
-                            <h1 className="prose-sm base-300 uppercase">
-                                Thumbnail
-                            </h1>
-
+                            <InnerTitle title="Thumbnail" />
                             <Cropper
-                                // style={{ height: "100%", width: "100%" }}
-                                // zoomTo={0.5}
-                                // initialAspectRatio={1}
                                 dragMode="move"
                                 aspectRatio={1}
                                 preview=".nail"
-                                src={image}
-                                viewMode={1}
+                                src={image ?? ""}
+                                viewMode={0}
                                 minCropBoxHeight={10}
                                 minCropBoxWidth={10}
                                 background={false}
                                 responsive={true}
                                 autoCropArea={1}
-                                checkOrientation={false} // https://github.com/fengyuanchen/cropperjs/issues/671
+                                checkOrientation={false}
                                 onInitialized={(instance) => {
                                     setThumbnailCropper(instance);
                                 }}
@@ -196,91 +256,33 @@ const create_post = () => {
                             />
                         </div>
                     </div>
-                    {image != "" && (
-                        <div className="flex flex-col">
-                            <Title title="Detail preview" />
-                            <div
-                                className="detail overflow-hidden"
-                                style={{
-                                    width: "100%",
-                                    float: "left",
-                                    height: "200px",
-                                }}
-                            />
-
-                            <Title title="Section preview" />
-                            <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-2 w-[100%]">
-                                <div className="uppercase pb-4 pl-4 prose">
-                                    <h2>{"Section Preview"}</h2>
+                    {image && (
+                        <div className="flex flex-row flex-1 gap-4">
+                            <div className="flex flex-col flex-1">
+                                <Title title="Detail preview" />
+                                <div className="flex place-content-center place-items-center bg-base-200 rounded-lg p-4">
+                                    <div className="detail overflow-hidden w-full float-center h-[640px] place-content-center" />
                                 </div>
-                                <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
-                                    {[
-                                        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12,
-                                        13, 14,
-                                    ].map(() => {
-                                        return (
-                                            <div
-                                                className="nail overflow-hidden"
-                                                style={{
-                                                    width: "100%",
-                                                    float: "left",
-                                                    height: "200px",
-                                                }}
-                                            />
-                                        );
-                                    })}
+                            </div>
+
+                            <div className="flex flex-col flex-1">
+                                <Title title="Section preview" />
+                                <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg w-[100%]">
+                                    <div className="uppercase pb-4 pl-4 prose">
+                                        <h2>{value}</h2>
+                                    </div>
+                                    <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
+                                        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(() => {
+                                            return (
+                                                <div className="nail overflow-hidden bg-slate-400 w-full float-left h-52" />
+                                            );
+                                        })}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     )}
-                    {/* {image != "" && <Title title="Detail preview" />}
-                    {image != "" && (
-                        <div
-                            className="detail overflow-hidden"
-                            style={{
-                                width: "100%",
-                                float: "left",
-                                height: "200px",
-                            }}
-                        />
-                    )}
-                    {image != "" && <Title title="Section preview" />}
-
-                    {image != "" && (
-                        <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg mt-2">
-                            <div className="uppercase pb-4 pl-4 prose">
-                                <h2>{"Section Preview"}</h2>
-                            </div>
-                            <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
-                                {[
-                                    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13,
-                                    14,
-                                ].map(() => {
-                                    return (
-                                        <div
-                                            className="nail overflow-hidden"
-                                            style={{
-                                                width: "100%",
-                                                float: "left",
-                                                height: "200px",
-                                            }}
-                                        />
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    )} */}
-
-                    <div className="flex place-content-end mt-2">
-                        <button
-                            className="btn btn-primary"
-                            onClick={() => {
-                                setActive(active + 1);
-                            }}
-                        >
-                            Next
-                        </button>
-                    </div>
+                    <NextButton click={(e) => {}} />
                 </Stepper.Step>
                 <Stepper.Step
                     label="Confirm"
