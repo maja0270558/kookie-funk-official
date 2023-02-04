@@ -65,11 +65,9 @@ const DetailPreview = (props: {
                 width="0"
                 height="0"
                 sizes="100vw"
-                className="object-contain w-auto h-auto aspect-auto  lg:min-h-[85vh] max-h-[85vh] block ml-auto mr-auto"
+                className="object-contain w-auto h-auto aspect-auto min-h-[80vh] max-h-[85vh] block m-auto align-middle drop-shadow-md"
             />
         </div>
-
-
     );
 
     const compomentTitle = (
@@ -96,7 +94,7 @@ const DetailPreview = (props: {
         <div className="flex flex-col p-4">
             <div className="flex flex-row place-content-center">
                 <div className="flex flex-col lg:flex-row flex-1 gap-4">
-                    <div className="">
+                    <div className=" block m-auto align-middle">
                         {compomentImage}
                     </div>
 

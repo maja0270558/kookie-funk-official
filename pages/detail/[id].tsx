@@ -73,15 +73,17 @@ const works = () => {
         );
 
         const compomentImage = data.post?.image && (
-            <Image
-                alt=""
-                // src={"/profile.jpg"}
-                src={data.post.image}
-                width="0"
-                height="0"
-                sizes="100vw"
-                className="object-contain lg:object-contain w-auto h-auto aspect-auto"
-            />
+            <div className=" ">
+                <Image
+                    alt=""
+                    // src={"/profile.jpg"}
+                    src={data.post.image}
+                    width="0"
+                    height="0"
+                    sizes="100vw"
+                    className="object-contain w-auto h-auto aspect-auto min-h-[80vh] max-h-[85vh] block m-auto align-middle drop-shadow-md"
+                />
+            </div>
         );
 
         const compomentTitle = data.post?.title && (
@@ -106,21 +108,22 @@ const works = () => {
 
         return (
             <div className="flex flex-col p-4">
-                <div className="flex flex-row  place-content-center min-h-[95vh] max-h-[95vh]">
-                    <div className="flex flex-col lg:flex-row flex-1 ">
-                        <div className="relative flex flex-auto justify-center min-w-[368] lg:max-w-[70%] pr-8">
+                <div className="flex flex-row place-content-center">
+                    <div className="flex flex-col lg:flex-row flex-1 gap-4">
+                        <div className=" block m-auto align-middle">
                             {compomentImage}
                         </div>
 
-                        <div className="flex lg:flex-1">
-                            <div className="flex lg:items-end editor">
+                        <div className="flex lg:flex-1 lg:min-w-[30%]">
+                            <div className="flex lg:items-end ">
                                 {compomentTitle}
                             </div>
                         </div>
+
                     </div>
                 </div>
 
-                <div className="flex flex-1 lg:items-end editor p-4">
+                <div className="flex flex-1 lg:items-end p-4">
                     {compomentDesc}
                 </div>
                 {otherPostsSection}
