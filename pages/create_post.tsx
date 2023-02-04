@@ -119,6 +119,7 @@ const create_post = () => {
     }
 
     function NextButton(props: {
+        title: string;
         click: (e: React.MouseEvent<HTMLElement>) => void;
     }) {
         return (
@@ -127,7 +128,7 @@ const create_post = () => {
                     className="uppercase btn btn-primary"
                     onClick={props.click}
                 >
-                    {"Next"}
+                    {props.title}
                 </button>
             </div>
         );
@@ -245,7 +246,7 @@ const create_post = () => {
                         <PostEditor editor={titleEditor}></PostEditor>
                         <Title title="Detail description" />
                         <PostEditor editor={contentEditor}></PostEditor>
-                        <NextButton click={handleContextStep} />
+                        <NextButton title="NEXT" click={handleContextStep} />
                     </Stepper.Step>
 
                     <Stepper.Step label="File" className="uppercase">
@@ -274,7 +275,7 @@ const create_post = () => {
                             name="files" /* sets the file input name, it's filepond by default */
                             labelIdle='<div class="text-5xl font-bold">Drag & Drop your files or <span class="filepond--label-action">Browse</span></div>'
                         />
-                        <NextButton click={handleFileStep} />
+                        <NextButton title="NEXT" click={handleFileStep} />
                     </Stepper.Step>
                     <Stepper.Step label="Crop" className=" uppercase">
                         <Title title="Crop your shit here" />
@@ -375,18 +376,17 @@ const create_post = () => {
                                 </div>
                             </div>
                         )}
-                        <NextButton click={handleCropStep} />
+                        <NextButton title="NEXT" click={handleCropStep} />
                     </Stepper.Step>
                     <Stepper.Step label="Confirm" className="uppercase">
                         <Title title="final result" />
-
                         <DetailPreview
                             src={cropData}
                             nailSrc={thumbnailCropData}
                             title={titleEditor?.getHTML() ?? ""}
                             desc={contentEditor?.getHTML() ?? ""}
                         />
-                        <NextButton click={() => { }} />
+                        <NextButton title="POST" click={() => { }} />
                     </Stepper.Step>
                 </Stepper>
             </div>
