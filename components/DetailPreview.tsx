@@ -57,15 +57,19 @@ const DetailPreview = (props: {
     );
 
     const compomentImage = (
-        <Image
-            alt=""
-            // src={"/profile.jpg"}
-            src={props.src}
-            width="0"
-            height="0"
-            sizes="100vw"
-            className="object-contain lg:object-contain w-auto h-auto aspect-auto"
-        />
+        <div className=" ">
+            <Image
+                alt=""
+                // src={"/profile.jpg"}
+                src={props.src}
+                width="0"
+                height="0"
+                sizes="100vw"
+                className="object-contain w-auto h-auto aspect-auto  lg:min-h-[85vh] max-h-[85vh] block ml-auto mr-auto"
+            />
+        </div>
+
+
     );
 
     const compomentTitle = (
@@ -90,17 +94,18 @@ const DetailPreview = (props: {
 
     return (
         <div className="flex flex-col p-4">
-            <div className="flex flex-row  place-content-center min-h-[95vh] max-h-[95vh]">
-                <div className="flex flex-col lg:flex-row flex-1 ">
-                    <div className="relative flex flex-auto justify-center min-w-[368] lg:max-w-[70%] pr-8">
+            <div className="flex flex-row place-content-center">
+                <div className="flex flex-col lg:flex-row flex-1 gap-4">
+                    <div className="">
                         {compomentImage}
                     </div>
 
-                    <div className="flex lg:flex-1">
+                    <div className="flex lg:flex-1 lg:min-w-[30%]">
                         <div className="flex lg:items-end ">
                             {compomentTitle}
                         </div>
                     </div>
+
                 </div>
             </div>
 

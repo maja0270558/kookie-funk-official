@@ -94,12 +94,16 @@ const create_post = () => {
     // segement
     const [segmentedValue, setSegmentedValue] = useState("free");
     function converSegmentedToRatio(value: string) {
-        if (value === "1") {
+        if (value === "1:1") {
             return 1;
-        } else if (value === "169") {
+        } else if (value === "16:9") {
             return 16 / 9;
-        } else if (value === "916") {
+        } else if (value === "A4") {
             return 210 / 297;
+        } else if (value === "Card") {
+            return 4 / 6;
+        } else if (value === "Post") {
+            return 18 / 24;
         }
 
         return NaN;
@@ -306,10 +310,12 @@ const create_post = () => {
                                             );
                                         }}
                                         data={[
-                                            { label: "Free", value: "free" },
-                                            { label: "1:1", value: "1" },
-                                            { label: "16:9", value: "169" },
-                                            { label: "BEST", value: "916" },
+                                            { label: "Free", value: "Free" },
+                                            { label: "1:1", value: "1:1" },
+                                            { label: "16:9", value: "16:9" },
+                                            { label: "A4", value: "A4" },
+                                            { label: "Card", value: "Card" },
+                                            { label: "Post", value: "Post" },
 
                                         ]}
                                     />
@@ -370,6 +376,8 @@ const create_post = () => {
                         <NextButton click={handleCropStep} />
                     </Stepper.Step>
                     <Stepper.Step label="Confirm" className="uppercase">
+                        <Title title="final result" />
+
                         <DetailPreview
                             src={cropData}
                             nailSrc={thumbnailCropData}
