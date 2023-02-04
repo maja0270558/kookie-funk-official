@@ -39,7 +39,8 @@ const works = () => {
         );
     const compoment = data.data.map((workData: WorksData) => {
         return (
-            <div className="mx-auto px-4 py-8">
+            <div className="mx-auto px-4 py-8" key={workData.section_name}
+            >
                 <div className="uppercase pb-4 pl-4 prose">
                     <h2>{workData.section_name}</h2>
                 </div>
@@ -47,6 +48,7 @@ const works = () => {
                     {workData.imgs.map((value) => {
                         return (
                             <GalleryImage
+                                key={value.id}
                                 path={value.img}
                                 id={value.id.toString()}
                             />

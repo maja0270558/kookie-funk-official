@@ -31,9 +31,10 @@ const DetailPreview = (props: {
                 style={{ maxHeight: cellSize, minHeight: cellSize }}
             >
 
-                {other.map(() => {
+                {other.map((value) => {
                     return (
                         <div
+                            key={value}
                             className="keen-slider__slide"
                             style={{
                                 maxWidth: cellSize,

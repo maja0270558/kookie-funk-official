@@ -90,13 +90,15 @@ const Sidebar = ({ children }: Props) => {
                     <div className="pb-16">
                         <Link href="./">
                             <Image
-                                className=""
+                                alt=""
                                 src={profileImage}
-                                alt={"kookie"}
-                                width={100}
-                                height={100}
+                                width="0"
+                                height="0"
+                                sizes="100vw"
+                                className="object-contain w-[200px] h-auto aspect-auto"
                                 priority={true}
-                            ></Image>
+                            />
+
                         </Link>
                     </div>
 

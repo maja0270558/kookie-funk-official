@@ -62,7 +62,6 @@ const create_post = () => {
         fetch(url)
             .then((res) => res.json())
             .then((jsonData) => {
-                console.log(jsonData);
                 setCatData(jsonData);
                 return jsonData;
             })
@@ -81,8 +80,8 @@ const create_post = () => {
                 .then((res) => res.json())
                 .then((jsonData) => {
                     const item = {
-                        value: jsonData.section,
-                        label: jsonData.section,
+                        value: jsonData.section.toUpperCase(),
+                        label: jsonData.section.toUpperCase(),
                         id: jsonData.id,
                     };
                     setCatData((current) => [...current, item]);
@@ -92,7 +91,7 @@ const create_post = () => {
     );
 
     // segement
-    const [segmentedValue, setSegmentedValue] = useState("free");
+    const [segmentedValue, setSegmentedValue] = useState("Free");
     function converSegmentedToRatio(value: string) {
         if (value === "1:1") {
             return 1;
@@ -135,12 +134,22 @@ const create_post = () => {
     }
 
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
+        console.log(active)
         if (!value) {
             setGloableError("Categorize not set");
             return;
         }
+
+        if (titleEditor?.isEmpty) {
+            setGloableError("Require Title");
+            return;
+        }
+
         setGloableError(null);
-        setActive(active + 1);
+        const step = active + 1
+        setActive(step);
+        console.log(step)
+
     }
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
@@ -177,7 +186,7 @@ const create_post = () => {
                     <Alert
                         className="text-xl mb-10"
                         icon={<IconAlertCircle size={16} />}
-                        title="🫵😩🍆🍑💦 Something you forgot here"
+                        title="😩🍆🍑💦 Something you forgot here"
                         color="red"
                     >
                         <p> {gloableError} </p>
@@ -188,9 +197,10 @@ const create_post = () => {
                     <Stepper.Step label="Context" className="uppercase">
                         <Title title="Select your categorize" />
                         <Select
+                            className=""
                             value={value}
                             data={catData}
-                            placeholder="Select categorize"
+                            placeholder="SELECT CATEGORIZE"
                             nothingFound="Nothing found"
                             searchable
                             creatable
@@ -309,7 +319,6 @@ const create_post = () => {
                                             { label: "A4", value: "A4" },
                                             { label: "Card", value: "Card" },
                                             { label: "Post", value: "Post" },
-
                                         ]}
                                     />
                                 )}
@@ -355,9 +364,9 @@ const create_post = () => {
                                         </div>
                                         <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(
-                                                () => {
+                                                (value) => {
                                                     return (
-                                                        <div className="nail overflow-hidden bg-slate-400 w-full float-left h-52" />
+                                                        <div key={value} className="nail overflow-hidden bg-slate-400 w-full float-left h-52" />
                                                     );
                                                 }
                                             )}
