@@ -38,8 +38,8 @@ import { Loader } from "@mantine/core";
 import DetailPreview from "../components/DetailPreview";
 
 const create_post = () => {
-    const titleEditor: Editor | null = editor();
-    const contentEditor: Editor | null = editor();
+    const titleEditor: Editor | null = editor("Title require");
+    const contentEditor: Editor | null = editor("Optional");
 
     // filepond
     const [files, setFiles] = useState([]);

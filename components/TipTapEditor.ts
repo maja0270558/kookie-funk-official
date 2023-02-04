@@ -6,10 +6,12 @@ import TextStyle from "@tiptap/extension-text-style";
 import { Color } from "@tiptap/extension-color";
 import { Editor, useEditor } from "@tiptap/react";
 import { Link } from "@mantine/tiptap";
+import Placeholder from '@tiptap/extension-placeholder';
+import Image from '@tiptap/extension-image'
 
 const content = "";
 
-function editor() {
+function editor(placeholder: string) {
     return useEditor({
         extensions: [
             StarterKit,
@@ -19,6 +21,8 @@ function editor() {
             Color,
             TextStyle,
             TextAlign.configure({ types: ["heading", "paragraph"] }),
+            Placeholder.configure({ placeholder: placeholder }),
+            Image
         ],
         content,
     });

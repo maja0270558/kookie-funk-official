@@ -1,7 +1,26 @@
-import { RichTextEditor } from '@mantine/tiptap';
+import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
+import { IconPhoto } from '@tabler/icons';
 import { Editor } from '@tiptap/react';
 
 const PostEditor = (props: { editor: Editor | null }) => {
+    function ImageControl() {
+        const { editor } = useRichTextEditorContext();
+        return (
+            <RichTextEditor.Control
+                onClick={() => {
+                    const url = window.prompt('URL')
+                    if (url) {
+                        editor.chain().focus().setImage({ src: url }).run()
+                    }
+                }}
+                aria-label="Insert Image"
+                title="Insert Image"
+            >
+                <IconPhoto stroke={1.5} size={16} />
+            </RichTextEditor.Control>
+        );
+    }
+
     return (
         <RichTextEditor editor={props.editor}>
             <RichTextEditor.Toolbar sticky stickyOffset={60}>
@@ -52,6 +71,7 @@ const PostEditor = (props: { editor: Editor | null }) => {
                 <RichTextEditor.ControlsGroup>
                     <RichTextEditor.Link />
                     <RichTextEditor.Unlink />
+                    <ImageControl />
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
