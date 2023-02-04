@@ -236,13 +236,6 @@ const create_post = () => {
                         <Title title="Detail description" />
                         <PostEditor editor={contentEditor}></PostEditor>
                         <NextButton click={handleContextStep} />
-                        <TypographyStylesProvider className="text-base-content">
-                            <div
-                                dangerouslySetInnerHTML={{
-                                    __html: titleEditor?.getHTML() ?? "",
-                                }}
-                            />
-                        </TypographyStylesProvider>
                     </Stepper.Step>
 
                     <Stepper.Step label="File" className="uppercase">

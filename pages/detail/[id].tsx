@@ -123,7 +123,7 @@ const works = () => {
                     </div>
                 </div>
 
-                <div className="flex flex-1 lg:items-end p-4">
+                <div className="flex flex-1 lg:items-end">
                     {compomentDesc}
                 </div>
                 {otherPostsSection}
