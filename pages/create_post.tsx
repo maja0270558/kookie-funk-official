@@ -22,7 +22,7 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import GalleryImage from "../components/GalleryImage";
 // steper
-import { Stepper, Select, Modal } from "@mantine/core";
+import { Stepper, Select, Modal, TypographyStylesProvider } from "@mantine/core";
 // editor
 import { Editor } from "@tiptap/react";
 import editor from "../components/TipTapEditor";
@@ -50,12 +50,6 @@ const create_post = () => {
 
     const [cropper, setCropper] = useState<any>();
     const [thumbnailCropper, setThumbnailCropper] = useState<any>();
-
-    const getThumbnailCropData = () => {
-        if (typeof thumbnailCropper !== "undefined") {
-            setCropData(thumbnailCropper.getCroppedCanvas().toDataURL());
-        }
-    };
 
     // steper
     const [active, setActive] = useState(0);
@@ -99,16 +93,13 @@ const create_post = () => {
 
     // segement
     const [segmentedValue, setSegmentedValue] = useState("free");
-    const [ratioValue, setRatioValue] = useState(16 / 9);
-
-    // model
-    const [opened, setOpened] = useState(false);
-
     function converSegmentedToRatio(value: string) {
         if (value === "1") {
             return 1;
         } else if (value === "169") {
             return 16 / 9;
+        } else if (value === "916") {
+            return 210 / 297;
         }
 
         return NaN;
@@ -163,30 +154,20 @@ const create_post = () => {
         }
         if (typeof thumbnailCropper !== "undefined") {
             setThumbnailCropData(
-                thumbnailCropper.getCroppedCanvas().toDataURL()
+                thumbnailCropper.getCroppedCanvas({
+                    maxWidth: 500,
+                    maxHeight: 500,
+                }).toDataURL()
             );
+
         }
-        setOpened(true);
+        // setOpened(true);
         setGloableError(null);
-        // setActive(active + 1);
+        setActive(active + 1);
     }
 
     return (
         <div>
-            <Modal
-                opened={opened}
-                onClose={() => setOpened(false)}
-                title=""
-                size="auto"
-            >
-                <DetailPreview
-                    src={cropData}
-                    nailSrc={thumbnailCropData}
-                    title={titleEditor?.getHTML() ?? ""}
-                    desc={contentEditor?.getHTML() ?? ""}
-                />
-            </Modal>
-
             <div className="p-8 flex flex-col">
                 {gloableError && (
                     <Alert
@@ -199,7 +180,7 @@ const create_post = () => {
                     </Alert>
                 )}
 
-                <Stepper active={active} onStepClick={setActive}>
+                <Stepper active={active} onStepClick={setActive} breakpoint="sm">
                     <Stepper.Step label="Context" className="uppercase">
                         <Title title="Select your categorize" />
                         <Select
@@ -219,7 +200,7 @@ const create_post = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => {}}
+                            onDropdownOpen={() => { }}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isLoading) {
@@ -251,6 +232,13 @@ const create_post = () => {
                         <Title title="Detail description" />
                         <PostEditor editor={contentEditor}></PostEditor>
                         <NextButton click={handleContextStep} />
+                        <TypographyStylesProvider className="text-base-content">
+                            <div
+                                dangerouslySetInnerHTML={{
+                                    __html: titleEditor?.getHTML() ?? "",
+                                }}
+                            />
+                        </TypographyStylesProvider>
                     </Stepper.Step>
 
                     <Stepper.Step label="File" className="uppercase">
@@ -283,7 +271,7 @@ const create_post = () => {
                     </Stepper.Step>
                     <Stepper.Step label="Crop" className=" uppercase">
                         <Title title="Crop your shit here" />
-                        <div className="flex flex-row gap-4 ">
+                        <div className="flex flex-col lg:flex-row gap-4 ">
                             <div className="relative flex-1 border-dashed border border-base-content rounded-xl p-4">
                                 <InnerTitle title="Detail Image" />
 
@@ -321,6 +309,8 @@ const create_post = () => {
                                             { label: "Free", value: "free" },
                                             { label: "1:1", value: "1" },
                                             { label: "16:9", value: "169" },
+                                            { label: "BEST", value: "916" },
+
                                         ]}
                                     />
                                 )}
@@ -350,7 +340,7 @@ const create_post = () => {
                             </div>
                         </div>
                         {image && (
-                            <div className="flex flex-row flex-1 gap-4">
+                            <div className="flex flex-col flex-1 gap-4">
                                 <div className="flex flex-col flex-1">
                                     <Title title="Detail preview" />
                                     <div className="flex place-content-center place-items-center bg-base-200 rounded-lg p-4">
@@ -380,7 +370,13 @@ const create_post = () => {
                         <NextButton click={handleCropStep} />
                     </Stepper.Step>
                     <Stepper.Step label="Confirm" className="uppercase">
-                        <NextButton click={() => {}} />
+                        <DetailPreview
+                            src={cropData}
+                            nailSrc={thumbnailCropData}
+                            title={titleEditor?.getHTML() ?? ""}
+                            desc={contentEditor?.getHTML() ?? ""}
+                        />
+                        <NextButton click={() => { }} />
                     </Stepper.Step>
                 </Stepper>
             </div>

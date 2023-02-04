@@ -65,7 +65,6 @@ const works = () => {
                                     path={value.img}
                                     id={value.id.toString()}
                                 />
-                                ;
                             </div>
                         );
                     })}

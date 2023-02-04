@@ -1,8 +1,11 @@
 import { TypographyStylesProvider } from "@mantine/core";
 import { useKeenSlider } from "keen-slider/react";
 import Image from "next/image";
+import { Image as MantineImage } from '@mantine/core';
+
 import React from "react";
 import GalleryImage from "../components/GalleryImage";
+import "keen-slider/keen-slider.min.css";
 
 const DetailPreview = (props: {
     src: string;
@@ -10,7 +13,7 @@ const DetailPreview = (props: {
     title: string;
     desc: string;
 }) => {
-    const other = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    const other = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
     const cellSize = 150;
     const [ref] = useKeenSlider<HTMLDivElement>({
         loop: false,
@@ -24,9 +27,10 @@ const DetailPreview = (props: {
         <div className="pt-4">
             <div
                 ref={ref}
-                className="keen-slider max-w-screen "
+                className="keen-slider min-w-full "
                 style={{ maxHeight: cellSize, minHeight: cellSize }}
             >
+
                 {other.map(() => {
                     return (
                         <div
@@ -38,7 +42,13 @@ const DetailPreview = (props: {
                                 minHeight: cellSize,
                             }}
                         >
-                            <GalleryImage path={props.nailSrc} id={""} />;
+                            <MantineImage
+                                width={cellSize}
+                                height={cellSize}
+                                src={null}
+                                withPlaceholder
+                            />
+
                         </div>
                     );
                 })}
@@ -87,14 +97,14 @@ const DetailPreview = (props: {
                     </div>
 
                     <div className="flex lg:flex-1">
-                        <div className="flex lg:items-end editor">
+                        <div className="flex lg:items-end ">
                             {compomentTitle}
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className="flex flex-1 lg:items-end editor p-4">
+            <div className="flex flex-1 lg:items-end p-4">
                 {compomentDesc}
             </div>
             {otherPostsSection}
