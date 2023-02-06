@@ -14,8 +14,7 @@ export default async function handle(
             let body: BodyArgument = req.body;
 
             if (!body.section) {
-                res.status(500);
-                break;
+                return res.status(500).json({ error: "Section empty" });
             }
 
             const contain = await prisma.categorize.findFirst({
@@ -25,8 +24,7 @@ export default async function handle(
             });
 
             if (contain) {
-                res.json(contain);
-                break;
+                return res.json(contain);
             }
 
             const result = await prisma.categorize.create({
@@ -35,10 +33,8 @@ export default async function handle(
                 },
             });
 
-            res.json(result);
-            break;
+            return res.json(result);
         default:
-            res.status(405);
-            break;
+            return res.status(500).json({ error: "HTTP method incorrect" });
     }
 }

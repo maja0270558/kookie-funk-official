@@ -43,9 +43,8 @@ export default async function handle(
             } else {
                 res.status(200).json({ error: "Invalid request type" });
             }
-            break;
+            return;
         default:
-            res.status(405);
-            break;
+            res.status(500).json({ error: "HTTP method incorrect" });
     }
 }

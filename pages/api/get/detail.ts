@@ -48,8 +48,8 @@ export default async function handle(
             } else {
                 res.status(500).json({ error: "There nothing here." });
             }
+            return;
         default:
             res.status(500);
-            break;
     }
 }

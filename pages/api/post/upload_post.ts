@@ -1,17 +1,17 @@
 import { prisma } from "../db";
 import type { NextApiRequest, NextApiResponse } from "next";
-import cloudinary from "cloudinary"
-
+import cloudinary from "cloudinary";
+import Validator from "jsonschema";
 interface BodyArgument {
     image_data_url: string;
     nail_image_data_url: string;
     title: string;
     description: string;
-    cat_id: number
+    cat_id: string;
 }
 
 function getRandomId() {
-    return Date.now() + ((Math.random() * 100000).toFixed());
+    return Date.now() + (Math.random() * 100000).toFixed();
 }
 
 export default async function handle(
@@ -21,29 +21,50 @@ export default async function handle(
     switch (req.method) {
         case "POST":
             let body: BodyArgument = req.body;
+            // Address, to be embedded on Person
+            var postSchema = {
+                type: "object",
+                properties: {
+                    image_data_url: { type: "string" },
+                    nail_image_data_url: { type: "string" },
+                    title: { type: "string" },
+                    description: { type: "string" },
+                    cat_id: { type: "string" },
+                },
+                required: [
+                    "image_data_url",
+                    "nail_image_data_url",
+                    "title",
+                    "cat_id",
+                ],
+            };
+            const validate = Validator.validate(body, postSchema);
 
-            const fieldexist = body.image_data_url && body.nail_image_data_url && body.title && body.cat_id
-            if (!fieldexist) {
-                res.status(500);
-                break;
+            if (!validate.valid) {
+                const error = validate.errors[0].message;
+                return res.json({
+                    error: error,
+                });
             }
 
             let id = getRandomId();
 
             // Upload
-            const imageCldRes = cloudinary.v2.uploader.upload(body.image_data_url, { public_id: `works/${id}` })
-            const nailImageCldRes = cloudinary.v2.uploader.upload(body.nail_image_data_url, { public_id: `thumbnails/${id}` })
+            const imageCldRes = cloudinary.v2.uploader.upload(
+                body.image_data_url,
+                { public_id: `works/${id}` }
+            );
+            const nailImageCldRes = cloudinary.v2.uploader.upload(
+                body.nail_image_data_url,
+                { public_id: `thumbnails/${id}` }
+            );
 
             Promise.all([imageCldRes, nailImageCldRes])
                 .then(function (valArray) {
-                    const imageUploadResult = valArray[0]
-                    const nailImageUploadResult = valArray[1]
-                    console.log(imageUploadResult)
-                    console.log(nailImageUploadResult)
-                    return ({
-                        imageURL: imageUploadResult.url,
-                        nailImageURL: nailImageUploadResult.url
-                    })
+                    return {
+                        imageURL: valArray[0].secure_url,
+                        nailImageURL: valArray[1].secure_url,
+                    };
                 })
                 .then(async (value) => {
                     const result = await prisma.works.create({
@@ -53,29 +74,20 @@ export default async function handle(
                             nail_image_path: value.nailImageURL,
                             desc: body.description,
                             display: 1,
-                            cat_id: body.cat_id,
-                            // image_public_id: id
+                            cat_id: parseInt(body.cat_id),
                         },
                     });
 
+                    return res.status(200).json({
+                        return_code: "0000",
+                    });
                 })
                 .catch((err) => {
+                    res.status(500).json({ error: "Cloudnary uppload fail" });
                     console.log(err);
-                });;
-
-            // Generate 
-            const url = cloudinary.v2.url(`works/${id}`, {
-                width: 100,
-                height: 150,
-                Crop: 'fill'
-            });
-            console.log(url)
-            res.json({
-                url: url
-            });
-            return
+                });
+            return;
         default:
-            res.status(405);
-            break;
+            res.status(500).json({ error: "HTTP method incorrect" });
     }
 }
