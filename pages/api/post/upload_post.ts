@@ -75,6 +75,7 @@ export default async function handle(
                             desc: body.description,
                             display: 1,
                             cat_id: parseInt(body.cat_id),
+                            public_image_id: id,
                         },
                     });
 
@@ -83,7 +84,7 @@ export default async function handle(
                     });
                 })
                 .catch((err) => {
-                    res.status(500).json({ error: "Cloudnary uppload fail" });
+                    res.status(500).json({ error: "Uppload fail" });
                     console.log(err);
                 });
             return;
