@@ -22,7 +22,13 @@ import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 import GalleryImage from "../components/GalleryImage";
 // steper
-import { Stepper, Select, Modal, TypographyStylesProvider } from "@mantine/core";
+import {
+    Stepper,
+    Select,
+    Modal,
+    TypographyStylesProvider,
+    LoadingOverlay,
+} from "@mantine/core";
 // editor
 import { Editor } from "@tiptap/react";
 import editor from "../components/TipTapEditor";
@@ -36,6 +42,7 @@ import { SegmentedControl } from "@mantine/core";
 // loader
 import { Loader } from "@mantine/core";
 import DetailPreview from "../components/DetailPreview";
+import Router from "next/router";
 
 const create_post = () => {
     const titleEditor: Editor | null = editor("Title require");
@@ -80,13 +87,28 @@ const create_post = () => {
                 .then((res) => res.json())
                 .then((jsonData) => {
                     const item = {
-                        value: jsonData.section.toUpperCase(),
+                        value: jsonData.id.toString(),
                         label: jsonData.section.toUpperCase(),
-                        id: jsonData.id,
                     };
                     setCatData((current) => [...current, item]);
                     setValue(item.value);
                     return jsonData;
+                })
+    );
+
+    const postRequest = useSWRMutation(
+        "/api/post/upload_post",
+        (url, { arg }) =>
+            fetch(url, {
+                method: "POST",
+                body: arg,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((jsonData) => {
+                    Router.push("/works");
                 })
     );
 
@@ -135,7 +157,7 @@ const create_post = () => {
     }
 
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
-        console.log(active)
+        console.log(active);
         if (!value) {
             setGloableError("Categorize not set");
             return;
@@ -147,10 +169,9 @@ const create_post = () => {
         }
 
         setGloableError(null);
-        const step = active + 1
+        const step = active + 1;
         setActive(step);
-        console.log(step)
-
+        console.log(step);
     }
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
@@ -164,16 +185,19 @@ const create_post = () => {
 
     function handleCropStep(event: React.MouseEvent<HTMLElement>) {
         if (typeof cropper !== "undefined") {
-            setCropData(cropper.getCroppedCanvas().toDataURL());
+            setCropData(
+                cropper.getCroppedCanvas().toDataURL("image/jpeg", 0.9)
+            );
         }
         if (typeof thumbnailCropper !== "undefined") {
             setThumbnailCropData(
-                thumbnailCropper.getCroppedCanvas({
-                    maxWidth: 500,
-                    maxHeight: 500,
-                }).toDataURL()
+                thumbnailCropper
+                    .getCroppedCanvas({
+                        maxWidth: 500,
+                        maxHeight: 500,
+                    })
+                    .toDataURL("image/jpeg", 0.9)
             );
-
         }
         // setOpened(true);
         setGloableError(null);
@@ -182,6 +206,12 @@ const create_post = () => {
 
     return (
         <div>
+            {
+                <LoadingOverlay
+                    visible={postRequest.isMutating}
+                    overlayBlur={2}
+                />
+            }
             <div className="p-8 flex flex-col">
                 {gloableError && (
                     <Alert
@@ -193,8 +223,11 @@ const create_post = () => {
                         <p> {gloableError} </p>
                     </Alert>
                 )}
-
-                <Stepper active={active} onStepClick={setActive} breakpoint="sm">
+                <Stepper
+                    active={active}
+                    onStepClick={setActive}
+                    breakpoint="sm"
+                >
                     <Stepper.Step label="Context" className="uppercase">
                         <Title title="Select your categorize" />
                         <Select
@@ -215,7 +248,7 @@ const create_post = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => { }}
+                            onDropdownOpen={() => {}}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isLoading) {
@@ -361,13 +394,24 @@ const create_post = () => {
                                     <Title title="Section preview" />
                                     <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg w-[100%]">
                                         <div className="uppercase pb-4 pl-4 prose">
-                                            <h2>{value}</h2>
+                                            <h2>
+                                                {
+                                                    catData.filter((item) => {
+                                                        return (
+                                                            item.value === value
+                                                        );
+                                                    })[0].label
+                                                }
+                                            </h2>
                                         </div>
                                         <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
                                             {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(
                                                 (value) => {
                                                     return (
-                                                        <div key={value} className="nail overflow-hidden bg-slate-400 w-full float-left h-52" />
+                                                        <div
+                                                            key={value}
+                                                            className="nail overflow-hidden bg-slate-400 w-full float-left h-52"
+                                                        />
                                                     );
                                                 }
                                             )}
@@ -386,22 +430,22 @@ const create_post = () => {
                             title={titleEditor?.getHTML() ?? ""}
                             desc={contentEditor?.getHTML() ?? ""}
                         />
-                        <NextButton title="POST" click={() => { }} />
+                        <NextButton
+                            title="POST"
+                            click={() => {
+                                const param = JSON.stringify({
+                                    image_data_url: cropData,
+                                    nail_image_data_url: thumbnailCropData,
+                                    title: titleEditor?.getHTML() ?? "",
+                                    cat_id: value,
+                                    description: contentEditor?.getHTML() ?? "",
+                                });
+                                console.log(param);
+                                postRequest.trigger(param);
+                            }}
+                        />
                     </Stepper.Step>
                 </Stepper>
-            </div>
-        </div>
-    );
-    return (
-        <div className="hero min-h-screen bg-base-200">
-            <div className="hero-content text-center">
-                <div className="max-w-md">
-                    <h1 className="text-5xl font-bold">There's nothing here</h1>
-                    <p className="py-6">
-                        已乃僧忽他出，數日不返，探其篋笥，空空如也。
-                    </p>
-                    <button className="btn btn-primary">Back to home</button>
-                </div>
             </div>
         </div>
     );

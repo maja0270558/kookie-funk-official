@@ -2,6 +2,14 @@ import { prisma } from "../db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import cloudinary from "cloudinary";
 import Validator from "jsonschema";
+
+export const config = {
+    api: {
+        bodyParser: {
+            sizeLimit: "100mb",
+        },
+    },
+};
 interface BodyArgument {
     image_data_url: string;
     nail_image_data_url: string;

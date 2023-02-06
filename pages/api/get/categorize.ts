@@ -5,7 +5,6 @@ import _ from "lodash";
 export interface CatData {
     value: string;
     label: string;
-    id: number;
 }
 export default async function handle(
     req: NextApiRequest,
@@ -16,9 +15,8 @@ export default async function handle(
 
     cats.forEach((cat) => {
         data.push({
-            value: cat.section,
+            value: cat.id.toString(),
             label: cat.section,
-            id: cat.id,
         });
     });
     res.json(data);
