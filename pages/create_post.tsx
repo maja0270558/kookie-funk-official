@@ -20,15 +20,8 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview);
 // react cropper
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
-import GalleryImage from "../components/GalleryImage";
 // steper
-import {
-    Stepper,
-    Select,
-    Modal,
-    TypographyStylesProvider,
-    LoadingOverlay,
-} from "@mantine/core";
+import { Stepper, Select, LoadingOverlay } from "@mantine/core";
 // editor
 import { Editor } from "@tiptap/react";
 import editor from "../components/TipTapEditor";
@@ -50,21 +43,23 @@ const create_post = () => {
 
     // filepond
     const [files, setFiles] = useState([]);
+
     // cropper
     const [image, setImage] = useState<string | null>(null);
     const [cropData, setCropData] = useState("#");
     const [thumbnailCropData, setThumbnailCropData] = useState("#");
-
     const [cropper, setCropper] = useState<any>();
     const [thumbnailCropper, setThumbnailCropper] = useState<any>();
 
     // steper
     const [active, setActive] = useState(0);
-    // selector
 
+    // selector
     const [catData, setCatData] = useState<any[]>([]);
     const [value, setValue] = useState<string | null>(null);
     const [gloableError, setGloableError] = useState<string | null>(null);
+
+    // new cat requests
     const categorizeDataRequest = useSWR("/api/get/categorize", (url) =>
         fetch(url)
             .then((res) => res.json())
@@ -74,6 +69,7 @@ const create_post = () => {
             })
     );
 
+    // cat requests
     const createCategorizeRequest = useSWRMutation(
         "/api/post/create_cat",
         (url, { arg }) =>
@@ -96,6 +92,7 @@ const create_post = () => {
                 })
     );
 
+    // post requests
     const postRequest = useSWRMutation(
         "/api/post/upload_post",
         (url, { arg }) =>
@@ -129,33 +126,7 @@ const create_post = () => {
 
         return NaN;
     }
-
-    function Title(props: { title: string }) {
-        return <h4 className="prose uppercase my-2">{props.title}</h4>;
-    }
-
-    function InnerTitle(props: { title: string }) {
-        return (
-            <h1 className="prose-sm base-300 uppercase h-9">{props.title}</h1>
-        );
-    }
-
-    function NextButton(props: {
-        title: string;
-        click: (e: React.MouseEvent<HTMLElement>) => void;
-    }) {
-        return (
-            <div className="flex place-content-end mt-4">
-                <button
-                    className="uppercase btn btn-primary"
-                    onClick={props.click}
-                >
-                    {props.title}
-                </button>
-            </div>
-        );
-    }
-
+    // MARK: step
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
         console.log(active);
         if (!value) {
@@ -202,6 +173,18 @@ const create_post = () => {
         // setOpened(true);
         setGloableError(null);
         setActive(active + 1);
+    }
+
+    function handlePostStep(event: React.MouseEvent<HTMLElement>) {
+        const param = JSON.stringify({
+            image_data_url: cropData,
+            nail_image_data_url: thumbnailCropData,
+            title: titleEditor?.getHTML() ?? "",
+            cat_id: value,
+            description: contentEditor?.getHTML() ?? "",
+        });
+        console.log(param);
+        postRequest.trigger(param);
     }
 
     return (
@@ -405,16 +388,17 @@ const create_post = () => {
                                             </h2>
                                         </div>
                                         <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
-                                            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map(
-                                                (value) => {
+                                            {Array(10)
+                                                .fill(0)
+                                                .map((v, i) => i)
+                                                .map((value) => {
                                                     return (
                                                         <div
                                                             key={value}
                                                             className="nail overflow-hidden bg-slate-400 w-full float-left h-52"
                                                         />
                                                     );
-                                                }
-                                            )}
+                                                })}
                                         </div>
                                     </div>
                                 </div>
@@ -430,25 +414,39 @@ const create_post = () => {
                             title={titleEditor?.getHTML() ?? ""}
                             desc={contentEditor?.getHTML() ?? ""}
                         />
-                        <NextButton
-                            title="POST"
-                            click={() => {
-                                const param = JSON.stringify({
-                                    image_data_url: cropData,
-                                    nail_image_data_url: thumbnailCropData,
-                                    title: titleEditor?.getHTML() ?? "",
-                                    cat_id: value,
-                                    description: contentEditor?.getHTML() ?? "",
-                                });
-                                console.log(param);
-                                postRequest.trigger(param);
-                            }}
-                        />
+                        <NextButton title="POST" click={handlePostStep} />
                     </Stepper.Step>
                 </Stepper>
             </div>
         </div>
     );
+
+    // MARK: conpoments
+    function Title(props: { title: string }) {
+        return <h4 className="prose uppercase my-2">{props.title}</h4>;
+    }
+
+    function InnerTitle(props: { title: string }) {
+        return (
+            <h1 className="prose-sm base-300 uppercase h-9">{props.title}</h1>
+        );
+    }
+
+    function NextButton(props: {
+        title: string;
+        click: (e: React.MouseEvent<HTMLElement>) => void;
+    }) {
+        return (
+            <div className="flex place-content-end mt-4">
+                <button
+                    className="uppercase btn btn-primary"
+                    onClick={props.click}
+                >
+                    {props.title}
+                </button>
+            </div>
+        );
+    }
 };
 
 export default create_post;

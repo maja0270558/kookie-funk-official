@@ -1,7 +1,7 @@
 import { TypographyStylesProvider } from "@mantine/core";
 import { useKeenSlider } from "keen-slider/react";
 import Image from "next/image";
-import { Image as MantineImage } from '@mantine/core';
+import { Image as MantineImage } from "@mantine/core";
 
 import React from "react";
 import GalleryImage from "../components/GalleryImage";
@@ -13,7 +13,6 @@ const DetailPreview = (props: {
     title: string;
     desc: string;
 }) => {
-    const other = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
     const cellSize = 150;
     const [ref] = useKeenSlider<HTMLDivElement>({
         loop: false,
@@ -30,29 +29,30 @@ const DetailPreview = (props: {
                 className="keen-slider min-w-full "
                 style={{ maxHeight: cellSize, minHeight: cellSize }}
             >
-
-                {other.map((value) => {
-                    return (
-                        <div
-                            key={value}
-                            className="keen-slider__slide"
-                            style={{
-                                maxWidth: cellSize,
-                                minWidth: cellSize,
-                                maxHeight: cellSize,
-                                minHeight: cellSize,
-                            }}
-                        >
-                            <MantineImage
-                                width={cellSize}
-                                height={cellSize}
-                                src={null}
-                                withPlaceholder
-                            />
-
-                        </div>
-                    );
-                })}
+                {Array(20)
+                    .fill(0)
+                    .map((v, i) => i)
+                    .map((value) => {
+                        return (
+                            <div
+                                key={value}
+                                className="keen-slider__slide"
+                                style={{
+                                    maxWidth: cellSize,
+                                    minWidth: cellSize,
+                                    maxHeight: cellSize,
+                                    minHeight: cellSize,
+                                }}
+                            >
+                                <MantineImage
+                                    width={cellSize}
+                                    height={cellSize}
+                                    src={null}
+                                    withPlaceholder
+                                />
+                            </div>
+                        );
+                    })}
             </div>
         </div>
     );
@@ -72,7 +72,7 @@ const DetailPreview = (props: {
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content">
+        <TypographyStylesProvider className="text-base-content prose-lg">
             <div
                 dangerouslySetInnerHTML={{
                     __html: props.title ?? "",
@@ -82,7 +82,7 @@ const DetailPreview = (props: {
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content">
+        <TypographyStylesProvider className="text-base-content prose-lg">
             <div
                 dangerouslySetInnerHTML={{
                     __html: props.desc ?? "",
@@ -104,13 +104,10 @@ const DetailPreview = (props: {
                             {compomentTitle}
                         </div>
                     </div>
-
                 </div>
             </div>
 
-            <div className="flex flex-1 lg:items-end p-4">
-                {compomentDesc}
-            </div>
+            <div className="flex flex-1 lg:items-end p-4">{compomentDesc}</div>
             {otherPostsSection}
         </div>
     );
