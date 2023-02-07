@@ -2,6 +2,8 @@ import { prisma } from "../db";
 import type { NextApiRequest, NextApiResponse } from "next";
 import cloudinary from "cloudinary";
 import Validator from "jsonschema";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../auth/[...nextauth]";
 
 export const config = {
     api: {
@@ -26,6 +28,13 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session) {
+        res.status(401).json({ error: "You must be logged in." });
+        return;
+    }
+
     switch (req.method) {
         case "POST":
             let body: BodyArgument = req.body;
