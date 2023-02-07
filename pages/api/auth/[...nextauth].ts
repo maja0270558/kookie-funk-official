@@ -26,11 +26,18 @@ export default NextAuth({
                     body: JSON.stringify(credentials),
                     headers: { "Content-Type": "application/json" },
                 });
+                console.log(res);
 
                 const user = await res.json();
+                console.log(user);
+
                 if (res.ok && user.name === credentials?.username) {
+                    console.log("success");
+
                     return user;
                 } else {
+                    console.log("fail");
+
                     return null;
                 }
             },
