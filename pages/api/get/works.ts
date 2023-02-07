@@ -27,7 +27,7 @@ export default async function handle(
         if (seperateWork) {
             const imageData = seperateWork.map((work) => {
                 return {
-                    img: work.image_path!,
+                    img: work.nail_image_path!,
                     id: work.id,
                 };
             });

@@ -28,7 +28,6 @@ export default async function handle(
 ) {
     switch (req.method) {
         case "POST":
-            return res.status(200).json({ return_code: "0000" });
             let body: BodyArgument = req.body;
             // Address, to be embedded on Person
             var postSchema = {

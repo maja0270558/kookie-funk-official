@@ -13,7 +13,7 @@ import { useKeenSlider } from "keen-slider/react";
 import GalleryImage from "../../components/GalleryImage";
 
 const works = () => {
-    const cellSize = 150;
+    const cellSize = 120;
     const [ref] = useKeenSlider<HTMLDivElement>({
         loop: false,
         mode: "free",
@@ -44,7 +44,7 @@ const works = () => {
         if (data.error) return <Error statusCode={404} title={data.error} />;
 
         const otherPostsSection = data.others && (
-            <div className="pt-4">
+            <div className="mt-4">
                 <div
                     ref={ref}
                     className="keen-slider max-w-screen "
@@ -97,7 +97,7 @@ const works = () => {
         );
 
         const compomentDesc = data.post?.description && (
-            <TypographyStylesProvider className="text-base-content">
+            <TypographyStylesProvider className="text-base-content mt-4">
                 <div
                     dangerouslySetInnerHTML={{
                         __html: data.post.description ?? "",
@@ -109,7 +109,7 @@ const works = () => {
         return (
             <div className="flex flex-col p-4">
                 <div className="flex flex-row place-content-center">
-                    <div className="flex flex-col lg:flex-row flex-1 gap-4">
+                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-8">
                         <div className=" block m-auto align-middle">
                             {compomentImage}
                         </div>
@@ -119,13 +119,10 @@ const works = () => {
                                 {compomentTitle}
                             </div>
                         </div>
-
                     </div>
                 </div>
 
-                <div className="flex flex-1 lg:items-end">
-                    {compomentDesc}
-                </div>
+                <div className="flex flex-1 lg:items-end">{compomentDesc}</div>
                 {otherPostsSection}
             </div>
         );

@@ -26,7 +26,7 @@ export default async function handle(
 
                 const otherPosts = othersResult.map((work) => {
                     return {
-                        img: work.image_path,
+                        img: work.nail_image_path,
                         id: work.id,
                     };
                 });
