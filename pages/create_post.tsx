@@ -1,15 +1,7 @@
 import PostEditPage from "../components/PostEditPage";
 
 const create_post = () => {
-    return (
-        <PostEditPage
-            id={null}
-            title=""
-            content=""
-            selectedCatId=""
-            imgSrc=""
-        />
-    );
+    return <PostEditPage />;
 };
 
 export default create_post;

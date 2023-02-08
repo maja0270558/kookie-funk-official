@@ -9,7 +9,9 @@ import { Link } from "@mantine/tiptap";
 import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
 
-function editor(placeholder: string, content: string) {
+const content = "";
+
+function editor(placeholder: string) {
     return useEditor({
         extensions: [
             StarterKit,

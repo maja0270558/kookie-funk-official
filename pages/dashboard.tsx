@@ -30,9 +30,11 @@ import classNames from "classnames";
 import useSWRMutation from "swr/mutation";
 import Router from "next/router";
 import { json } from "stream/consumers";
-
+import { useAppDispatch } from "../hook";
+import { setEditPost } from "../slices/editPostSlice";
 interface DashBoardData {
     id: number;
+    image_path: string;
     nail_image_path: string;
     title: string;
     desc: string;
@@ -45,6 +47,8 @@ interface DashBoardData {
 }
 
 const dashboard = () => {
+    const dispatch = useAppDispatch();
+
     const [dashboardData, setDashboardData] = useState<any[]>([]);
     const [filter, setFilter] = useState("");
 
@@ -250,6 +254,21 @@ const dashboard = () => {
 
                         <Menu.Dropdown>
                             <Menu.Item
+                                onClick={() => {
+                                    const data = {
+                                        id: element.id.toString(),
+                                        title: element.title,
+                                        content: element.desc,
+                                        selectedCatId:
+                                            element.categorize.id.toString(),
+                                        imgSrc: element.image_path,
+                                    };
+                                    dispatch(setEditPost(data));
+                                    Router.push({
+                                        pathname: "/edit_post",
+                                        query: data,
+                                    });
+                                }}
                                 icon={<IconAdjustmentsHorizontal size={14} />}
                             >
                                 Edit

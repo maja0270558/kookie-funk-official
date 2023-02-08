@@ -41,40 +41,54 @@ import { SegmentedControl } from "@mantine/core";
 // loader
 import { Loader } from "@mantine/core";
 import DetailPreview from "./DetailPreview";
-import Router from "next/router";
+import Router, { useRouter } from "next/router";
 import { FilePondFile } from "filepond";
+import { EditPostPara } from "../slices/editPostSlice";
 
-const PostEditPage = (
-    props: {
-        id: number | null;
-        title: string;
-        content: string;
-        selectedCatId: string;
-        imgSrc: string;
-    } | null
-) => {
-    const titleEditor: Editor | null = editor(
-        "Title require",
-        props?.title ?? ""
-    );
-    const contentEditor: Editor | null = editor(
-        "Optional",
-        props?.content ?? ""
-    );
+const PostEditPage = () => {
+    const titleEditor: Editor | null = editor("Title require");
+    const contentEditor: Editor | null = editor("Optional");
+
+    const router = useRouter();
     // filepond
     useEffect(() => {
-        if (!props) {
+        if (!router.isReady) return;
+        if (!titleEditor) return;
+        if (!contentEditor) return;
+
+        const postData = router.query as unknown as EditPostPara;
+        if (!postData) {
             return;
         }
+        setInitData(postData);
+        const decodedPath = decodeURIComponent(postData.imgSrc);
 
-        if (props.imgSrc != "") {
+        if (decodedPath != "") {
             setFiles([
                 {
-                    source: props.imgSrc,
+                    source: decodedPath,
                 },
             ]);
         }
-    }, []);
+
+        const decodedCatID = decodeURIComponent(postData.selectedCatId);
+        if (decodedCatID) {
+            categorizeDataRequest.trigger(decodedCatID);
+        }
+
+        const decodedTitle = decodeURIComponent(postData.title);
+
+        if (decodedTitle !== "") {
+            titleEditor?.commands.setContent(decodedTitle);
+        }
+
+        const decodedContent = decodeURIComponent(postData.content);
+        if (decodedContent !== "") {
+            contentEditor?.commands.setContent(decodedContent);
+        }
+    }, [router.isReady, titleEditor, contentEditor]);
+
+    const [initData, setInitData] = useState<EditPostPara | null>(null);
     const [files, setFiles] = useState<any[]>([]);
 
     // cropper
@@ -93,18 +107,20 @@ const PostEditPage = (
     const [gloableError, setGloableError] = useState<string | null>(null);
 
     // new cat requests
-    const categorizeDataRequest = useSWR("/api/get/categorize", (url) =>
-        fetch(url)
-            .then((res) => res.json())
-            .then((jsonData) => {
-                setCatData(jsonData);
+    const categorizeDataRequest = useSWRMutation(
+        "/api/get/categorize",
+        (url, { arg }) =>
+            fetch(url)
+                .then((res) => res.json())
+                .then((jsonData) => {
+                    setCatData(jsonData);
 
-                if (props?.selectedCatId != "") {
-                    setValue(props?.selectedCatId ?? null);
-                }
+                    if (arg != "") {
+                        setValue(arg);
+                    }
 
-                return jsonData;
-            })
+                    return jsonData;
+                })
     );
 
     // cat requests
@@ -133,6 +149,23 @@ const PostEditPage = (
     // post requests
     const postRequest = useSWRMutation(
         "/api/post/upload_post",
+        (url, { arg }) =>
+            fetch(url, {
+                method: "POST",
+                body: arg,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((jsonData) => {
+                    Router.push("/works");
+                })
+    );
+
+    // post requests
+    const editPostRequest = useSWRMutation(
+        "/api/post/edit_post",
         (url, { arg }) =>
             fetch(url, {
                 method: "POST",
@@ -221,9 +254,13 @@ const PostEditPage = (
             title: titleEditor?.getHTML() ?? "",
             cat_id: value,
             description: contentEditor?.getHTML() ?? "",
+            id: initData?.id,
         });
-        console.log(param);
-        postRequest.trigger(param);
+        if (initData?.id) {
+            editPostRequest.trigger(param);
+        } else {
+            postRequest.trigger(param);
+        }
     }
 
     return (
@@ -273,7 +310,7 @@ const PostEditPage = (
                             onDropdownOpen={() => {}}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
-                                if (categorizeDataRequest.isLoading) {
+                                if (categorizeDataRequest.isMutating) {
                                     return <Loader />;
                                 }
                                 if (categorizeDataRequest.error) {
@@ -314,6 +351,11 @@ const PostEditPage = (
                             instantUpload={false}
                             files={files}
                             onaddfile={(err, item: any) => {
+                                if (err) {
+                                    console.warn(err);
+                                    return;
+                                }
+
                                 if (item) {
                                     setImage(item.getFileEncodeDataURL());
                                 }
@@ -454,7 +496,10 @@ const PostEditPage = (
                             title={titleEditor?.getHTML() ?? ""}
                             desc={contentEditor?.getHTML() ?? ""}
                         />
-                        <NextButton title="POST" click={handlePostStep} />
+                        <NextButton
+                            title={initData?.id ? "Save edit" : "Upload post"}
+                            click={handlePostStep}
+                        />
                     </Stepper.Step>
                 </Stepper>
             </div>
