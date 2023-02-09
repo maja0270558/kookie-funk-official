@@ -45,7 +45,7 @@ export default async function handle(
                 return res.json(result);
             } catch (e) {
                 return res.status(500).json({
-                    error: "prisma delete error",
+                    error: `Create cat error because ${e}`,
                 });
             }
 
