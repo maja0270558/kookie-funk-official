@@ -29,9 +29,7 @@ import {
 import classNames from "classnames";
 import useSWRMutation from "swr/mutation";
 import Router from "next/router";
-import { json } from "stream/consumers";
 import { useAppDispatch } from "../hook";
-import { setEditPost } from "../slices/editPostSlice";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -119,6 +117,8 @@ const dashboard = () => {
         string | null
     >(null);
 
+    const [gloableError, setGloableError] = useState<string | null>(null);
+
     // categorize modal open
     const [opened, setOpened] = useState(false);
     const [editCatData, setEditCatData] = useState<{
@@ -127,8 +127,29 @@ const dashboard = () => {
     } | null>(null);
 
     const [editCatInputValue, setEditCatInputValue] = useState("");
-
     const [editSaveButtonEnable, setEditSaveButtonEnable] = useState(false);
+
+    // edit cat request
+    const deletePostRequest = useSWRMutation(
+        "/api/post/delete_post",
+        (url, { arg }) =>
+            fetch(url, {
+                method: "POST",
+                body: arg,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            })
+                .then((res) => res.json())
+                .then((jsonData) => {
+                    if (jsonData.error) {
+                        setGloableError(jsonData.error);
+                    } else {
+                        Router.reload();
+                    }
+                    return jsonData;
+                })
+    );
 
     if (worksRequest.error)
         return <Error statusCode={500} title="Something going wrong here :(" />;
@@ -263,7 +284,6 @@ const dashboard = () => {
                                             element.categorize.id.toString(),
                                         imgSrc: element.image_path,
                                     };
-                                    dispatch(setEditPost(data));
                                     Router.push({
                                         pathname: "/edit_post",
                                         query: data,
@@ -385,6 +405,18 @@ const dashboard = () => {
                     </div>
                 }
             </Modal>
+
+            {gloableError && (
+                <Alert
+                    className="text-xl mb-10"
+                    icon={<IconAlertCircle size={16} />}
+                    title={`😩🍆🍑💦`}
+                    color="red"
+                >
+                    <p className=" uppercase">{gloableError}</p>
+                </Alert>
+            )}
+
             <h1 className="prose-lg font-bold mt-2 mb-2">
                 Manage your categorize
             </h1>

@@ -49,12 +49,14 @@ export default async function handle(
                     title: { type: "string" },
                     description: { type: "string" },
                     cat_id: { type: "string" },
+                    id: { type: "string" },
                 },
                 required: [
                     "image_data_url",
                     "nail_image_data_url",
                     "title",
                     "cat_id",
+                    "id",
                 ],
             };
             const validate = Validator.validate(body, postSchema);
