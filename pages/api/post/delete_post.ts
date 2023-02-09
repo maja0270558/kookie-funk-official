@@ -70,7 +70,9 @@ export default async function handle(
 
                 return res.status(200).json({ return_code: "0000" });
             } catch (error) {
-                return res.status(500).json({ error: "Delete fail" });
+                return res
+                    .status(500)
+                    .json({ error: `Delete post fail because ${error}` });
             }
 
         default:
