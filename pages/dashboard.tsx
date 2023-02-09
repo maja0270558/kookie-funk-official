@@ -30,6 +30,7 @@ import useSWRMutation from "swr/mutation";
 import Router from "next/router";
 import { useAppDispatch } from "../hook";
 import { errorNotification } from "../components/NotificationService";
+import createFetcher from "../helper/Fetcher";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -51,67 +52,45 @@ const dashboard = () => {
     const [filter, setFilter] = useState("");
 
     const worksRequest = useSWR("/api/get/dashboard", (url) =>
-        fetch(url)
-            .then((res) => res.json())
-            .then((data) => {
-                setDashboardData(data);
-                return data;
-            })
+        createFetcher(url).then((data) => {
+            setDashboardData(data);
+            return data;
+        })
     );
 
     // categorize
     const [catData, setCatData] = useState<any[]>([]);
     const categorizeDataRequest = useSWR("/api/get/categorize", (url) =>
-        fetch(url)
-            .then((res) => res.json())
-            .then((jsonData) => {
-                setCatData(jsonData);
-                return jsonData;
-            })
+        createFetcher(url).then((data) => {
+            setCatData(data);
+            return data;
+        })
     );
 
     // cat requests
     const deleteCategorizeRequest = useSWRMutation(
         "/api/post/delete_cat",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            createFetcher(url, arg).then((data) => {
+                if (!data.error) {
+                    setOpened(false);
+                    Router.reload();
+                }
+                return data;
             })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    if (jsonData.error) {
-                        errorNotification("ERROR:", jsonData.error);
-                    } else {
-                        Router.reload();
-                    }
-                    return jsonData;
-                })
     );
 
     // edit cat request
     const editCategorizeRequest = useSWRMutation(
         "/api/post/edit_cat",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            createFetcher(url, arg).then((data) => {
+                if (!data.error) {
+                    setOpened(false);
+                    Router.reload();
+                }
+                return data;
             })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    if (jsonData.error) {
-                        errorNotification("ERROR:", jsonData.error);
-                    } else {
-                        Router.reload();
-                    }
-                    return jsonData;
-                })
     );
 
     // categorize modal open
@@ -128,22 +107,12 @@ const dashboard = () => {
     const deletePostRequest = useSWRMutation(
         "/api/post/delete_post",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
+            createFetcher(url, arg).then((data) => {
+                if (!data.error) {
+                    Router.reload();
+                }
+                return data;
             })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    if (jsonData.error) {
-                        errorNotification("ERROR:", jsonData.error);
-                    } else {
-                        Router.reload();
-                    }
-                    return jsonData;
-                })
     );
 
     if (worksRequest.error)
@@ -398,35 +367,40 @@ const dashboard = () => {
                     </div>
                 }
             </Modal>
-            <h1 className="prose-lg font-bold mt-2 mb-2">
-                Manage your categorize
-            </h1>
+            {
+                <h1 className="prose-lg font-bold mt-2 mb-2">
+                    {catData.length > 0
+                        ? "Manage your categorize"
+                        : "No categorize"}
+                </h1>
+            }
             <div className="flex flex-row gap-4">
                 <Group className="flex-auto">
-                    {catData.map((element) => {
-                        return (
-                            <div
-                                key={element.value}
-                                onClick={() => {
-                                    setEditCatInputValue(element.label);
-                                    setEditCatData({
-                                        id: element.value,
-                                        section: element.label,
-                                    });
-                                    setOpened(true);
-                                }}
-                            >
-                                <Badge
-                                    size="lg"
-                                    color="teal"
-                                    sx={{ paddingRight: 3 }}
-                                    rightSection={pencelButton}
+                    {catData.length > 0 &&
+                        catData.map((element) => {
+                            return (
+                                <div
+                                    key={element.value}
+                                    onClick={() => {
+                                        setEditCatInputValue(element.label);
+                                        setEditCatData({
+                                            id: element.value,
+                                            section: element.label,
+                                        });
+                                        setOpened(true);
+                                    }}
                                 >
-                                    {element.label.toUpperCase()}
-                                </Badge>
-                            </div>
-                        );
-                    })}
+                                    <Badge
+                                        size="lg"
+                                        color="teal"
+                                        sx={{ paddingRight: 3 }}
+                                        rightSection={pencelButton}
+                                    >
+                                        {element.label.toUpperCase()}
+                                    </Badge>
+                                </div>
+                            );
+                        })}
                 </Group>
                 <Button
                     className="btn btn-primary"

@@ -20,6 +20,7 @@ export default async function handle(
                 label: cat.section,
             });
         });
+
         return res.json(data);
     } catch (e) {
         return res.status(500).json({
