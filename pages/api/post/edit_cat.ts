@@ -18,7 +18,6 @@ export default async function handle(
         res.status(401).json({ error: "You must be logged in." });
         return;
     }
-    return res.status(500).json({ error: "id or section empty" });
 
     switch (req.method) {
         case "POST":
@@ -40,7 +39,7 @@ export default async function handle(
                 return res.json({ return_code: "0000" });
             } catch (e) {
                 return res.status(500).json({
-                    error: "prisma delete error",
+                    error: `Edit categorize fail because ${e}`,
                 });
             }
 

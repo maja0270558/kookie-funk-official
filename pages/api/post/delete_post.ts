@@ -48,36 +48,31 @@ export default async function handle(
                 });
             }
 
-            const publicId = await prisma.works.findFirst({
-                where: {
-                    id: parseInt(body.id),
-                },
-                select: {
-                    public_image_id: true,
-                },
-            });
-
-            const id = publicId;
-            const removeimageRes = await cloudinary.v2.api
-                .delete_resources([`works/${id}`, `thumbnails/${id}`])
-                .then(async () => {
-                    const result = await prisma.works.delete({
-                        where: {
-                            id: parseInt(body.id),
-                        },
-                    });
-                    if (result) {
-                        return { return_code: "0000" };
-                    } else {
-                        return { error: "Delete prisma fail" };
-                    }
-                })
-                .catch((err) => {
-                    res.status(500).json({ error: "Uppload fail" });
-                    console.log(err);
+            try {
+                const publicId = await prisma.works.findFirst({
+                    where: {
+                        id: parseInt(body.id),
+                    },
+                    select: {
+                        public_image_id: true,
+                    },
                 });
 
-            return res.status(200).json(removeimageRes);
+                const id = publicId?.public_image_id;
+                await cloudinary.v2.uploader.destroy(`works/${id}`);
+                await cloudinary.v2.uploader.destroy(`thumbnails/${id}`);
+
+                await prisma.works.delete({
+                    where: {
+                        id: parseInt(body.id),
+                    },
+                });
+
+                return res.status(200).json({ return_code: "0000" });
+            } catch (error) {
+                return res.status(500).json({ error: "Delete fail" });
+            }
+
         default:
             res.status(500).json({ error: "HTTP method incorrect" });
     }

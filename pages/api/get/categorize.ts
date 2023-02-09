@@ -10,14 +10,20 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const cats = await prisma.categorize.findMany();
-    const data: CatData[] = [];
+    try {
+        const cats = await prisma.categorize.findMany();
+        const data: CatData[] = [];
 
-    cats.forEach((cat) => {
-        data.push({
-            value: cat.id.toString(),
-            label: cat.section,
+        cats.forEach((cat) => {
+            data.push({
+                value: cat.id.toString(),
+                label: cat.section,
+            });
         });
-    });
-    res.json(data);
+        return res.json(data);
+    } catch (e) {
+        return res.status(500).json({
+            error: `OMG ${e}`,
+        });
+    }
 }

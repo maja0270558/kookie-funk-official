@@ -55,13 +55,18 @@ const PostEditPage = () => {
         if (!router.isReady) return;
         if (!titleEditor) return;
         if (!contentEditor) return;
+        const decode = (str: string): string =>
+            Buffer.from(str, "base64").toString("binary");
+        const postData: EditPostPara = router.query as unknown as EditPostPara;
+        const isEmpty = Object.keys(postData).length === 0;
 
-        const postData = router.query as unknown as EditPostPara;
-        if (!postData) {
-            return;
-        }
         setInitData(postData);
         const decodedPath = decodeURIComponent(postData.imgSrc);
+
+        if (isEmpty) {
+            categorizeDataRequest.trigger("");
+            return;
+        }
 
         if (decodedPath != "") {
             setFiles([
@@ -77,14 +82,13 @@ const PostEditPage = () => {
         }
 
         const decodedTitle = decodeURIComponent(postData.title);
-
         if (decodedTitle !== "") {
-            titleEditor?.commands.setContent(decodedTitle);
+            titleEditor?.commands.setContent(decode(decodedTitle));
         }
 
         const decodedContent = decodeURIComponent(postData.content);
         if (decodedContent !== "") {
-            contentEditor?.commands.setContent(decodedContent);
+            contentEditor?.commands.setContent(decode(decodedContent));
         }
     }, [router.isReady, titleEditor, contentEditor]);
 
@@ -159,7 +163,7 @@ const PostEditPage = () => {
             })
                 .then((res) => res.json())
                 .then((jsonData) => {
-                    Router.push("/works");
+                    Router.push("/dashboard");
                 })
     );
 
@@ -176,7 +180,7 @@ const PostEditPage = () => {
             })
                 .then((res) => res.json())
                 .then((jsonData) => {
-                    Router.push("/works");
+                    Router.push("/dashboard");
                 })
     );
 

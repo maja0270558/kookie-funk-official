@@ -26,23 +26,29 @@ export default async function handle(
                 return res.status(500).json({ error: "Section empty" });
             }
 
-            const contain = await prisma.categorize.findFirst({
-                where: {
-                    section: body.section,
-                },
-            });
+            try {
+                const contain = await prisma.categorize.findFirst({
+                    where: {
+                        section: body.section,
+                    },
+                });
 
-            if (contain) {
-                return res.json(contain);
+                if (contain) {
+                    return res.json(contain);
+                }
+
+                const result = await prisma.categorize.create({
+                    data: {
+                        section: body.section,
+                    },
+                });
+                return res.json(result);
+            } catch (e) {
+                return res.status(500).json({
+                    error: "prisma delete error",
+                });
             }
 
-            const result = await prisma.categorize.create({
-                data: {
-                    section: body.section,
-                },
-            });
-
-            return res.json(result);
         default:
             return res.status(500).json({ error: "HTTP method incorrect" });
     }

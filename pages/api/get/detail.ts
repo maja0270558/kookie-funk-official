@@ -8,7 +8,12 @@ export default async function handle(
     switch (req.method) {
         case "GET":
             const id: number = parseInt(req.query.id as string);
-            if (id) {
+            if (!id) {
+                return res.status(500).json({
+                    error: `id not exist`,
+                });
+            }
+            try {
                 const result = await prisma.works.findFirst({
                     where: {
                         id: id,
@@ -41,15 +46,16 @@ export default async function handle(
                         others: otherPosts,
                     });
                 } else {
-                    res.status(500).json({
+                    return res.status(500).json({
                         error: "There nothing here.",
                     });
                 }
-            } else {
-                res.status(500).json({ error: "There nothing here." });
+            } catch (e) {
+                return res.status(500).json({
+                    error: `OMG ${e}`,
+                });
             }
-            return;
         default:
-            res.status(500);
+            res.status(500).json({ error: "HTTP method incorrect" });
     }
 }

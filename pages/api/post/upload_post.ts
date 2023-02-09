@@ -64,47 +64,41 @@ export default async function handle(
                 });
             }
 
-            let id = getRandomId();
+            try {
+                let id = getRandomId();
 
-            // Upload
-            const imageCldRes = cloudinary.v2.uploader.upload(
-                body.image_data_url,
-                { public_id: `works/${id}` }
-            );
-            const nailImageCldRes = cloudinary.v2.uploader.upload(
-                body.nail_image_data_url,
-                { public_id: `thumbnails/${id}` }
-            );
+                const imageCldRes = await cloudinary.v2.uploader.upload(
+                    body.image_data_url,
+                    { public_id: `works/${id}` }
+                );
+                const nailImageCldRes = await cloudinary.v2.uploader.upload(
+                    body.nail_image_data_url,
+                    { public_id: `thumbnails/${id}` }
+                );
+                const imageURL = imageCldRes.secure_url;
+                const nailImageURL = nailImageCldRes.secure_url;
 
-            Promise.all([imageCldRes, nailImageCldRes])
-                .then(function (valArray) {
-                    return {
-                        imageURL: valArray[0].secure_url,
-                        nailImageURL: valArray[1].secure_url,
-                    };
-                })
-                .then(async (value) => {
-                    const result = await prisma.works.create({
+                if (imageURL !== "" && nailImageURL !== "") {
+                    await prisma.works.create({
                         data: {
                             title: body.title,
-                            image_path: value.imageURL,
-                            nail_image_path: value.nailImageURL,
+                            image_path: imageURL,
+                            nail_image_path: nailImageURL,
                             desc: body.description,
                             display: 1,
                             cat_id: parseInt(body.cat_id),
                             public_image_id: id,
                         },
                     });
+                }
 
-                    return res.status(200).json({
-                        return_code: "0000",
-                    });
-                })
-                .catch((err) => {
-                    res.status(500).json({ error: "Uppload fail" });
-                    console.log(err);
-                });
-            return;
+                return res.status(200).json({ return_code: "0000" });
+            } catch (error) {
+                return res
+                    .status(500)
+                    .json({ error: `Post fail because ${error}` });
+            }
+
         default:
             res.status(500).json({ error: "HTTP method incorrect" });
     }

@@ -11,6 +11,7 @@ import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 // custom image
 import GalleryImage from "../../components/GalleryImage";
+import { DetailLayout } from "../../components/DetailLayout";
 
 const works = () => {
     const cellSize = 120;
@@ -87,7 +88,7 @@ const works = () => {
         );
 
         const compomentTitle = data.post?.title && (
-            <TypographyStylesProvider className="text-base-content">
+            <TypographyStylesProvider className="text-base-content lg:min-w-full">
                 <div
                     dangerouslySetInnerHTML={{
                         __html: data.post.title ?? "",
@@ -97,7 +98,7 @@ const works = () => {
         );
 
         const compomentDesc = data.post?.description && (
-            <TypographyStylesProvider className="text-base-content mt-4">
+            <TypographyStylesProvider className="text-base-content mt-4 lg:min-w-full ">
                 <div
                     dangerouslySetInnerHTML={{
                         __html: data.post.description ?? "",
@@ -107,24 +108,12 @@ const works = () => {
         );
 
         return (
-            <div className="flex flex-col p-4">
-                <div className="flex flex-row place-content-center">
-                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-8">
-                        <div className=" block m-auto align-middle">
-                            {compomentImage}
-                        </div>
-
-                        <div className="flex lg:flex-1 lg:min-w-[30%]">
-                            <div className="flex lg:items-end ">
-                                {compomentTitle}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="flex flex-1 lg:items-end">{compomentDesc}</div>
-                {otherPostsSection}
-            </div>
+            <DetailLayout
+                image={compomentImage}
+                title={compomentTitle}
+                content={compomentDesc}
+                otherSection={otherPostsSection}
+            ></DetailLayout>
         );
     }
 };

@@ -6,6 +6,7 @@ import { Image as MantineImage } from "@mantine/core";
 import React from "react";
 import GalleryImage from "../components/GalleryImage";
 import "keen-slider/keen-slider.min.css";
+import { DetailLayout } from "./DetailLayout";
 
 const DetailPreview = (props: {
     src: string;
@@ -72,7 +73,7 @@ const DetailPreview = (props: {
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg">
+        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
             <div
                 dangerouslySetInnerHTML={{
                     __html: props.title ?? "",
@@ -82,7 +83,7 @@ const DetailPreview = (props: {
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg">
+        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
             <div
                 dangerouslySetInnerHTML={{
                     __html: props.desc ?? "",
@@ -92,24 +93,12 @@ const DetailPreview = (props: {
     );
 
     return (
-        <div className="flex flex-col p-4">
-            <div className="flex flex-row place-content-center">
-                <div className="flex flex-col lg:flex-row flex-1 gap-4">
-                    <div className=" block m-auto align-middle">
-                        {compomentImage}
-                    </div>
-
-                    <div className="flex lg:flex-1 lg:min-w-[30%]">
-                        <div className="flex lg:items-end ">
-                            {compomentTitle}
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex flex-1 lg:items-end p-4">{compomentDesc}</div>
-            {otherPostsSection}
-        </div>
+        <DetailLayout
+            image={compomentImage}
+            title={compomentTitle}
+            content={compomentDesc}
+            otherSection={otherPostsSection}
+        ></DetailLayout>
     );
 };
 

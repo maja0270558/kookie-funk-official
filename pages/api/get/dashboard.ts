@@ -16,11 +16,17 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const works = await prisma.works.findMany({
-        include: {
-            categorize: true, // Return all fields
-        },
-    });
+    try {
+        const works = await prisma.works.findMany({
+            include: {
+                categorize: true, // Return all fields
+            },
+        });
 
-    res.json(works);
+        return res.json(works);
+    } catch (e) {
+        return res.status(500).json({
+            error: `OMG ${e}`,
+        });
+    }
 }

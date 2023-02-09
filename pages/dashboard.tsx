@@ -156,24 +156,19 @@ const dashboard = () => {
                 <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
             </div>
         );
-    if (worksRequest.data.length <= 0 || !worksRequest.data)
-        return (
-            <div className="hero min-h-screen bg-base-200">
-                <div className="hero-content text-center">
-                    <div className="max-w-md">
-                        <h1 className="text-5xl font-bold">
-                            There's nothing here
-                        </h1>
-                        <p className="py-6">
-                            已乃僧忽他出，數日不返，探其篋笥，空空如也。
-                        </p>
-                        <button className="btn btn-primary">
-                            Back to home
-                        </button>
-                    </div>
+
+    const emptyTableContent = (
+        <div className="hero min-h-full bg-base-200">
+            <div className="hero-content text-center">
+                <div className="max-w-md">
+                    <h1 className="text-2xl font-bold">There's nothing here</h1>
+                    <p className="py-6">
+                        已乃僧忽他出，數日不返，探其篋笥，空空如也。
+                    </p>
                 </div>
             </div>
-        );
+        </div>
+    );
 
     const ths = (
         <tr>
@@ -271,10 +266,15 @@ const dashboard = () => {
                         <Menu.Dropdown>
                             <Menu.Item
                                 onClick={() => {
+                                    const encode = (str: string): string =>
+                                        Buffer.from(str, "binary").toString(
+                                            "base64"
+                                        );
+
                                     const data = {
                                         id: element.id.toString(),
-                                        title: element.title,
-                                        content: element.desc,
+                                        title: encode(element.title),
+                                        content: encode(element.desc),
                                         selectedCatId:
                                             element.categorize.id.toString(),
                                         imgSrc: element.image_path,
@@ -321,16 +321,10 @@ const dashboard = () => {
     });
     return (
         <div className="flex flex-col m-4">
-            {
-                <LoadingOverlay
-                    visible={
-                        deleteCategorizeRequest.isMutating ||
-                        editCategorizeRequest.isMutating ||
-                        deletePostRequest.isMutating
-                    }
-                    overlayBlur={2}
-                />
-            }
+            <LoadingOverlay
+                visible={deletePostRequest.isMutating}
+                overlayBlur={2}
+            />{" "}
             <Modal
                 opened={opened}
                 onClose={() => {
@@ -343,6 +337,14 @@ const dashboard = () => {
                 }}
                 title="Edit Pannel"
             >
+                <LoadingOverlay
+                    visible={
+                        deleteCategorizeRequest.isMutating ||
+                        editCategorizeRequest.isMutating ||
+                        deletePostRequest.isMutating
+                    }
+                    overlayBlur={2}
+                />
                 {
                     <div className="flex flex-col gap-2">
                         <Input
@@ -396,36 +398,46 @@ const dashboard = () => {
                     </div>
                 }
             </Modal>
-
             <h1 className="prose-lg font-bold mt-2 mb-2">
                 Manage your categorize
             </h1>
-            <Group>
-                {catData.map((element) => {
-                    return (
-                        <div
-                            key={element.value}
-                            onClick={() => {
-                                setEditCatInputValue(element.label);
-                                setEditCatData({
-                                    id: element.value,
-                                    section: element.label,
-                                });
-                                setOpened(true);
-                            }}
-                        >
-                            <Badge
-                                size="lg"
-                                color="teal"
-                                sx={{ paddingRight: 3 }}
-                                rightSection={pencelButton}
+            <div className="flex flex-row gap-4">
+                <Group className="flex-auto">
+                    {catData.map((element) => {
+                        return (
+                            <div
+                                key={element.value}
+                                onClick={() => {
+                                    setEditCatInputValue(element.label);
+                                    setEditCatData({
+                                        id: element.value,
+                                        section: element.label,
+                                    });
+                                    setOpened(true);
+                                }}
                             >
-                                {element.label.toUpperCase()}
-                            </Badge>
-                        </div>
-                    );
-                })}
-            </Group>
+                                <Badge
+                                    size="lg"
+                                    color="teal"
+                                    sx={{ paddingRight: 3 }}
+                                    rightSection={pencelButton}
+                                >
+                                    {element.label.toUpperCase()}
+                                </Badge>
+                            </div>
+                        );
+                    })}
+                </Group>
+                <Button
+                    className="btn btn-primary"
+                    leftIcon={<IconPencil />}
+                    onClick={() => {
+                        Router.push("/create_post");
+                    }}
+                >
+                    New post
+                </Button>
+            </div>
             <h1 className="prose-lg font-bold mt-2 mb-2">Manage your works</h1>
             <Input
                 icon={<IconSearch />}
@@ -443,8 +455,9 @@ const dashboard = () => {
             >
                 <thead>{ths}</thead>
                 <tbody>{rows}</tbody>
-                <caption>大吸勃 Dashboard</caption>
             </Table>
+            {(worksRequest.data.length <= 0 || !worksRequest.data) &&
+                emptyTableContent}
         </div>
     );
 };
