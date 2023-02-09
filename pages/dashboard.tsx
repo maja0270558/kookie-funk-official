@@ -24,12 +24,12 @@ import {
     IconAdjustmentsHorizontal,
     IconSearch,
     IconPencil,
-    IconAlertCircle,
 } from "@tabler/icons";
 import classNames from "classnames";
 import useSWRMutation from "swr/mutation";
 import Router from "next/router";
 import { useAppDispatch } from "../hook";
+import { errorNotification } from "../components/NotificationService";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -84,7 +84,7 @@ const dashboard = () => {
                 .then((res) => res.json())
                 .then((jsonData) => {
                     if (jsonData.error) {
-                        setGloableEditPannelError(jsonData.error);
+                        errorNotification("ERROR:", jsonData.error);
                     } else {
                         Router.reload();
                     }
@@ -106,18 +106,13 @@ const dashboard = () => {
                 .then((res) => res.json())
                 .then((jsonData) => {
                     if (jsonData.error) {
-                        setGloableEditPannelError(jsonData.error);
+                        errorNotification("ERROR:", jsonData.error);
                     } else {
                         Router.reload();
                     }
                     return jsonData;
                 })
     );
-    const [gloableEditPannelError, setGloableEditPannelError] = useState<
-        string | null
-    >(null);
-
-    const [gloableError, setGloableError] = useState<string | null>(null);
 
     // categorize modal open
     const [opened, setOpened] = useState(false);
@@ -143,7 +138,7 @@ const dashboard = () => {
                 .then((res) => res.json())
                 .then((jsonData) => {
                     if (jsonData.error) {
-                        setGloableError(jsonData.error);
+                        errorNotification("ERROR:", jsonData.error);
                     } else {
                         Router.reload();
                     }
@@ -294,6 +289,15 @@ const dashboard = () => {
                                 Edit
                             </Menu.Item>
                             <Menu.Item
+                                onClick={() => {
+                                    const data = {
+                                        id: element.id.toString(),
+                                    };
+                                    console.log("🦮🦮🦮🦮🦮🦮");
+                                    deletePostRequest.trigger(
+                                        JSON.stringify(data)
+                                    );
+                                }}
                                 color="red"
                                 icon={<IconTrash size={14} />}
                             >
@@ -317,10 +321,19 @@ const dashboard = () => {
     });
     return (
         <div className="flex flex-col m-4">
+            {
+                <LoadingOverlay
+                    visible={
+                        deleteCategorizeRequest.isMutating ||
+                        editCategorizeRequest.isMutating ||
+                        deletePostRequest.isMutating
+                    }
+                    overlayBlur={2}
+                />
+            }
             <Modal
                 opened={opened}
                 onClose={() => {
-                    setGloableEditPannelError(null);
                     editCategorizeRequest.reset();
                     deleteCategorizeRequest.reset();
                     setEditCatInputValue("");
@@ -332,28 +345,6 @@ const dashboard = () => {
             >
                 {
                     <div className="flex flex-col gap-2">
-                        {
-                            <LoadingOverlay
-                                visible={
-                                    deleteCategorizeRequest.isMutating ||
-                                    editCategorizeRequest.isMutating
-                                }
-                                overlayBlur={2}
-                            />
-                        }
-                        {gloableEditPannelError && (
-                            <Alert
-                                className="text-xl mb-10"
-                                icon={<IconAlertCircle size={16} />}
-                                title={`😩🍆🍑💦`}
-                                color="red"
-                            >
-                                <p className=" uppercase">
-                                    {gloableEditPannelError}
-                                </p>
-                            </Alert>
-                        )}
-
                         <Input
                             value={editCatInputValue}
                             onChange={(t) => {
@@ -405,17 +396,6 @@ const dashboard = () => {
                     </div>
                 }
             </Modal>
-
-            {gloableError && (
-                <Alert
-                    className="text-xl mb-10"
-                    icon={<IconAlertCircle size={16} />}
-                    title={`😩🍆🍑💦`}
-                    color="red"
-                >
-                    <p className=" uppercase">{gloableError}</p>
-                </Alert>
-            )}
 
             <h1 className="prose-lg font-bold mt-2 mb-2">
                 Manage your categorize

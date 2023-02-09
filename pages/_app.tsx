@@ -10,6 +10,7 @@ import ErrorBoundary from "../components/ErrorBoundary";
 import { ColorScheme, MantineProvider } from "@mantine/core";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
+import { NotificationsProvider } from "@mantine/notifications";
 
 // Grabs the full Tailwind CSS object
 const fullConfig = resolveConfig(tailwindConfig);
@@ -52,7 +53,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                             }}
                         >
                             <ErrorBoundary>
-                                <Component {...pageProps} />
+                                <NotificationsProvider>
+                                    <Component {...pageProps} />
+                                </NotificationsProvider>
                             </ErrorBoundary>
                         </MantineProvider>
                     </Layout>
