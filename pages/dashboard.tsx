@@ -177,16 +177,22 @@ const dashboard = () => {
         .map((element: DashBoardData) => (
             <tr key={element.id}>
                 <td>
-                    <Image
-                        src={element.nail_image_path}
-                        alt={""}
-                        width="50"
-                        height="50"
-                        placeholder="blur"
-                        blurDataURL="/placeholder.jpeg"
-                        className="rounded-lg"
-                        priority={true}
-                    ></Image>
+                    <button
+                        onClick={() => {
+                            Router.push(`/detail/${element.id}`);
+                        }}
+                    >
+                        <Image
+                            src={element.nail_image_path}
+                            alt={""}
+                            width="50"
+                            height="50"
+                            placeholder="blur"
+                            blurDataURL="/placeholder.jpeg"
+                            className="rounded-lg"
+                            priority={true}
+                        ></Image>
+                    </button>
                 </td>
                 <td>
                     <Badge>
