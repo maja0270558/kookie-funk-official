@@ -43,9 +43,7 @@ export default async function handle(
                 });
             }
         });
-        return res.json({
-            data,
-        });
+        return res.json(data);
     } catch (e) {
         return res.status(500).json({
             error: `OMG ${e}`,

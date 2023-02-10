@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 // mantine
-import { ColorScheme, LoadingOverlay, MantineProvider } from "@mantine/core";
+import { ColorScheme, MantineProvider } from "@mantine/core";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
 import { NotificationsProvider } from "@mantine/notifications";

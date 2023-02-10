@@ -27,7 +27,7 @@ registerPlugin(
 import Cropper from "react-cropper";
 import "cropperjs/dist/cropper.css";
 // steper
-import { Stepper, Select, LoadingOverlay } from "@mantine/core";
+import { Stepper, Select } from "@mantine/core";
 // editor
 import { Editor } from "@tiptap/react";
 import editor from "./TipTapEditor";
@@ -269,12 +269,6 @@ const PostEditPage = () => {
 
     return (
         <div>
-            {
-                <LoadingOverlay
-                    visible={postRequest.isMutating}
-                    overlayBlur={2}
-                />
-            }
             <div className="p-8 flex flex-col">
                 {gloableError && (
                     <Alert

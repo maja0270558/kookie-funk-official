@@ -1,8 +1,8 @@
 import {
     ActionIcon,
-    Alert,
     Badge,
     Button,
+    Center,
     Group,
     Input,
     LoadingOverlay,
@@ -60,6 +60,7 @@ const dashboard = () => {
 
     // categorize
     const [catData, setCatData] = useState<any[]>([]);
+
     const categorizeDataRequest = useSWR("/api/get/categorize", (url) =>
         createFetcher(url).then((data) => {
             setCatData(data);
@@ -129,25 +130,23 @@ const dashboard = () => {
 
     if (worksRequest.error)
         return <Error statusCode={500} title="Something going wrong here :(" />;
-    if (worksRequest.isLoading)
-        return (
-            <div className="flex items-center justify-center space-x-2 min-h-full">
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-            </div>
-        );
+
+    if (worksRequest.isLoading) return <div className=""></div>;
 
     const emptyTableContent = (
-        <div className="hero min-h-full bg-base-200">
-            <div className="hero-content text-center">
-                <div className="max-w-md">
-                    <h1 className="text-2xl font-bold">There's nothing here</h1>
-                    <p className="py-6">
-                        已乃僧忽他出，數日不返，探其篋笥，空空如也。
-                    </p>
+        <div className="flex flex-1  justify-center text-center rounded-lg">
+            <Center>
+                <div className="max-w-md flex-auto">
+                    <Image
+                        src="/greyEmptyState.png"
+                        alt={""}
+                        width="500"
+                        height="500"
+                        className="rounded-lg"
+                        priority={true}
+                    ></Image>
                 </div>
-            </div>
+            </Center>
         </div>
     );
 
@@ -328,14 +327,33 @@ const dashboard = () => {
 
     const saveButtonClass = classNames("btn", {
         ["btn-primary"]: editSaveButtonEnable,
-        ["btn-disabled"]: !editSaveButtonEnable,
+        ["glass btn-disabled"]: !editSaveButtonEnable,
     });
+
+    const worksTable = (
+        <div>
+            <h1 className="prose-lg font-bold mt-2 mb-2">Manage your works</h1>
+            <Input
+                icon={<IconSearch />}
+                placeholder="You can search 『title』, 『description』,『categorize』 here"
+                onChange={(t) => {
+                    setFilter(t.target.value);
+                }}
+            />
+            <Table
+                className="table-auto"
+                captionSide="bottom"
+                highlightOnHover={true}
+                horizontalSpacing="lg"
+                verticalSpacing="sm"
+            >
+                <thead>{ths}</thead>
+                <tbody>{rows}</tbody>
+            </Table>
+        </div>
+    );
     return (
-        <div className="flex flex-col m-4">
-            <LoadingOverlay
-                visible={deletePostRequest.isMutating}
-                overlayBlur={2}
-            />{" "}
+        <div className="flex flex-col p-4 min-h-full">
             <Modal
                 opened={opened}
                 onClose={() => {
@@ -397,13 +415,9 @@ const dashboard = () => {
                                 <IconTrash size={18} color="red" />
                             </button>
 
-                            <p className=" prose-xs text-red-400 font-bold">
-                                **Important!** This action will remove all the
-                                works related to this categorize.
-                                <br />
-                                <br />
-                                **重要！**
-                                移除類別時將會移除類別底下所有相關的貼文，請檢查清楚後再移除
+                            <p className=" prose-xs  text-red-300 ">
+                                <p className="font-bold"> **重要！**</p>
+                                移除類別時將會移除類別底下所有相關的貼文，請想清楚後再移除
                             </p>
                         </div>
                     </div>
@@ -454,24 +468,7 @@ const dashboard = () => {
                     New post
                 </Button>
             </div>
-            <h1 className="prose-lg font-bold mt-2 mb-2">Manage your works</h1>
-            <Input
-                icon={<IconSearch />}
-                placeholder="You can search 『title』, 『description』,『categorize』 here"
-                onChange={(t) => {
-                    setFilter(t.target.value);
-                }}
-            />
-            <Table
-                className="table-auto"
-                captionSide="bottom"
-                highlightOnHover={true}
-                horizontalSpacing="lg"
-                verticalSpacing="sm"
-            >
-                <thead>{ths}</thead>
-                <tbody>{rows}</tbody>
-            </Table>
+            {worksTable}
             {(worksRequest.data.length <= 0 || !worksRequest.data) &&
                 emptyTableContent}
         </div>

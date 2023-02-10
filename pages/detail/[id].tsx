@@ -31,14 +31,7 @@ const works = () => {
         (url) => fetch(url).then((res) => res.json())
     );
 
-    if (isLoading)
-        return (
-            <div className="flex items-center justify-center space-x-2 min-h-full">
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-                <div className="w-4 h-4 rounded-full animate-pulse dark:bg-primary"></div>
-            </div>
-        );
+    if (isLoading) return <div className=""></div>;
 
     if (data) {
         // error handling
