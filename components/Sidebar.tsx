@@ -6,6 +6,7 @@ import classNames from "classnames";
 
 /// Next-auth
 import { useSession } from "next-auth/react";
+import { LoadingOverlay } from "@mantine/core";
 
 type Props = {
     children: ReactNode;
@@ -31,6 +32,12 @@ const Sidebar = ({ children }: Props) => {
 
     if (session) {
         menuItems.push({
+            label: "dashboard",
+            link: "/dashboard",
+            enable: true,
+        });
+
+        menuItems.push({
             label: "signout",
             link: "/api/auth/signout",
             enable: true,
@@ -53,7 +60,7 @@ const Sidebar = ({ children }: Props) => {
     return (
         <div className="drawer drawer-mobile">
             <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-            <div className="drawer-content flex flex-col">
+            <div className="drawer-content flex flex-col relative">
                 {/* nav bar on */}
                 <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden ">
                     <label
@@ -81,6 +88,7 @@ const Sidebar = ({ children }: Props) => {
                         </a>
                     </div>
                 </div>
+
                 {children}
             </div>
             <div className="drawer-side">

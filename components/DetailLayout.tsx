@@ -4,7 +4,7 @@ type Props = {
     image: ReactNode;
     title: ReactNode;
     content: ReactNode;
-    otherSection: ReactNode;
+    otherSection: ReactNode | null;
 };
 
 export const DetailLayout = ({

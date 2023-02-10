@@ -29,7 +29,6 @@ import classNames from "classnames";
 import useSWRMutation from "swr/mutation";
 import Router from "next/router";
 import { useAppDispatch } from "../hook";
-import { errorNotification } from "../components/NotificationService";
 import createFetcher from "../helper/Fetcher";
 interface DashBoardData {
     id: number;

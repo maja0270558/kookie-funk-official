@@ -4,6 +4,7 @@ import { WorksData } from "./api/get/works";
 import GalleryImage from "../components/GalleryImage";
 import Error from "next/error";
 import createFetcher from "../helper/Fetcher";
+import { Center, Loader } from "@mantine/core";
 
 const works = () => {
     const { data, error, isLoading } = useSWR("/api/get/works", (url) =>
@@ -12,7 +13,12 @@ const works = () => {
 
     if (error)
         return <Error statusCode={404} title="Something going wrong here :(" />;
-    if (isLoading) return <div className=""></div>;
+    if (isLoading)
+        return (
+            <Center className=" min-h-full">
+                <Loader size={"xl"}></Loader>
+            </Center>
+        );
 
     const emptyView = (
         <div className="hero min-h-screen bg-base-200">

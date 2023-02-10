@@ -1,17 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import Error from "next/error";
 // fetch library
 import useSWR from "swr";
 import { useRouter } from "next/router";
 // rich text
-import { TypographyStylesProvider } from "@mantine/core";
+import {
+    Skeleton,
+    TypographyStylesProvider,
+    Center,
+    Loader,
+} from "@mantine/core";
 // slider
 import "keen-slider/keen-slider.min.css";
 import { useKeenSlider } from "keen-slider/react";
 // custom image
 import GalleryImage from "../../components/GalleryImage";
 import { DetailLayout } from "../../components/DetailLayout";
+import createFetcher from "../../helper/Fetcher";
 
 const works = () => {
     const cellSize = 120;
@@ -23,61 +29,74 @@ const works = () => {
             spacing: 12,
         },
     });
+    const [imgIsLoading, setImgIsLoading] = useState(true);
 
     const router = useRouter();
     const { id } = router.query;
     const { data, error, isLoading } = useSWR(
         id ? `/api/get/detail?id=${id}` : null,
-        (url) => fetch(url).then((res) => res.json())
+        (url) => createFetcher(url)
     );
 
-    if (isLoading) return <div className=""></div>;
+    if (isLoading)
+        return (
+            <Center className=" min-h-full">
+                <Loader size={"xl"}></Loader>
+            </Center>
+        );
 
     if (data) {
         // error handling
-        if (data.error) return <Error statusCode={404} title={data.error} />;
+        if (data.error)
+            return (
+                <Error statusCode={404} title="Something going wrong here :(" />
+            );
 
-        const otherPostsSection = data.others && (
-            <div className="mt-4">
-                <div
-                    ref={ref}
-                    className="keen-slider max-w-screen "
-                    style={{ maxHeight: cellSize, minHeight: cellSize }}
-                >
-                    {data.others.map((value: { img: string; id: string }) => {
-                        return (
-                            <div
-                                className="keen-slider__slide"
-                                style={{
-                                    maxWidth: cellSize,
-                                    minWidth: cellSize,
-                                    maxHeight: cellSize,
-                                    minHeight: cellSize,
-                                }}
-                            >
-                                <GalleryImage
-                                    path={value.img}
-                                    id={value.id.toString()}
-                                />
-                            </div>
-                        );
-                    })}
+        const otherPostsSection =
+            data.others instanceof Array && data.others.length > 0 ? (
+                <div className="mt-4">
+                    <div
+                        ref={ref}
+                        className="keen-slider max-w-screen "
+                        style={{ maxHeight: cellSize, minHeight: cellSize }}
+                    >
+                        {data.others.map(
+                            (value: { img: string; id: string }) => {
+                                return (
+                                    <div
+                                        className="keen-slider__slide"
+                                        style={{
+                                            maxWidth: cellSize,
+                                            minWidth: cellSize,
+                                            maxHeight: cellSize,
+                                            minHeight: cellSize,
+                                        }}
+                                    >
+                                        <GalleryImage
+                                            path={value.img}
+                                            id={value.id.toString()}
+                                        />
+                                    </div>
+                                );
+                            }
+                        )}
+                    </div>
                 </div>
-            </div>
-        );
+            ) : null;
 
         const compomentImage = data.post?.image && (
-            <div className=" ">
+            <Skeleton visible={imgIsLoading}>
                 <Image
                     alt=""
                     // src={"/profile.jpg"}
                     src={data.post.image}
-                    width="0"
-                    height="0"
+                    width="500"
+                    height="500"
+                    onLoadingComplete={() => setImgIsLoading(false)}
                     sizes="100vw"
                     className="object-contain w-auto h-auto aspect-auto min-h-[80vh] max-h-[85vh] block m-auto align-middle drop-shadow-md"
                 />
-            </div>
+            </Skeleton>
         );
 
         const compomentTitle = data.post?.title && (

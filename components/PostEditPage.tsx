@@ -201,6 +201,24 @@ const PostEditPage = () => {
 
         return NaN;
     }
+
+    function stepHandler(step: number) {
+        switch (step) {
+            case 0:
+                handleContextStep;
+                break;
+            case 1:
+                handleFileStep;
+                break;
+            case 2:
+                handleCropStep;
+                break;
+            case 3:
+                handlePostStep;
+                break;
+        }
+    }
+
     // MARK: step
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
         console.log(active);
@@ -282,7 +300,11 @@ const PostEditPage = () => {
                 )}
                 <Stepper
                     active={active}
-                    onStepClick={setActive}
+                    onStepClick={(step) => {
+                        if (step < active) {
+                            setActive(step);
+                        }
+                    }}
                     breakpoint="sm"
                 >
                     <Stepper.Step label="Context" className="uppercase">

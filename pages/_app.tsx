@@ -47,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         withGlobalStyles
                         withNormalizeCSS
                         theme={{
+                            loader: "dots",
                             colorScheme: mantineTheme,
                             primaryColor: "lime",
                         }}
