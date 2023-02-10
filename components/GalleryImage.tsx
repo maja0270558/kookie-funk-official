@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import classNames from "classnames";
+import { Skeleton } from "@mantine/core";
 
 type GalleryImageProps = {
     path: string;
@@ -11,24 +12,27 @@ type GalleryImageProps = {
 function GalleryImage(props: GalleryImageProps) {
     const [isLoading, setLoading] = useState(true);
 
-    const imageClass = classNames("duration-700 ease-in-out", {
-        ["grayscale blur-2xl"]: isLoading,
-        ["grayscale-0 blur-0 group-hover:scale-110 transition object-cover h-48 w-48"]:
-            !isLoading,
+    const imageClass = classNames("duration-200 ease-in-out  object-fill", {
+        [""]: isLoading,
+        ["group-hover:scale-105 transition"]: !isLoading,
     });
+
     return (
         <Link href={`../detail/${props.id}`} className="group">
-            <div className="duration-100 ease-in-out aspect-w-1 aspect-h-1 overflow-hidden group-hover:drop-shadow-lg ">
-                <Image
-                    src={props.path}
-                    alt={""}
-                    width="0"
-                    height="0"
-                    sizes="100vw"
-                    onLoadingComplete={() => setLoading(false)}
-                    className={imageClass}
-                    priority={true}
-                ></Image>
+            <div className="flex group-hover:drop-shadow-lg aspect-1 overflow-hidden">
+                <Skeleton visible={isLoading}>
+                    <Image
+                        src={props.path}
+                        alt={""}
+                        width="200"
+                        height="200"
+                        placeholder="blur"
+                        blurDataURL="/placeholder.jpeg"
+                        onLoadingComplete={() => setLoading(false)}
+                        className={imageClass}
+                        priority={true}
+                    ></Image>
+                </Skeleton>
             </div>
         </Link>
     );

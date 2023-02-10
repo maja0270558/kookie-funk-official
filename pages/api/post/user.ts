@@ -8,10 +8,15 @@ export default async function handle(
 ) {
     switch (req.method) {
         case "POST":
+            console.log("POST in");
             let username = req.body.username;
             let password = req.body.password;
             let fieldsExisting = username && password;
+            console.log("CHECK FIELDS EXISTING");
+
             if (fieldsExisting) {
+                console.log("FIELDS EXISTING");
+
                 const result = await prisma.user.findFirst({
                     where: {
                         user_name: username,
@@ -43,9 +48,8 @@ export default async function handle(
             } else {
                 res.status(200).json({ error: "Invalid request type" });
             }
-            break;
+            return;
         default:
-            res.status(405).end("Invalid request type");
-            break;
+            res.status(500).json({ error: "HTTP method incorrect" });
     }
 }

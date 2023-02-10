@@ -16,29 +16,37 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
-    const works = await prisma.works.findMany();
-    const worksById = _.groupBy(works, "cat_id");
+    try {
+        const works = await prisma.works.findMany({
+            where: {
+                display: 1,
+            },
+        });
+        const worksById = _.groupBy(works, "cat_id");
 
-    const cats = await prisma.categorize.findMany();
-    const data: WorksData[] = [];
+        const cats = await prisma.categorize.findMany();
+        const data: WorksData[] = [];
 
-    cats.forEach((cat) => {
-        let seperateWork = worksById[cat.id];
-        if (seperateWork) {
-            const imageData = seperateWork.map((work) => {
-                return {
-                    img: work.image_path!,
-                    id: work.id,
-                };
-            });
+        cats.forEach((cat) => {
+            let seperateWork = worksById[cat.id];
+            if (seperateWork) {
+                const imageData = seperateWork.map((work) => {
+                    return {
+                        img: work.nail_image_path!,
+                        id: work.id,
+                    };
+                });
 
-            data.push({
-                section_name: cat.section,
-                imgs: imageData,
-            });
-        }
-    });
-    res.json({
-        data,
-    });
+                data.push({
+                    section_name: cat.section,
+                    imgs: imageData,
+                });
+            }
+        });
+        return res.json(data);
+    } catch (e) {
+        return res.status(500).json({
+            error: `OMG ${e}`,
+        });
+    }
 }

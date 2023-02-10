@@ -17,6 +17,7 @@ model works {
   id              Int        @id @default(autoincrement())
   image_path      String?    @db.VarChar(1000)
   nail_image_path String?    @db.VarChar(1000)
+  public_image_id String?    @db.VarChar(1000)
   title           String     @db.Text
   desc            String     @db.Text
   display         Int?       @db.TinyInt

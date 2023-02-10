@@ -4,17 +4,37 @@ import { SessionProvider } from "next-auth/react";
 import { Layout } from "../components/Layout";
 import { store } from "..//store";
 import { Provider } from "react-redux";
+import ErrorBoundary from "../components/ErrorBoundary";
 
 // mantine
-import { MantineProvider } from "@mantine/core";
+import { ColorScheme, MantineProvider } from "@mantine/core";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
-import ErrorBoundary from "../components/ErrorBoundary";
+import { NotificationsProvider } from "@mantine/notifications";
 
 // Grabs the full Tailwind CSS object
 const fullConfig = resolveConfig(tailwindConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
+    const forest = "forest";
+    const light = "lemonade";
+    const dark = "dark";
+    const lofi = "lofi";
+    const cupcake = "cupcake";
+
+    let themeMap = new Map([
+        [`${forest}`, "dark"],
+        [`${dark}`, "dark"],
+        [`${light}`, "light"],
+        [`${lofi}`, "light"],
+        [`${cupcake}`, "light"],
+    ]);
+    const currentTheme = light;
+    const mantineTheme: ColorScheme = themeMap.get(
+        `${currentTheme}`
+    ) as ColorScheme;
+    let primaryColor = "#66DC5A";
+
     return (
         <SessionProvider
             // Provider options are not required but can be useful in situations where
@@ -22,40 +42,25 @@ function MyApp({ Component, pageProps }: AppProps) {
             session={pageProps.session}
         >
             <Provider store={store}>
-                <Layout>
+                <div className="relative" data-theme={currentTheme}>
                     <MantineProvider
                         withGlobalStyles
                         withNormalizeCSS
                         theme={{
-                            components: {
-                                RichTextEditor: {
-                                    classNames: {
-                                        root: "bg-base-300 border-base-100",
-                                        toolbar: "bg-base-300 border-base-100 ",
-                                        controlsGroup: "",
-                                        control:
-                                            "text-base-content border-base-100",
-                                        content:
-                                            "bg-base-300 text-base-content",
-                                        typographyStylesProvider: "prose",
-                                        linkEditor: "",
-                                        linkEditorSave:
-                                            "bg-base-100 text-base-content",
-                                        linkEditorInput:
-                                            "bg-base-100 text-base-content",
-                                        linkEditorExternalControl:
-                                            "bg-base-100 text-base-content",
-                                    },
-                                },
-                            },
-                            /** Put your mantine theme override here */
+                            loader: "dots",
+                            colorScheme: mantineTheme,
+                            primaryColor: "lime",
                         }}
                     >
-                        <ErrorBoundary>
-                            <Component {...pageProps} />
-                        </ErrorBoundary>
+                        <Layout>
+                            <ErrorBoundary>
+                                <NotificationsProvider>
+                                    <Component {...pageProps} />
+                                </NotificationsProvider>
+                            </ErrorBoundary>
+                        </Layout>
                     </MantineProvider>
-                </Layout>
+                </div>
             </Provider>
         </SessionProvider>
     );

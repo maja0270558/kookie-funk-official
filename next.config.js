@@ -4,13 +4,7 @@ module.exports = {
     images: {
         remotePatterns: [
             {
-                hostname: "media.printables.com",
-            },
-            {
-                hostname: "scontent-tpe1-1.xx.fbcdn.net",
-            },
-            {
-                hostname: "picsum.photos",
+                hostname: "res.cloudinary.com"
             },
         ],
     },
