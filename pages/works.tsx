@@ -5,6 +5,7 @@ import GalleryImage from "../components/GalleryImage";
 import Error from "next/error";
 import createFetcher from "../helper/Fetcher";
 import { Center, Loader } from "@mantine/core";
+import Link from "next/link";
 
 const works = () => {
     const { data, error, isLoading } = useSWR("/api/get/works", (url) =>
@@ -28,7 +29,9 @@ const works = () => {
                     <p className="py-6">
                         已乃僧忽他出，數日不返，探其篋笥，空空如也。
                     </p>
-                    <button className="btn btn-primary">Back to home</button>
+                    <Link href={"../"} className="btn btn-primary">
+                        Back to home
+                    </Link>
                 </div>
             </div>
         </div>
