@@ -15,6 +15,11 @@ export const config = {
 
 interface BodyArgument {
     id: string;
+    display: string;
+}
+
+function getRandomId() {
+    return Date.now() + (Math.random() * 100000).toFixed();
 }
 
 export default async function handle(
@@ -30,14 +35,15 @@ export default async function handle(
 
     switch (req.method) {
         case "POST":
-            console.log("🦤🦤🦤🦤🦤");
             let body: BodyArgument = req.body;
+            // Address, to be embedded on Person
             var postSchema = {
                 type: "object",
                 properties: {
+                    display: { type: "string" },
                     id: { type: "string" },
                 },
-                required: ["id"],
+                required: ["display", "id"],
             };
             const validate = Validator.validate(body, postSchema);
 
@@ -49,22 +55,12 @@ export default async function handle(
             }
 
             try {
-                const publicId = await prisma.works.findFirst({
+                await prisma.works.update({
                     where: {
                         id: parseInt(body.id),
                     },
-                    select: {
-                        public_image_id: true,
-                    },
-                });
-
-                const id = publicId?.public_image_id;
-                await cloudinary.v2.uploader.destroy(`works/${id}`);
-                await cloudinary.v2.uploader.destroy(`thumbnails/${id}`);
-
-                await prisma.works.delete({
-                    where: {
-                        id: parseInt(body.id),
+                    data: {
+                        display: parseInt(body.display),
                     },
                 });
 
@@ -72,9 +68,8 @@ export default async function handle(
             } catch (error) {
                 return res
                     .status(500)
-                    .json({ error: `Delete post fail because ${error}` });
+                    .json({ error: `Edit post fail because ${error}` });
             }
-
         default:
             res.status(500).json({ error: "HTTP method incorrect" });
     }

@@ -1,10 +1,15 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getServerSession } from "next-auth";
 import { prisma } from "../../api/db";
+import { authOptions } from "../auth/[...nextauth]";
+import works from "../../detail/[id]";
 
 export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+    const session = await getServerSession(req, res, authOptions);
+
     switch (req.method) {
         case "GET":
             const id: number = parseInt(req.query.id as string);
@@ -14,20 +19,46 @@ export default async function handle(
                 });
             }
             try {
-                const result = await prisma.works.findFirst({
-                    where: {
-                        id: id,
-                    },
-                });
+                let filter: any;
+                let otherResultFilter: any;
 
-                const othersResult = await prisma.works.findMany({
-                    where: {
-                        NOT: {
+                if (session) {
+                    filter = {
+                        where: {
                             id: id,
                         },
-                    },
-                    take: 100,
-                });
+                    };
+                    otherResultFilter = {
+                        where: {
+                            NOT: {
+                                id: id,
+                            },
+                        },
+                        take: 100,
+                    };
+                } else {
+                    filter = {
+                        where: {
+                            id: id,
+                            display: 1,
+                        },
+                    };
+                    otherResultFilter = {
+                        where: {
+                            display: 1,
+                            NOT: {
+                                id: id,
+                            },
+                        },
+                        take: 100,
+                    };
+                }
+
+                const result = await prisma.works.findFirst(filter);
+
+                const othersResult = await prisma.works.findMany(
+                    otherResultFilter
+                );
 
                 const otherPosts = othersResult.map((work) => {
                     return {

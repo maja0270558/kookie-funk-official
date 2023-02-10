@@ -62,22 +62,22 @@ export default async function handle(
             const validate = Validator.validate(body, postSchema);
 
             if (!validate.valid) {
-                const error = validate.errors[0].message;
+                const error = validate.errors[0].stack;
                 return res.json({
                     error: error,
                 });
             }
 
-            const publicId = await prisma.works.findFirst({
-                where: {
-                    id: parseInt(body.id),
-                },
-                select: {
-                    public_image_id: true,
-                },
-            });
-
             try {
+                const publicId = await prisma.works.findFirst({
+                    where: {
+                        id: parseInt(body.id),
+                    },
+                    select: {
+                        public_image_id: true,
+                    },
+                });
+
                 const id = publicId?.public_image_id;
                 const imageCldRes = await cloudinary.v2.uploader.upload(
                     body.image_data_url,

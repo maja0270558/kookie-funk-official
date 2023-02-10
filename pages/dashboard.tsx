@@ -103,9 +103,21 @@ const dashboard = () => {
     const [editCatInputValue, setEditCatInputValue] = useState("");
     const [editSaveButtonEnable, setEditSaveButtonEnable] = useState(false);
 
-    // edit cat request
+    // delete post request
     const deletePostRequest = useSWRMutation(
         "/api/post/delete_post",
+        (url, { arg }) =>
+            createFetcher(url, arg).then((data) => {
+                if (!data.error) {
+                    Router.reload();
+                }
+                return data;
+            })
+    );
+
+    // edit cat request
+    const editPostPublicRequest = useSWRMutation(
+        "/api/post/edit_post_status",
         (url, { arg }) =>
             createFetcher(url, arg).then((data) => {
                 if (!data.error) {
@@ -257,12 +269,36 @@ const dashboard = () => {
                             >
                                 Edit
                             </Menu.Item>
+
+                            <Menu.Item
+                                onClick={() => {
+                                    const data = {
+                                        id: element.id.toString(),
+                                        display:
+                                            element.display > 0 ? "0" : "1",
+                                    };
+                                    editPostPublicRequest.trigger(
+                                        JSON.stringify(data)
+                                    );
+                                }}
+                                icon={
+                                    element.display > 0 ? (
+                                        <IconEyeOff size={14} />
+                                    ) : (
+                                        <IconEye size={14} />
+                                    )
+                                }
+                            >
+                                {element.display > 0
+                                    ? "Set private"
+                                    : "Set public"}
+                            </Menu.Item>
+
                             <Menu.Item
                                 onClick={() => {
                                     const data = {
                                         id: element.id.toString(),
                                     };
-                                    console.log("🦮🦮🦮🦮🦮🦮");
                                     deletePostRequest.trigger(
                                         JSON.stringify(data)
                                     );

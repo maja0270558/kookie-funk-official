@@ -58,7 +58,7 @@ export default async function handle(
             const validate = Validator.validate(body, postSchema);
 
             if (!validate.valid) {
-                const error = validate.errors[0].message;
+                const error = validate.errors[0].stack;
                 return res.json({
                     error: error,
                 });

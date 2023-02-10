@@ -17,7 +17,11 @@ export default async function handle(
     res: NextApiResponse
 ) {
     try {
-        const works = await prisma.works.findMany();
+        const works = await prisma.works.findMany({
+            where: {
+                display: 1,
+            },
+        });
         const worksById = _.groupBy(works, "cat_id");
 
         const cats = await prisma.categorize.findMany();
