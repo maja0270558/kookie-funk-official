@@ -7,7 +7,7 @@ import { Provider } from "react-redux";
 import ErrorBoundary from "../components/ErrorBoundary";
 
 // mantine
-import { ColorScheme, MantineProvider } from "@mantine/core";
+import { ColorScheme, LoadingOverlay, MantineProvider } from "@mantine/core";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
 import { NotificationsProvider } from "@mantine/notifications";
@@ -43,22 +43,22 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
             <Provider store={store}>
                 <div className="relative" data-theme={currentTheme}>
-                    <Layout>
-                        <MantineProvider
-                            withGlobalStyles
-                            withNormalizeCSS
-                            theme={{
-                                colorScheme: mantineTheme,
-                                primaryColor: "lime",
-                            }}
-                        >
+                    <MantineProvider
+                        withGlobalStyles
+                        withNormalizeCSS
+                        theme={{
+                            colorScheme: mantineTheme,
+                            primaryColor: "lime",
+                        }}
+                    >
+                        <Layout>
                             <ErrorBoundary>
                                 <NotificationsProvider>
                                     <Component {...pageProps} />
                                 </NotificationsProvider>
                             </ErrorBoundary>
-                        </MantineProvider>
-                    </Layout>
+                        </Layout>
+                    </MantineProvider>
                 </div>
             </Provider>
         </SessionProvider>

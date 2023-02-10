@@ -1,4 +1,12 @@
 import { errorNotification } from "../components/NotificationService";
+import useSWR, {
+    Arguments,
+    BareFetcher,
+    Middleware,
+    SWRConfiguration,
+    SWRHook,
+} from "swr";
+
 export default function createFetcher(url: string, arg?: any) {
     let fetcher: Promise<Response>;
     if (arg) {

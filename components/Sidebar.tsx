@@ -98,7 +98,6 @@ const Sidebar = ({ children }: Props) => {
                                 className="object-contain w-[200px] h-auto aspect-auto"
                                 priority={true}
                             />
-
                         </Link>
                     </div>
 
