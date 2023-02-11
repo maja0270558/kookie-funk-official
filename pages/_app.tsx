@@ -11,6 +11,7 @@ import { ColorScheme, MantineProvider } from "@mantine/core";
 import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
 import { NotificationsProvider } from "@mantine/notifications";
+import Head from "next/head";
 
 // Grabs the full Tailwind CSS object
 const fullConfig = resolveConfig(tailwindConfig);
@@ -43,6 +44,11 @@ function MyApp({ Component, pageProps }: AppProps) {
         >
             <Provider store={store}>
                 <div className="relative" data-theme={currentTheme}>
+                    <Head>
+                        <link rel="preconnect" href="https://fonts.googleapis.com" />
+                        <link rel="preconnect" href="https://fonts.gstatic.com" />
+                        <link href="https://fonts.googleapis.com/css2?family=Darker+Grotesque:wght@300;400;500;600;700;800;900&family=Noto+Sans+Symbols+2&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+                    </Head>
                     <MantineProvider
                         withGlobalStyles
                         withNormalizeCSS

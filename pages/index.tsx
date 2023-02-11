@@ -8,10 +8,11 @@ const home = () => {
             <Head>
                 <title>KookieFunk</title>
                 <meta name="description" content="KOOKIE FUNK" key="desc" />
+
             </Head>
-            <div className="flex flex-row  place-content-center min-h-[100vh]">
+            <div className="flex flex-row  min-h-[100vh]">
                 <div className="flex flex-col lg:flex-row-reverse flex-1 ">
-                    <div className="relative flex flex-auto justify-center min-w-[368]">
+                    <div className="flex flex-auto justify-center min-w-[368]">
                         {
                             <Image
                                 alt=""
@@ -19,15 +20,15 @@ const home = () => {
                                 width="0"
                                 height="0"
                                 sizes="100vw"
-                                className=" object-fill w-auto h-auto aspect-auto"
+                                className=" object-contain object-bottom w-auto h-auto aspect-auto"
                             />
                         }
                     </div>
 
-                    <div className="flex flex-1 pt-4 items-end justify-center lg:justify-end">
-                        <div className="flex">
-                            <div className="grow-1 text-base-content prose-sm lg:prose-lg lg:pb-8 m-auto">
-                                <h1 className="text-3xl font-bold text-center lg:text-left">
+                    <div className="flex flex-1 pt-4 justify-center lg:justify-end">
+                        <div className="flex lg:flex-auto">
+                            <div className=" text-gray-500 grow-1 prose-lg lg:prose-xl xl:prose-2xl lg:pb-8 m-auto">
+                                <h1 className="font-bold text-center lg:text-left">
                                     曲奇放克
                                 </h1>
                                 <p className="">台灣人｜A型</p>

@@ -1,4 +1,5 @@
 /** @type {import('tailwindcss').Config} */
+
 module.exports = {
     content: [
         "./pages/**/*.{js,ts,jsx,tsx}",
@@ -7,6 +8,12 @@ module.exports = {
     ],
     theme: {
         extend: {
+            fontFamily: {
+                rajdhani: [`"Rajdhani"`, `"sans-serif"`],
+                noto: [`"Noto Sans Symbols 2"`, `"sans-serif"`],
+                grotesque: [`"Darker Grotesque"`, `"sans-serif"`],
+
+            },
             gridTemplateColumns: {
                 14: "repeat(14, minmax(0, 1fr))",
                 fill: "repeat(auto-fill, minmax(100px, 1fr))",
