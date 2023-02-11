@@ -94,7 +94,7 @@ const works = () => {
                     height="500"
                     onLoadingComplete={() => setImgIsLoading(false)}
                     sizes="100vw"
-                    className="object-contain w-auto h-auto aspect-auto min-h-[80vh] max-h-[85vh] block m-auto align-middle drop-shadow-md"
+                    className="object-contain w-auto h-auto aspect-auto lg:min-h-[80vh] max-h-[85vh] drop-shadow-md"
                 />
             </Skeleton>
         );

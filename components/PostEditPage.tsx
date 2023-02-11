@@ -44,6 +44,7 @@ import DetailPreview from "./DetailPreview";
 import Router, { useRouter } from "next/router";
 import { FilePondFile } from "filepond";
 import { EditPostPara } from "../slices/editPostSlice";
+import createFetcher from "../helper/Fetcher";
 
 const PostEditPage = () => {
     const titleEditor: Editor | null = editor("Title require");
@@ -114,16 +115,15 @@ const PostEditPage = () => {
     const categorizeDataRequest = useSWRMutation(
         "/api/get/categorize",
         (url, { arg }) =>
-            fetch(url)
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    setCatData(jsonData);
-
-                    if (arg != "") {
-                        setValue(arg);
+            createFetcher(url)
+                .then((data) => {
+                    if (!data.error) {
+                        setCatData(data);
+                        if (arg != "") {
+                            setValue(arg);
+                        }
                     }
-
-                    return jsonData;
+                    return data;
                 })
     );
 
@@ -131,22 +131,17 @@ const PostEditPage = () => {
     const createCategorizeRequest = useSWRMutation(
         "/api/post/create_cat",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    const item = {
-                        value: jsonData.id.toString(),
-                        label: jsonData.section.toUpperCase(),
-                    };
-                    setCatData((current) => [...current, item]);
-                    setValue(item.value);
-                    return jsonData;
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        const item = {
+                            value: data.id.toString(),
+                            label: data.section.toUpperCase(),
+                        };
+                        setCatData((current) => [...current, item]);
+                        setValue(item.value);
+                    }
+                    return data;
                 })
     );
 
@@ -154,16 +149,11 @@ const PostEditPage = () => {
     const postRequest = useSWRMutation(
         "/api/post/upload_post",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    Router.push("/dashboard");
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        Router.push("/dashboard");
+                    }
                 })
     );
 
@@ -171,16 +161,11 @@ const PostEditPage = () => {
     const editPostRequest = useSWRMutation(
         "/api/post/edit_post",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    Router.push("/dashboard");
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        Router.push("/dashboard");
+                    }
                 })
     );
 
@@ -327,7 +312,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => {}}
+                            onDropdownOpen={() => { }}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
