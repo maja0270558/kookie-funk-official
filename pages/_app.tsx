@@ -12,6 +12,7 @@ import resolveConfig from "tailwindcss/resolveConfig";
 import tailwindConfig from "../tailwind.config";
 import { NotificationsProvider } from "@mantine/notifications";
 import Head from "next/head";
+import { RouterTransition } from "../components/RouterTransition";
 
 // Grabs the full Tailwind CSS object
 const fullConfig = resolveConfig(tailwindConfig);
@@ -30,7 +31,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         [`${lofi}`, "light"],
         [`${cupcake}`, "light"],
     ]);
-    const currentTheme = cupcake;
+    const currentTheme = dark;
     const mantineTheme: ColorScheme = themeMap.get(
         `${currentTheme}`
     ) as ColorScheme;
@@ -58,6 +59,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                             primaryColor: "lime",
                         }}
                     >
+                        <RouterTransition />
+
                         <Layout>
                             <ErrorBoundary>
                                 <NotificationsProvider>

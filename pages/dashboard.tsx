@@ -164,7 +164,7 @@ const dashboard = () => {
 
 
 
-    const rows = dashboardData
+    const rows = dashboardData instanceof Array && dashboardData
         .filter((element: DashBoardData) => {
             if (cateFilter == "") return true;
             return (
