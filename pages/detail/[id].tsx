@@ -84,46 +84,12 @@ const works = () => {
                 </div>
             ) : null;
 
-        const compomentImage = data.post?.image && (
-            <Skeleton visible={imgIsLoading}>
-                <Image
-                    alt=""
-                    // src={"/profile.jpg"}
-                    src={data.post.image}
-                    width="500"
-                    height="500"
-                    onLoadingComplete={() => setImgIsLoading(false)}
-                    sizes="100vw"
-                    className="object-contain w-auto h-auto aspect-auto lg:min-h-[80vh] max-h-[85vh] drop-shadow-md"
-                />
-            </Skeleton>
-        );
-
-        const compomentTitle = data.post?.title && (
-            <TypographyStylesProvider className="text-base-content lg:min-w-full">
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: data.post.title ?? "",
-                    }}
-                />
-            </TypographyStylesProvider>
-        );
-
-        const compomentDesc = data.post?.description && (
-            <TypographyStylesProvider className="text-base-content mt-4 lg:min-w-full ">
-                <div
-                    dangerouslySetInnerHTML={{
-                        __html: data.post.description ?? "",
-                    }}
-                />
-            </TypographyStylesProvider>
-        );
 
         return (
             <DetailLayout
-                image={compomentImage}
-                title={compomentTitle}
-                content={compomentDesc}
+                image={data.post?.image ?? ""}
+                title={data.post.title ?? ""}
+                content={data.post.description ?? ""}
                 otherSection={otherPostsSection}
             ></DetailLayout>
         );
