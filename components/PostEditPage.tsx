@@ -35,7 +35,7 @@ import PostEditor from "./RichTextEditor";
 import { constant } from "lodash";
 // alert
 import { Alert } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle, IconBox } from "@tabler/icons";
 // segement
 import { SegmentedControl } from "@mantine/core";
 // loader
@@ -45,6 +45,8 @@ import Router, { useRouter } from "next/router";
 import { FilePondFile } from "filepond";
 import { EditPostPara } from "../slices/editPostSlice";
 import createFetcher from "../helper/Fetcher";
+import Head from "next/head";
+import { useDropboxChooser } from 'use-dropbox-chooser'
 
 const PostEditPage = () => {
     const titleEditor: Editor | null = editor("Title require");
@@ -270,6 +272,27 @@ const PostEditPage = () => {
         }
     }
 
+    const { open, isOpen } = useDropboxChooser({
+        appKey: process.env.DROPBOX_APPKEY,
+        chooserOptions: {
+            // default: 'preview'
+            linkType: 'direct',
+            // default: false
+            multiselect: false,
+            extensions: ["images"]
+        },
+        onSelected: (files) => {
+            files.length > 0 && files[0].link && setFiles([
+                {
+                    source: files[0].link,
+                },
+            ]);
+        },
+        onCanceled: () => {
+
+        }
+    })
+
     return (
         <div>
             <div className="p-8 flex flex-col">
@@ -348,6 +371,10 @@ const PostEditPage = () => {
 
                     <Stepper.Step label="File" className="uppercase">
                         <Title title="Select your hard work" />
+                        <button className="mb-4 btn btn-xs rounded-none text-white border-none" onClick={open} disabled={isOpen}>
+                            <IconBox></IconBox>
+                            Choose from Dropbox
+                        </button>
                         <FilePond
                             imagePreviewMinHeight={80}
                             credits={false}
