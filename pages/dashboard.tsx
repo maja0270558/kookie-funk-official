@@ -339,16 +339,19 @@ const dashboard = () => {
                     setFilter(t.target.value);
                 }}
             />
-            <Table
-                className="table-auto"
-                captionSide="bottom"
-                highlightOnHover={true}
-                horizontalSpacing="lg"
-                verticalSpacing="sm"
-            >
-                <thead>{ths}</thead>
-                <tbody>{rows}</tbody>
-            </Table>
+            <div className="overflow-auto">
+                <Table
+                    className="table-auto"
+                    captionSide="bottom"
+                    highlightOnHover={true}
+                    horizontalSpacing="lg"
+                    verticalSpacing="sm"
+                >
+                    <thead>{ths}</thead>
+                    <tbody>{rows}</tbody>
+                </Table>
+            </div>
+
         </div>
     );
     return (
