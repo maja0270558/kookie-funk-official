@@ -6,7 +6,10 @@ import Error from "next/error";
 import createFetcher from "../helper/Fetcher";
 import { Center, Loader } from "@mantine/core";
 import Link from "next/link";
-import Head from "next/head";
+
+import { Rajdhani } from '@next/font/google'
+const rajdhani = Rajdhani({ weight: "500", subsets: ['latin'] })
+
 
 const works = () => {
     const { data, error, isLoading } = useSWR("/api/get/works", (url) =>
@@ -40,13 +43,14 @@ const works = () => {
 
     if (data instanceof Array) if (data.length <= 0) return emptyView;
 
+    const sectionClass = `uppercase pb-4 text-lg ${rajdhani.className}`
     const compoment =
         data instanceof Array &&
         data.map((workData: WorksData) => {
             return (
 
                 <div className="mx-auto px-4 py-8" key={workData.section_name}>
-                    <div className="uppercase pb-4 font-rajdhani text-lg">
+                    <div className={sectionClass}>
                         <h1>{workData.section_name}</h1>
                     </div>
                     <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
