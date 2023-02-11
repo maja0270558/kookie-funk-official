@@ -451,7 +451,7 @@ const dashboard = () => {
                                 >
                                     <Badge
                                         className=" cursor-pointer"
-                                        variant={element.label == cateFilter ? "dot" : "light"}
+                                        variant={element.label == cateFilter ? "light" : "dot"}
                                         size="lg"
                                         color="teal"
                                         sx={{ paddingRight: 3 }}
