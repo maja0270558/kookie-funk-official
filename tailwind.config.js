@@ -9,9 +9,9 @@ module.exports = {
     theme: {
         extend: {
             fontFamily: {
-                rajdhani: [`"Rajdhani"`, `"sans-serif"`],
-                noto: [`"Noto Sans Symbols 2"`, `"sans-serif"`],
-                grotesque: [`"Darker Grotesque"`, `"sans-serif"`],
+                // rajdhani: [`"Rajdhani"`, `"sans-serif"`],
+                // noto: [`"Noto Sans Symbols 2"`, `"sans-serif"`],
+                // grotesque: [`"Darker Grotesque"`, `"sans-serif"`],
 
             },
             gridTemplateColumns: {

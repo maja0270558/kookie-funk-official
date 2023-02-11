@@ -6,7 +6,8 @@ import classNames from "classnames";
 
 /// Next-auth
 import { useSession } from "next-auth/react";
-import { LoadingOverlay } from "@mantine/core";
+import { Rajdhani } from '@next/font/google'
+const rajdhani = Rajdhani({ weight: "600", subsets: ['latin'] })
 
 type Props = {
     children: ReactNode;
@@ -44,9 +45,10 @@ const Sidebar = ({ children }: Props) => {
         });
     }
 
+    const menuItemClassName = `btn-block uppercase pl-2 text-left text-xl font-black mb-2 ${rajdhani.className}`
     const getLinkItemClasses = (isSelected: boolean, enable: boolean) => {
         return classNames(
-            "btn-block uppercase pl-2 text-left text-xl font-rajdhani font-black mb-2",
+            menuItemClassName,
             {
                 ["text-white bg-primary"]: isSelected && enable,
                 ["btn-ghost bg-base-100 hover:bg-base-200"]:
