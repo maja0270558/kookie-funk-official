@@ -389,7 +389,9 @@ const PostEditPage = () => {
                                 <Cropper
                                     className=" relative"
                                     dragMode="move"
-                                    aspectRatio={NaN}
+                                    aspectRatio={
+                                        converSegmentedToRatio(segmentedValue)
+                                    }
                                     scalable={false}
                                     preview=".detail"
                                     src={image ?? ""}
