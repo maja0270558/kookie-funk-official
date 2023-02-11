@@ -3,6 +3,7 @@ import { getServerSession } from "next-auth";
 import { prisma } from "../../api/db";
 import { authOptions } from "../auth/[...nextauth]";
 import works from "../../detail/[id]";
+import _ from "lodash";
 
 export default async function handle(
     req: NextApiRequest,
@@ -65,16 +66,24 @@ export default async function handle(
                         img: work.nail_image_path,
                         id: work.id,
                     };
-                });
+                })
+
+                const targetIndex = otherPosts.findIndex((element) => {
+                    return element.id > id
+                })
+
+                const trailPosts = _.slice(otherPosts, 0, targetIndex)
+                const leadingPosts = _.slice(otherPosts, targetIndex, otherPosts.length)
+                const orderPosts = _.concat(leadingPosts, trailPosts);
 
                 if (result) {
-                    res.status(200).json({
+                    return res.status(200).json({
                         post: {
                             title: result.title,
                             description: result.desc,
                             image: result.image_path,
                         },
-                        others: otherPosts,
+                        others: orderPosts,
                     });
                 } else {
                     return res.status(500).json({
@@ -87,6 +96,6 @@ export default async function handle(
                 });
             }
         default:
-            res.status(500).json({ error: "HTTP method incorrect" });
+            return res.status(500).json({ error: "HTTP method incorrect" });
     }
 }

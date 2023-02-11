@@ -93,7 +93,7 @@ const Sidebar = ({ children }: Props) => {
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-                <ul className="menu w-72 pl-20 pt-20 pr-10 mr-20 bg-base-100 text-base-content">
+                <ul className="menu w-80 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">
                     {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
                         <Link href="./">
