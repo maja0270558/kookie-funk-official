@@ -16,6 +16,7 @@ export default async function handle(
     req: NextApiRequest,
     res: NextApiResponse
 ) {
+
     try {
         const works = await prisma.works.findMany({
             include: {

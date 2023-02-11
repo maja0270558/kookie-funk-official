@@ -6,6 +6,7 @@ import Error from "next/error";
 import createFetcher from "../helper/Fetcher";
 import { Center, Loader } from "@mantine/core";
 import Link from "next/link";
+import Head from "next/head";
 
 const works = () => {
     const { data, error, isLoading } = useSWR("/api/get/works", (url) =>
@@ -43,9 +44,10 @@ const works = () => {
         data instanceof Array &&
         data.map((workData: WorksData) => {
             return (
+
                 <div className="mx-auto px-4 py-8" key={workData.section_name}>
-                    <div className="uppercase pb-4 pl-4 prose">
-                        <h2>{workData.section_name}</h2>
+                    <div className="uppercase pb-4 font-rajdhani text-lg">
+                        <h1>{workData.section_name}</h1>
                     </div>
                     <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
                         {workData.imgs.map((value) => {
@@ -62,7 +64,9 @@ const works = () => {
             );
         });
 
-    return compoment ? <div>{compoment}</div> : emptyView;
+    return compoment ? <div className="m-8">
+        {compoment}
+    </div> : emptyView;
 };
 
 export default works;

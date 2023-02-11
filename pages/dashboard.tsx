@@ -49,6 +49,7 @@ const dashboard = () => {
 
     const [dashboardData, setDashboardData] = useState<any[]>([]);
     const [filter, setFilter] = useState("");
+    const [cateFilter, setCatFilter] = useState("");
 
     const worksRequest = useSWR("/api/get/dashboard", (url) =>
         createFetcher(url).then((data) => {
@@ -161,7 +162,17 @@ const dashboard = () => {
         </tr>
     );
 
-    const rows = dashboardData
+
+
+    const rows = dashboardData instanceof Array && dashboardData
+        .filter((element: DashBoardData) => {
+            if (cateFilter == "") return true;
+            return (
+                element.categorize.section
+                    .toLowerCase()
+                    .includes(cateFilter.toLowerCase())
+            );
+        })
         .filter((element: DashBoardData) => {
             if (filter == "") return true;
             return (
@@ -318,12 +329,6 @@ const dashboard = () => {
             </tr>
         ));
 
-    const pencelButton = (
-        <ActionIcon size="xs" radius="xl" variant="transparent">
-            <IconPencil size={16} />
-        </ActionIcon>
-    );
-
     const saveButtonClass = classNames("btn", {
         ["btn-primary"]: editSaveButtonEnable,
         ["glass btn-disabled"]: !editSaveButtonEnable,
@@ -339,16 +344,19 @@ const dashboard = () => {
                     setFilter(t.target.value);
                 }}
             />
-            <Table
-                className="table-auto"
-                captionSide="bottom"
-                highlightOnHover={true}
-                horizontalSpacing="lg"
-                verticalSpacing="sm"
-            >
-                <thead>{ths}</thead>
-                <tbody>{rows}</tbody>
-            </Table>
+            <div className="overflow-auto">
+                <Table
+                    className="table-auto"
+                    captionSide="bottom"
+                    highlightOnHover={true}
+                    horizontalSpacing="lg"
+                    verticalSpacing="sm"
+                >
+                    <thead>{ths}</thead>
+                    <tbody>{rows}</tbody>
+                </Table>
+            </div>
+
         </div>
     );
     return (
@@ -414,10 +422,10 @@ const dashboard = () => {
                                 <IconTrash size={18} color="red" />
                             </button>
 
-                            <p className=" prose-xs  text-red-300 ">
+                            <div className=" prose-xs  text-red-300 ">
                                 <p className="font-bold"> **重要！**</p>
                                 移除類別時將會移除類別底下所有相關的貼文，請想清楚後再移除
-                            </p>
+                            </div>
                         </div>
                     </div>
                 }
@@ -437,21 +445,36 @@ const dashboard = () => {
                                 <div
                                     key={element.value}
                                     onClick={() => {
-                                        setEditCatInputValue(element.label);
-                                        setEditCatData({
-                                            id: element.value,
-                                            section: element.label,
-                                        });
-                                        setOpened(true);
+
+
                                     }}
                                 >
                                     <Badge
+                                        className=" cursor-pointer"
+                                        variant={element.label == cateFilter ? "light" : "dot"}
                                         size="lg"
                                         color="teal"
                                         sx={{ paddingRight: 3 }}
-                                        rightSection={pencelButton}
+                                        rightSection={
+                                            <ActionIcon size="xs" radius="xl" variant="transparent" onClick={() => {
+                                                setEditCatInputValue(element.label);
+                                                setEditCatData({
+                                                    id: element.value,
+                                                    section: element.label,
+                                                });
+                                                setOpened(true);
+                                            }}>
+                                                <IconPencil size={16} />
+                                            </ActionIcon>
+                                        }
                                     >
-                                        {element.label.toUpperCase()}
+                                        <div onClick={() => {
+                                            const filterValue = (element.label == cateFilter) ? "" : element.label
+                                            setCatFilter(filterValue)
+
+                                        }}>
+                                            {element.label.toUpperCase()}
+                                        </div>
                                     </Badge>
                                 </div>
                             );

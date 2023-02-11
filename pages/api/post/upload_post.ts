@@ -90,10 +90,15 @@ export default async function handle(
                             public_image_id: id,
                         },
                     });
+                } else {
+                    return res
+                        .status(500)
+                        .json({ error: `Post fail because cloudnary issue` });
                 }
 
                 return res.status(200).json({ return_code: "0000" });
             } catch (error) {
+                console.log(error)
                 return res
                     .status(500)
                     .json({ error: `Post fail because ${error}` });

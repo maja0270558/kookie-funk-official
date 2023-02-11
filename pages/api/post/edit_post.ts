@@ -31,7 +31,6 @@ export default async function handle(
     res: NextApiResponse
 ) {
     const session = await getServerSession(req, res, authOptions);
-
     if (!session) {
         res.status(401).json({ error: "You must be logged in." });
         return;
@@ -63,7 +62,7 @@ export default async function handle(
 
             if (!validate.valid) {
                 const error = validate.errors[0].stack;
-                return res.json({
+                return res.status(500).json({
                     error: error,
                 });
             }
@@ -89,7 +88,6 @@ export default async function handle(
                 );
                 const imageURL = imageCldRes.secure_url;
                 const nailImageURL = nailImageCldRes.secure_url;
-
                 if (imageURL !== "" && nailImageURL !== "") {
                     await prisma.works.update({
                         where: {
@@ -104,6 +102,10 @@ export default async function handle(
                             cat_id: parseInt(body.cat_id),
                         },
                     });
+                } else {
+                    return res
+                        .status(500)
+                        .json({ error: `Edit post fail because cloudnary issue` });
                 }
 
                 return res.status(200).json({ return_code: "0000" });

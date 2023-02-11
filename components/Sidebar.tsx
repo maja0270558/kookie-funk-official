@@ -46,12 +46,12 @@ const Sidebar = ({ children }: Props) => {
 
     const getLinkItemClasses = (isSelected: boolean, enable: boolean) => {
         return classNames(
-            "btn-xs btn-block uppercase mb-1 font-medium text-xs text-left",
+            "btn-block uppercase pl-2 text-left text-xl font-rajdhani font-black mb-2",
             {
-                ["text-base-100 bg-primary"]: isSelected && enable,
+                ["text-white bg-primary"]: isSelected && enable,
                 ["btn-ghost bg-base-100 hover:bg-base-200"]:
                     !isSelected && enable,
-                ["text-base-300"]: !enable,
+                ["text-gray-500"]: !enable,
             }
         );
     };
@@ -59,7 +59,7 @@ const Sidebar = ({ children }: Props) => {
 
     return (
         <div className="drawer drawer-mobile">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
+            <input id="my-drawer-2" type="checkbox" className="drawer-toggle " />
             <div className="drawer-content flex flex-col relative">
                 {/* nav bar on */}
                 <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden ">
@@ -93,7 +93,7 @@ const Sidebar = ({ children }: Props) => {
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-                <ul className="menu w-60 pl-20 pt-8 pr-10 bg-base-100 text-base-content">
+                <ul className="menu w-80 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">
                     {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
                         <Link href="./">
@@ -109,7 +109,7 @@ const Sidebar = ({ children }: Props) => {
                         </Link>
                     </div>
 
-                    <div className="flex-grow w-24">
+                    <div className="flex-grow">
                         {menuItems.map(({ ...menu }) => {
                             const isSelected = router.pathname == menu.link;
                             return (

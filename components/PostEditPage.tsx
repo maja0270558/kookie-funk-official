@@ -14,13 +14,15 @@ import "filepond/dist/filepond.min.css";
 import FilePondPluginImageExifOrientation from "filepond-plugin-image-exif-orientation";
 import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import FilePondPluginFileEncode from "filepond-plugin-file-encode";
+import FilePondPluginFileValidateType from 'filepond-plugin-file-validate-type';
 
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 // Register the plugins
 registerPlugin(
     FilePondPluginImageExifOrientation,
     FilePondPluginImagePreview,
-    FilePondPluginFileEncode
+    FilePondPluginFileEncode,
+    FilePondPluginFileValidateType
 );
 // -------------------
 // react cropper
@@ -35,7 +37,7 @@ import PostEditor from "./RichTextEditor";
 import { constant } from "lodash";
 // alert
 import { Alert } from "@mantine/core";
-import { IconAlertCircle } from "@tabler/icons";
+import { IconAlertCircle, IconBox, IconExclamationCircle } from "@tabler/icons";
 // segement
 import { SegmentedControl } from "@mantine/core";
 // loader
@@ -44,6 +46,9 @@ import DetailPreview from "./DetailPreview";
 import Router, { useRouter } from "next/router";
 import { FilePondFile } from "filepond";
 import { EditPostPara } from "../slices/editPostSlice";
+import createFetcher from "../helper/Fetcher";
+import Head from "next/head";
+import { useDropboxChooser } from 'use-dropbox-chooser'
 
 const PostEditPage = () => {
     const titleEditor: Editor | null = editor("Title require");
@@ -83,17 +88,18 @@ const PostEditPage = () => {
 
         const decodedTitle = decodeURIComponent(postData.title);
         if (decodedTitle !== "") {
-            titleEditor?.commands.setContent(decode(decodedTitle));
+            !titleEditor.isDestroyed && titleEditor?.commands.setContent(decode(decodedTitle));
         }
 
         const decodedContent = decodeURIComponent(postData.content);
         if (decodedContent !== "") {
-            contentEditor?.commands.setContent(decode(decodedContent));
+            !contentEditor.isDestroyed && contentEditor?.commands.setContent(decode(decodedContent));
         }
     }, [router.isReady, titleEditor, contentEditor]);
 
     const [initData, setInitData] = useState<EditPostPara | null>(null);
     const [files, setFiles] = useState<any[]>([]);
+    const [fileIsGIF, setFileIsGIF] = useState<boolean>(false);
 
     // cropper
     const [image, setImage] = useState<string | null>(null);
@@ -114,16 +120,15 @@ const PostEditPage = () => {
     const categorizeDataRequest = useSWRMutation(
         "/api/get/categorize",
         (url, { arg }) =>
-            fetch(url)
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    setCatData(jsonData);
-
-                    if (arg != "") {
-                        setValue(arg);
+            createFetcher(url)
+                .then((data) => {
+                    if (!data.error) {
+                        setCatData(data);
+                        if (arg != "") {
+                            setValue(arg);
+                        }
                     }
-
-                    return jsonData;
+                    return data;
                 })
     );
 
@@ -131,22 +136,17 @@ const PostEditPage = () => {
     const createCategorizeRequest = useSWRMutation(
         "/api/post/create_cat",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    const item = {
-                        value: jsonData.id.toString(),
-                        label: jsonData.section.toUpperCase(),
-                    };
-                    setCatData((current) => [...current, item]);
-                    setValue(item.value);
-                    return jsonData;
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        const item = {
+                            value: data.id.toString(),
+                            label: data.section.toUpperCase(),
+                        };
+                        setCatData((current) => [...current, item]);
+                        setValue(item.value);
+                    }
+                    return data;
                 })
     );
 
@@ -154,16 +154,11 @@ const PostEditPage = () => {
     const postRequest = useSWRMutation(
         "/api/post/upload_post",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    Router.push("/dashboard");
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        Router.push("/dashboard");
+                    }
                 })
     );
 
@@ -171,16 +166,11 @@ const PostEditPage = () => {
     const editPostRequest = useSWRMutation(
         "/api/post/edit_post",
         (url, { arg }) =>
-            fetch(url, {
-                method: "POST",
-                body: arg,
-                headers: {
-                    "Content-Type": "application/json",
-                },
-            })
-                .then((res) => res.json())
-                .then((jsonData) => {
-                    Router.push("/dashboard");
+            createFetcher(url, arg)
+                .then((data) => {
+                    if (!data.error) {
+                        Router.push("/dashboard");
+                    }
                 })
     );
 
@@ -200,23 +190,6 @@ const PostEditPage = () => {
         }
 
         return NaN;
-    }
-
-    function stepHandler(step: number) {
-        switch (step) {
-            case 0:
-                handleContextStep;
-                break;
-            case 1:
-                handleFileStep;
-                break;
-            case 2:
-                handleCropStep;
-                break;
-            case 3:
-                handlePostStep;
-                break;
-        }
     }
 
     // MARK: step
@@ -239,17 +212,21 @@ const PostEditPage = () => {
     }
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
-        console.log(image);
         if (!image) {
             setGloableError("File not select");
             return;
         }
+
         setGloableError(null);
         setActive(active + 1);
     }
 
     function handleCropStep(event: React.MouseEvent<HTMLElement>) {
-        if (typeof cropper !== "undefined") {
+        if (fileIsGIF) {
+            setCropData(
+                image ?? ""
+            );
+        } else if (typeof cropper !== "undefined") {
             setCropData(
                 cropper.getCroppedCanvas().toDataURL("image/jpeg", 0.9)
             );
@@ -270,6 +247,7 @@ const PostEditPage = () => {
     }
 
     function handlePostStep(event: React.MouseEvent<HTMLElement>) {
+        console.log(cropData)
         const param = JSON.stringify({
             image_data_url: cropData,
             nail_image_data_url: thumbnailCropData,
@@ -284,6 +262,27 @@ const PostEditPage = () => {
             postRequest.trigger(param);
         }
     }
+
+    const { open, isOpen } = useDropboxChooser({
+        appKey: "r7swpbyqksavenz",
+        chooserOptions: {
+            // default: 'preview'
+            linkType: 'direct',
+            // default: false
+            multiselect: false,
+            extensions: ["images"]
+        },
+        onSelected: (files) => {
+            files.length > 0 && files[0].link && setFiles([
+                {
+                    source: files[0].link,
+                },
+            ]);
+        },
+        onCanceled: () => {
+
+        }
+    })
 
     return (
         <div>
@@ -327,7 +326,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => {}}
+                            onDropdownOpen={() => { }}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
@@ -363,7 +362,12 @@ const PostEditPage = () => {
 
                     <Stepper.Step label="File" className="uppercase">
                         <Title title="Select your hard work" />
+                        <button className="mb-4 btn btn-xs rounded-none text-white border-none" onClick={open} disabled={isOpen}>
+                            <IconBox></IconBox>
+                            Choose from Dropbox
+                        </button>
                         <FilePond
+                            acceptedFileTypes={['image/*']}
                             imagePreviewMinHeight={80}
                             credits={false}
                             allowProcess={false}
@@ -376,6 +380,8 @@ const PostEditPage = () => {
                                     return;
                                 }
 
+                                setFileIsGIF(item.filename.includes('gif'))
+
                                 if (item) {
                                     setImage(item.getFileEncodeDataURL());
                                 }
@@ -384,6 +390,7 @@ const PostEditPage = () => {
                                 setFiles(fileItems);
                                 if (fileItems.length <= 0) {
                                     setImage(null);
+                                    setFileIsGIF(false);
                                     return;
                                 }
                             }}
@@ -395,119 +402,132 @@ const PostEditPage = () => {
                         />
                         <NextButton title="NEXT" click={handleFileStep} />
                     </Stepper.Step>
-                    <Stepper.Step label="Crop" className=" uppercase">
-                        <Title title="Crop your shit here" />
-                        <div className="flex flex-col lg:flex-row gap-4 ">
-                            <div className="relative flex-1 border-dashed border border-base-content rounded-xl p-4">
-                                <InnerTitle title="Detail Image" />
+                    {
+                        <Stepper.Step label="Crop" className=" uppercase">
+                            <Title title="Crop your shit here" />
+                            {fileIsGIF && <div className="flex text-yellow-500">
+                                <IconExclamationCircle size={16} className="mr-2" />
+                                <InnerTitle title="GIF only support crop thumbnail" />
+                            </div>}
+                            <div className="flex flex-col lg:flex-row gap-4 ">
+                                {!fileIsGIF && <div className="relative flex-1 border-dashed border border-base-content rounded-xl p-4">
+                                    <InnerTitle title="Detail Image" />
 
-                                <Cropper
-                                    className=" relative"
-                                    dragMode="move"
-                                    aspectRatio={NaN}
-                                    scalable={false}
-                                    preview=".detail"
-                                    src={image ?? ""}
-                                    viewMode={2}
-                                    minCropBoxHeight={10}
-                                    minCropBoxWidth={10}
-                                    background={false}
-                                    responsive={true}
-                                    autoCropArea={1}
-                                    checkOrientation={false}
-                                    onInitialized={(instance) => {
-                                        setCropper(instance);
-                                    }}
-                                    guides={true}
-                                />
-                                {image && (
-                                    <SegmentedControl
-                                        className="absolute inset-x-12 bottom-0 mt-2"
-                                        size="xs"
-                                        value={segmentedValue}
-                                        onChange={(v) => {
-                                            setSegmentedValue(v);
-                                            cropper.setAspectRatio(
-                                                converSegmentedToRatio(v)
-                                            );
+                                    <Cropper
+                                        className="relative"
+                                        dragMode="move"
+                                        aspectRatio={
+                                            converSegmentedToRatio(segmentedValue)
+                                        }
+                                        scalable={false}
+                                        preview=".detail"
+                                        src={image ?? ""}
+                                        viewMode={2}
+                                        minCropBoxHeight={10}
+                                        minCropBoxWidth={10}
+                                        background={false}
+                                        responsive={true}
+                                        autoCropArea={1}
+                                        checkOrientation={false}
+                                        onInitialized={(instance) => {
+                                            setCropper(instance);
                                         }}
-                                        data={[
-                                            { label: "Free", value: "Free" },
-                                            { label: "1:1", value: "1:1" },
-                                            { label: "16:9", value: "16:9" },
-                                            { label: "A4", value: "A4" },
-                                            { label: "Card", value: "Card" },
-                                            { label: "Post", value: "Post" },
-                                        ]}
+                                        guides={true}
                                     />
-                                )}
+                                    {image && (
+                                        <SegmentedControl
+                                            className="absolute inset-x-12 bottom-0 mt-2"
+                                            size="xs"
+                                            value={segmentedValue}
+                                            onChange={(v) => {
+                                                setSegmentedValue(v);
+                                                cropper.setAspectRatio(
+                                                    converSegmentedToRatio(v)
+                                                );
+                                            }}
+                                            data={[
+                                                { label: "Free", value: "Free" },
+                                                { label: "1:1", value: "1:1" },
+                                                { label: "16:9", value: "16:9" },
+                                                { label: "A4", value: "A4" },
+                                                { label: "Card", value: "Card" },
+                                                { label: "Post", value: "Post" },
+                                            ]}
+                                        />
+                                    )}
 
-                                <Cropper />
-                            </div>
-
-                            <div className="flex flex-col flex-1 border-dashed border border-base-content rounded-xl p-4">
-                                <InnerTitle title="Thumbnail" />
-                                <Cropper
-                                    dragMode="move"
-                                    aspectRatio={1}
-                                    preview=".nail"
-                                    src={image ?? ""}
-                                    viewMode={0}
-                                    minCropBoxHeight={10}
-                                    minCropBoxWidth={10}
-                                    background={false}
-                                    responsive={true}
-                                    autoCropArea={1}
-                                    checkOrientation={false}
-                                    onInitialized={(instance) => {
-                                        setThumbnailCropper(instance);
-                                    }}
-                                    guides={true}
-                                />
-                            </div>
-                        </div>
-                        {image && (
-                            <div className="flex flex-col flex-1 gap-4">
-                                <div className="flex flex-col flex-1">
-                                    <Title title="Detail preview" />
-                                    <div className="flex place-content-center place-items-center bg-base-200 rounded-lg p-4">
-                                        <div className="detail overflow-hidden w-full float-center h-[640px] place-content-center" />
-                                    </div>
+                                    <Cropper />
                                 </div>
 
-                                <div className="flex flex-col flex-1">
-                                    <Title title="Section preview" />
-                                    <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg w-[100%]">
-                                        <div className="uppercase pb-4 pl-4 prose">
-                                            <h2>
-                                                {
-                                                    catData.filter((item) => {
+                                }
+
+
+                                <div className="flex flex-col flex-1 border-dashed border border-base-content rounded-xl p-4">
+                                    <InnerTitle title="Thumbnail" />
+                                    <Cropper
+                                        dragMode="move"
+                                        aspectRatio={1}
+                                        preview=".nail"
+                                        src={image ?? ""}
+                                        viewMode={0}
+                                        minCropBoxHeight={10}
+                                        minCropBoxWidth={10}
+                                        background={false}
+                                        responsive={true}
+                                        autoCropArea={1}
+                                        checkOrientation={false}
+                                        onInitialized={(instance) => {
+                                            setThumbnailCropper(instance);
+                                        }}
+                                        guides={true}
+                                    />
+                                </div>
+                            </div>
+                            {image && (
+                                <div className="flex flex-col flex-1 gap-4">
+                                    {!fileIsGIF &&
+                                        <div className="flex flex-col flex-1">
+                                            <Title title="Detail preview" />
+                                            <div className="flex place-content-center place-items-center bg-base-200 rounded-lg p-4">
+                                                <div className="detail overflow-hidden w-full float-center h-[640px] place-content-center" />
+                                            </div>
+                                        </div>
+                                    }
+
+                                    <div className="flex flex-col flex-1">
+                                        <Title title="Section preview" />
+                                        <div className="mx-auto px-4 py-8 bg-base-200 rounded-lg w-[100%]">
+                                            <div className="uppercase pb-4 pl-4 prose">
+                                                <h2>
+                                                    {
+                                                        catData.filter((item) => {
+                                                            return (
+                                                                item.value === value
+                                                            );
+                                                        })[0].label
+                                                    }
+                                                </h2>
+                                            </div>
+                                            <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
+                                                {Array(10)
+                                                    .fill(0)
+                                                    .map((v, i) => i)
+                                                    .map((value) => {
                                                         return (
-                                                            item.value === value
+                                                            <div
+                                                                key={value}
+                                                                className="nail overflow-hidden bg-slate-400 w-full float-left h-52"
+                                                            />
                                                         );
-                                                    })[0].label
-                                                }
-                                            </h2>
-                                        </div>
-                                        <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
-                                            {Array(10)
-                                                .fill(0)
-                                                .map((v, i) => i)
-                                                .map((value) => {
-                                                    return (
-                                                        <div
-                                                            key={value}
-                                                            className="nail overflow-hidden bg-slate-400 w-full float-left h-52"
-                                                        />
-                                                    );
-                                                })}
+                                                    })}
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        )}
-                        <NextButton title="NEXT" click={handleCropStep} />
-                    </Stepper.Step>
+                            )}
+                            <NextButton title="NEXT" click={handleCropStep} />
+                        </Stepper.Step>
+                    }
                     <Stepper.Step label="Confirm" className="uppercase">
                         <Title title="final result" />
                         <DetailPreview

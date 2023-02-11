@@ -58,45 +58,11 @@ const DetailPreview = (props: {
         </div>
     );
 
-    const compomentImage = (
-        <div className=" ">
-            <Image
-                alt=""
-                // src={"/profile.jpg"}
-                src={props.src}
-                width="0"
-                height="0"
-                sizes="100vw"
-                className="object-contain w-auto h-auto aspect-auto min-h-[80vh] max-h-[85vh] block m-auto align-middle drop-shadow-md"
-            />
-        </div>
-    );
-
-    const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: props.title ?? "",
-                }}
-            />
-        </TypographyStylesProvider>
-    );
-
-    const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
-            <div
-                dangerouslySetInnerHTML={{
-                    __html: props.desc ?? "",
-                }}
-            />
-        </TypographyStylesProvider>
-    );
-
     return (
         <DetailLayout
-            image={compomentImage}
-            title={compomentTitle}
-            content={compomentDesc}
+            image={props.src}
+            title={props.title ?? ""}
+            content={props.desc ?? ""}
             otherSection={otherPostsSection}
         ></DetailLayout>
     );
