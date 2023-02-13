@@ -67,8 +67,35 @@ function NextButton(props: {
 }
 
 const PostEditPage = () => {
-    const titleEditor: Editor | null = editor("Title require");
-    const contentEditor: Editor | null = editor("Optional");
+    const titleEditor: Editor | null = editor("Title Require", () => {
+        setUnsavedChanges(true);
+    });
+    const contentEditor: Editor | null = editor("Optional", () => {
+        setUnsavedChanges(true);
+    });
+    const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
+
+    useEffect(() => {
+        const warningText =
+            "Did you wash your ass today? Are you sure you wish to leave this page?";
+        const handleWindowClose = (e: BeforeUnloadEvent) => {
+            if (!unsavedChanges) return;
+            e.preventDefault();
+            return (e.returnValue = warningText);
+        };
+        const handleBrowseAway = () => {
+            if (!unsavedChanges) return;
+            if (window.confirm(warningText)) return;
+            router.events.emit("routeChangeError");
+            throw "routeChange aborted.";
+        };
+        window.addEventListener("beforeunload", handleWindowClose);
+        router.events.on("routeChangeStart", handleBrowseAway);
+        return () => {
+            window.removeEventListener("beforeunload", handleWindowClose);
+            router.events.off("routeChangeStart", handleBrowseAway);
+        };
+    }, [unsavedChanges]);
 
     const router = useRouter();
     // filepond
@@ -259,6 +286,7 @@ const PostEditPage = () => {
     }
 
     function handlePostStep(event: React.MouseEvent<HTMLElement>) {
+        setUnsavedChanges(false);
         console.log(cropData);
         const param = JSON.stringify({
             image_data_url: cropData,
@@ -329,7 +357,10 @@ const PostEditPage = () => {
                             searchable
                             creatable
                             getCreateLabel={(query) => `+ Create ${query}`}
-                            onChange={setValue}
+                            onChange={(value) => {
+                                setUnsavedChanges(true);
+                                setValue(value);
+                            }}
                             onCreate={(query) => {
                                 createCategorizeRequest.trigger(
                                     JSON.stringify({
@@ -409,6 +440,7 @@ const PostEditPage = () => {
                                     setFileIsGIF(false);
                                     return;
                                 }
+                                setUnsavedChanges(true);
                             }}
                             // allowFileEncode={true}
                             allowMultiple={false}
