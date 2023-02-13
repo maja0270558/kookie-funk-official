@@ -12,8 +12,11 @@ import Youtube from "@tiptap/extension-youtube";
 
 const content = "";
 
-function editor(placeholder: string) {
+function editor(placeholder: string, contentChange?: () => void) {
     return useEditor({
+        onUpdate({ editor }) {
+            contentChange && contentChange();
+        },
         extensions: [
             StarterKit,
             Underline,
