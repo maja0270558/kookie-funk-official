@@ -8,6 +8,7 @@ import { Editor, useEditor } from "@tiptap/react";
 import { Link } from "@mantine/tiptap";
 import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
+import Youtube from "@tiptap/extension-youtube";
 
 const content = "";
 
@@ -23,6 +24,7 @@ function editor(placeholder: string) {
             TextAlign.configure({ types: ["heading", "paragraph"] }),
             Placeholder.configure({ placeholder: placeholder }),
             Image,
+            Youtube,
         ],
         content,
     });

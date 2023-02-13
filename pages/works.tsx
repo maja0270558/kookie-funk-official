@@ -7,10 +7,6 @@ import createFetcher from "../helper/Fetcher";
 import { Center, Loader } from "@mantine/core";
 import Link from "next/link";
 
-import { Rajdhani } from '@next/font/google'
-const rajdhani = Rajdhani({ weight: "500", subsets: ['latin'] })
-
-
 const works = () => {
     const { data, error, isLoading } = useSWR("/api/get/works", (url) =>
         createFetcher(url)
@@ -43,23 +39,22 @@ const works = () => {
 
     if (data instanceof Array) if (data.length <= 0) return emptyView;
 
-    const sectionClass = `uppercase pb-4 text-lg ${rajdhani.className}`
     const compoment =
         data instanceof Array &&
         data.map((workData: WorksData) => {
             return (
-
                 <div className="mx-auto px-4 py-8" key={workData.section_name}>
-                    <div className={sectionClass}>
+                    <div className="uppercase pb-4 text-lg font-economica">
                         <h1>{workData.section_name}</h1>
                     </div>
-                    <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
+                    <div className="gap-y-4 gap-x-4 flex flex-wrap">
                         {workData.imgs.map((value) => {
                             return (
                                 <GalleryImage
                                     key={value.id}
                                     path={value.img}
                                     id={value.id.toString()}
+                                    className="h-[95px] w-[95px] overflow-hidden"
                                 />
                             );
                         })}
@@ -68,9 +63,7 @@ const works = () => {
             );
         });
 
-    return compoment ? <div className="m-8">
-        {compoment}
-    </div> : emptyView;
+    return compoment ? <div className="m-8">{compoment}</div> : emptyView;
 };
 
 export default works;

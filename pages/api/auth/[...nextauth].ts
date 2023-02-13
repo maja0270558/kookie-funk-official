@@ -21,7 +21,8 @@ export const authOptions: NextAuthOptions = {
             },
             async authorize(credentials, req) {
                 console.log(JSON.stringify(credentials));
-
+                console.log("⛄️⛄️⛄️⛄️⛄️⛄️⛄️");
+                console.log(process.env.NEXTAUTH_URL);
                 const res = await fetch(
                     `${process.env.NEXTAUTH_URL}/api/post/user`,
                     {
@@ -30,7 +31,7 @@ export const authOptions: NextAuthOptions = {
                         headers: { "Content-Type": "application/json" },
                     }
                 );
-
+                console.log("⛄️⛄️⛄️⛄️⛄️⛄️⛄️🔥");
                 console.log(res);
 
                 const user = await res.json();

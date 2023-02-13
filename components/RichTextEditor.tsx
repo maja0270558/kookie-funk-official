@@ -1,47 +1,171 @@
-import { RichTextEditor, useRichTextEditorContext } from '@mantine/tiptap';
-import { IconPhoto } from '@tabler/icons';
-import { Editor } from '@tiptap/react';
+import { RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
+import { IconPhoto, IconVideo } from "@tabler/icons";
+import { Editor } from "@tiptap/react";
+import React from "react";
+import { Popover, Button, TextInput, NumberInput } from "@mantine/core";
+import { useState } from "react";
 
-const PostEditor = (props: { editor: Editor | null }) => {
-    function ImageControl() {
-        const { editor } = useRichTextEditorContext();
-        return (
-            <RichTextEditor.Control
-                onClick={() => {
-                    const url = window.prompt('URL')
-                    if (url) {
-                        editor.chain().focus().setImage({ src: url }).run()
-                    }
-                }}
-                aria-label="Insert Image"
-                title="Insert Image"
-            >
-                <IconPhoto stroke={1.5} size={16} />
-            </RichTextEditor.Control>
-        );
-    }
+function ImageControl() {
+    const { editor } = useRichTextEditorContext();
+    const [url, setURL] = useState<string>("");
 
     return (
-        <RichTextEditor editor={props.editor}>
-            <RichTextEditor.Toolbar sticky stickyOffset={60}>
+        <Popover
+            width={300}
+            trapFocus
+            position="bottom"
+            withArrow
+            shadow="md"
+            onClose={() => {
+                setURL("");
+            }}
+        >
+            <Popover.Target>
+                <RichTextEditor.Control
+                    onClick={() => {
+                        const url = window.prompt("URL");
+                        if (url) {
+                            editor.chain().focus().setImage({ src: url }).run();
+                        }
+                    }}
+                    aria-label="Insert Image"
+                    title="Insert Image"
+                >
+                    <IconPhoto stroke={1.5} size={16} />
+                </RichTextEditor.Control>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <div className="flex flex-auto gap-2">
+                    <TextInput
+                        className="flex-1"
+                        label="Image URL"
+                        placeholder="Link"
+                        size="xs"
+                        onChange={(e) => {
+                            setURL(e.target.value);
+                        }}
+                    />
+                    <button
+                        className=" place-self-end btn btn-xs btn-primary mt-2"
+                        onClick={() => {
+                            if (url) {
+                                editor
+                                    .chain()
+                                    .focus()
+                                    .setImage({ src: url })
+                                    .run();
+                            }
+                        }}
+                    >
+                        OK
+                    </button>
+                </div>
+            </Popover.Dropdown>
+        </Popover>
+    );
+}
 
+function YoutubeControl() {
+    const { editor } = useRichTextEditorContext();
+    const [width, setWidth] = useState<number>(320);
+    const [height, setHeight] = useState<number>(180);
+    const [url, setURL] = useState<string>("");
+
+    return (
+        <Popover
+            width={300}
+            trapFocus
+            position="bottom"
+            withArrow
+            shadow="md"
+            onClose={() => {
+                setURL("");
+            }}
+        >
+            <Popover.Target>
+                <RichTextEditor.Control
+                    onClick={() => {
+                        const url = window.prompt("URL");
+                    }}
+                    aria-label="Insert Youtube"
+                    title="Insert Youtube"
+                >
+                    <IconVideo stroke={1.5} size={16} />
+                </RichTextEditor.Control>
+            </Popover.Target>
+            <Popover.Dropdown>
+                <div className="flex flex-col">
+                    <TextInput
+                        className="flex-1"
+                        label="Image URL"
+                        placeholder="Link"
+                        size="xs"
+                        onChange={(e) => {
+                            setURL(e.target.value);
+                        }}
+                    />
+                    <div className="flex flex-row gap-2">
+                        <NumberInput
+                            size="xs"
+                            defaultValue={320}
+                            placeholder="W"
+                            label="Width"
+                            onChange={(v) => {
+                                v && setWidth(v);
+                            }}
+                        />
+                        <NumberInput
+                            size="xs"
+                            defaultValue={180}
+                            placeholder="Height"
+                            label="Height"
+                            onChange={(v) => {
+                                v && setHeight(v);
+                            }}
+                        />
+                    </div>
+
+                    <button
+                        className=" place-self-end btn btn-xs btn-primary mt-2"
+                        onClick={() => {
+                            if (url) {
+                                editor.commands.setYoutubeVideo({
+                                    src: url,
+                                    width: width,
+                                    height: height,
+                                });
+                            }
+                        }}
+                    >
+                        OK
+                    </button>
+                </div>
+            </Popover.Dropdown>
+        </Popover>
+    );
+}
+
+const PostEditor = (props: { editor: Editor | null }) => {
+    return (
+        <RichTextEditor editor={props.editor}>
+            <RichTextEditor.Toolbar sticky stickyOffset={0}>
                 <RichTextEditor.ColorPicker
                     colors={[
-                        '#ffffff',
-                        '#25262b',
-                        '#868e96',
-                        '#fa5252',
-                        '#e64980',
-                        '#be4bdb',
-                        '#7950f2',
-                        '#4c6ef5',
-                        '#228be6',
-                        '#15aabf',
-                        '#12b886',
-                        '#40c057',
-                        '#82c91e',
-                        '#fab005',
-                        '#fd7e14',
+                        "#ffffff",
+                        "#25262b",
+                        "#868e96",
+                        "#fa5252",
+                        "#e64980",
+                        "#be4bdb",
+                        "#7950f2",
+                        "#4c6ef5",
+                        "#228be6",
+                        "#15aabf",
+                        "#12b886",
+                        "#40c057",
+                        "#82c91e",
+                        "#fab005",
+                        "#fd7e14",
                     ]}
                 />
                 <RichTextEditor.ControlsGroup>
@@ -71,7 +195,6 @@ const PostEditor = (props: { editor: Editor | null }) => {
                 <RichTextEditor.ControlsGroup>
                     <RichTextEditor.Link />
                     <RichTextEditor.Unlink />
-                    <ImageControl />
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
@@ -79,6 +202,13 @@ const PostEditor = (props: { editor: Editor | null }) => {
                     <RichTextEditor.AlignCenter />
                     <RichTextEditor.AlignJustify />
                     <RichTextEditor.AlignRight />
+                </RichTextEditor.ControlsGroup>
+            </RichTextEditor.Toolbar>
+
+            <RichTextEditor.Toolbar>
+                <RichTextEditor.ControlsGroup>
+                    <ImageControl />
+                    <YoutubeControl />
                 </RichTextEditor.ControlsGroup>
             </RichTextEditor.Toolbar>
 

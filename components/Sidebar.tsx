@@ -6,8 +6,6 @@ import classNames from "classnames";
 
 /// Next-auth
 import { useSession } from "next-auth/react";
-import { Rajdhani } from '@next/font/google'
-const rajdhani = Rajdhani({ weight: "600", subsets: ['latin'] })
 
 type Props = {
     children: ReactNode;
@@ -45,26 +43,26 @@ const Sidebar = ({ children }: Props) => {
         });
     }
 
-    const menuItemClassName = `btn-block uppercase pl-2 text-left text-xl font-black mb-2 ${rajdhani.className}`
+    const menuItemClassName = `btn-block uppercase pl-2 text-left text-xl font-economica font-black mb-2`;
     const getLinkItemClasses = (isSelected: boolean, enable: boolean) => {
-        return classNames(
-            menuItemClassName,
-            {
-                ["text-white bg-primary"]: isSelected && enable,
-                ["btn-ghost bg-base-100 hover:bg-base-200"]:
-                    !isSelected && enable,
-                ["text-gray-500"]: !enable,
-            }
-        );
+        return classNames(menuItemClassName, {
+            ["text-white bg-primary"]: isSelected && enable,
+            ["btn-ghost bg-base-100 hover:bg-base-200"]: !isSelected && enable,
+            ["text-gray-500"]: !enable,
+        });
     };
     const profileImage = "/profile.jpg";
 
     return (
         <div className="drawer drawer-mobile">
-            <input id="my-drawer-2" type="checkbox" className="drawer-toggle " />
+            <input
+                id="my-drawer-2"
+                type="checkbox"
+                className="drawer-toggle "
+            />
             <div className="drawer-content flex flex-col relative">
                 {/* nav bar on */}
-                <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden ">
+                <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden min-w-[100vh]">
                     <label
                         htmlFor="my-drawer-2"
                         className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden"
@@ -85,9 +83,12 @@ const Sidebar = ({ children }: Props) => {
                     </label>
 
                     <div className="flex-1">
-                        <a className="btn btn-ghost normal-case text-xl">
+                        <Link
+                            href="../"
+                            className="btn btn-ghost normal-case text-xl"
+                        >
                             KOOKIE OFFICAL
-                        </a>
+                        </Link>
                     </div>
                 </div>
 
@@ -95,10 +96,10 @@ const Sidebar = ({ children }: Props) => {
             </div>
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
-                <ul className="menu w-80 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">
+                <ul className="menu w-72 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">
                     {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
-                        <Link href="./">
+                        <Link href="../">
                             <Image
                                 alt=""
                                 src={profileImage}
@@ -116,7 +117,10 @@ const Sidebar = ({ children }: Props) => {
                             const isSelected = router.pathname == menu.link;
                             return (
                                 <div key={menu.label}>
-                                    <Link href={`${menu.link}`}>
+                                    <Link
+                                        as={`${menu.link}`}
+                                        href={`${menu.link}`}
+                                    >
                                         <button
                                             className={getLinkItemClasses(
                                                 isSelected,

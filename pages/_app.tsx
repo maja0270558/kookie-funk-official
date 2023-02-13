@@ -18,23 +18,22 @@ import { RouterTransition } from "../components/RouterTransition";
 const fullConfig = resolveConfig(tailwindConfig);
 
 function MyApp({ Component, pageProps }: AppProps) {
-    const forest = "forest";
-    const light = "lemonade";
+    const light = "light";
     const dark = "dark";
-    const lofi = "lofi";
     const cupcake = "cupcake";
 
     let themeMap = new Map([
-        [`${forest}`, "dark"],
-        [`${dark}`, "dark"],
-        [`${light}`, "light"],
-        [`${lofi}`, "light"],
-        [`${cupcake}`, "light"],
+        [dark, { colorScheme: "dark", primaryColor: "lime" }],
+        [light, { colorScheme: "light", primaryColor: "lime" }],
+        [cupcake, { colorScheme: "light", primaryColor: "cyan" }],
     ]);
-    const currentTheme = dark;
-    const mantineTheme: ColorScheme = themeMap.get(
-        `${currentTheme}`
-    ) as ColorScheme;
+
+    const currentTheme = light;
+    const mantineTheme: ColorScheme = themeMap.get(`${currentTheme}`)
+        ?.colorScheme as ColorScheme;
+
+    const mantinePrimaryColor: string = themeMap.get(`${currentTheme}`)
+        ?.primaryColor as ColorScheme;
     let primaryColor = "#66DC5A";
 
     return (
@@ -56,7 +55,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                         theme={{
                             loader: "dots",
                             colorScheme: mantineTheme,
-                            primaryColor: "lime",
+                            primaryColor: mantinePrimaryColor,
                         }}
                     >
                         <RouterTransition />
