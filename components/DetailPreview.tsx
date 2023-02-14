@@ -26,9 +26,9 @@ const DetailPreview = (props: {
         });
 
     return (
-        <div>
+        <div className=" relative">
             <Tabs
-                className="mb-8"
+                className="mb-8 bg-base-100 sticky top-14 lg:top-0 z-50"
                 defaultValue="desktop"
                 onTabChange={(v) => {
                     const mobile = v == "mobile";
