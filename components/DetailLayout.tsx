@@ -27,7 +27,7 @@ export const DetailLayout = ({
                 height="500"
                 onLoadingComplete={() => setImgIsLoading(false)}
                 sizes="100vw"
-                className="object-contain w-[100vh] lg:object-left-bottom lg:w-[70vh] h-auto aspect-auto max-h-[80vh]  drop-shadow-md"
+                className="object-contain lg:object-left-bottom min-w-[368px] w-[70vh] h-auto aspect-auto max-h-[85vh]  drop-shadow-md"
                 priority={true}
             />
         </Skeleton>
