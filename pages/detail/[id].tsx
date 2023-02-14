@@ -9,9 +9,13 @@ import { Center, Loader } from "@mantine/core";
 import GalleryImage from "../../components/GalleryImage";
 import { DetailLayout } from "../../components/DetailLayout";
 import createFetcher from "../../helper/Fetcher";
+import { useEffect } from "react";
 
 const works = () => {
-    const cellSize = 120;
+    useEffect(() => {
+        window.history.scrollRestoration = 'manual'
+    }, []);
+
     const router = useRouter();
     const { id } = router.query;
     const { data, isLoading } = useSWR(
