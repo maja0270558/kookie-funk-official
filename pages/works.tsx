@@ -47,18 +47,21 @@ const works = () => {
                     <div className="uppercase pb-4 text-lg font-economica">
                         <h1>{workData.section_name}</h1>
                     </div>
-                    <div className="gap-y-4 gap-x-4 flex flex-wrap">
-                        {workData.imgs.map((value) => {
-                            return (
-                                <GalleryImage
-                                    key={value.id}
-                                    path={value.img}
-                                    id={value.id.toString()}
-                                    className="h-[95px] w-[95px] overflow-hidden"
-                                />
-                            );
-                        })}
+                    <div className="p-2">
+                        <div className=" gap-y-2 gap-x-2 grid grid-cols-4 md:grid-cols-7 lg:flex lg:flex-wrap  p-2">
+                            {workData.imgs.map((value) => {
+                                return (
+                                    <GalleryImage
+                                        key={value.id}
+                                        path={value.img}
+                                        id={value.id.toString()}
+                                        className="w-[100%] aspect-1 lg:w-[15%] lg:max-w-[90px] overflow-hidden"
+                                    />
+                                );
+                            })}
+                        </div>
                     </div>
+
                 </div>
             );
         });

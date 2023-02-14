@@ -19,7 +19,7 @@ module.exports = {
             },
             gridTemplateColumns: {
                 14: "repeat(14, minmax(0, 1fr))",
-                fill: "repeat(auto-fill, minmax(100px, 1fr))",
+                fill: "repeat(autofit, minmax(100px, 1fr))",
             },
 
             screens: {
@@ -35,7 +35,7 @@ module.exports = {
     daisyui: {
         themes: [
             {
-                 dark: {
+                dark: {
                     ...require("daisyui/src/colors/themes")["[data-theme=dark]"],
                     primary: primaryColor,
                 },
