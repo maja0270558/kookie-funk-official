@@ -272,11 +272,6 @@ const dashboard = () => {
 
                                         const data = {
                                             id: element.id.toString(),
-                                            title: encode(element.title),
-                                            content: encode(element.desc),
-                                            selectedCatId:
-                                                element.categorize.id.toString(),
-                                            imgSrc: element.image_path,
                                         };
                                         Router.push({
                                             pathname: "/edit_post",
@@ -447,7 +442,7 @@ const dashboard = () => {
                     {catData.length > 0 &&
                         catData.map((element) => {
                             return (
-                                <div key={element.value} onClick={() => {}}>
+                                <div key={element.value} onClick={() => { }}>
                                     <Badge
                                         className=" cursor-pointer"
                                         variant={

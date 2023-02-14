@@ -67,6 +67,8 @@ function NextButton(props: {
 }
 
 const PostEditPage = () => {
+    const router = useRouter();
+
     const titleEditor: Editor | null = editor("Title Require", () => {
         setUnsavedChanges(true);
     });
@@ -74,6 +76,13 @@ const PostEditPage = () => {
         setUnsavedChanges(true);
     });
     const [unsavedChanges, setUnsavedChanges] = useState<boolean>(false);
+
+    const { id } = router.query;
+    const { data, isLoading } = useSWR(
+        id ? `/api/get/find_work?id=${id}` : null,
+        (url) => createFetcher(url)
+    );
+
 
     useEffect(() => {
         const warningText =
@@ -97,50 +106,56 @@ const PostEditPage = () => {
         };
     }, [unsavedChanges]);
 
-    const router = useRouter();
     // filepond
     useEffect(() => {
         if (!router.isReady) return;
         if (!titleEditor) return;
         if (!contentEditor) return;
-        const decode = (str: string): string =>
-            Buffer.from(str, "base64").toString("binary");
-        const postData: EditPostPara = router.query as unknown as EditPostPara;
-        const isEmpty = Object.keys(postData).length === 0;
+        if (!data) return
 
-        setInitData(postData);
-        const decodedPath = decodeURIComponent(postData.imgSrc);
-
-        if (isEmpty) {
+        const initData = {
+            id: data.id,
+            title: data.title,
+            content: data.desc,
+            selectedCatId: data.cat_id,
+            imgSrc: data.image_path
+        }
+        const initDataEmpty = Object.keys(initData).length === 0;
+        if (initDataEmpty) {
             categorizeDataRequest.trigger("");
             return;
         }
+        setInitData(initData);
 
-        if (decodedPath != "") {
+        // image
+        if (initData.imgSrc != "") {
             setFiles([
                 {
-                    source: decodedPath,
+                    source: initData.imgSrc,
                 },
             ]);
         }
 
-        const decodedCatID = decodeURIComponent(postData.selectedCatId);
-        if (decodedCatID) {
-            categorizeDataRequest.trigger(decodedCatID);
+        console.log(data.cat_id)
+        if (initData.selectedCatId) {
+            console.log("trigger request: ", initData.selectedCatId)
+
+            categorizeDataRequest.trigger(initData.selectedCatId);
         }
 
-        const decodedTitle = decodeURIComponent(postData.title);
-        if (decodedTitle !== "") {
+        if (initData.title !== "") {
             !titleEditor.isDestroyed &&
-                titleEditor?.commands.setContent(decode(decodedTitle));
+                titleEditor?.commands.setContent(initData.title);
         }
 
-        const decodedContent = decodeURIComponent(postData.content);
-        if (decodedContent !== "") {
+        if (initData.content !== "") {
             !contentEditor.isDestroyed &&
-                contentEditor?.commands.setContent(decode(decodedContent));
+                contentEditor?.commands.setContent(initData.content);
         }
-    }, [router.isReady, titleEditor, contentEditor]);
+
+        return
+
+    }, [router.isReady, titleEditor, contentEditor, data]);
 
     const [initData, setInitData] = useState<EditPostPara | null>(null);
     const [files, setFiles] = useState<any[]>([]);
@@ -161,7 +176,7 @@ const PostEditPage = () => {
     const [value, setValue] = useState<string | null>(null);
     const [gloableError, setGloableError] = useState<string | null>(null);
 
-    // new cat requests
+    // cat requests
     const categorizeDataRequest = useSWRMutation(
         "/api/get/categorize",
         (url, { arg }) =>
@@ -169,14 +184,16 @@ const PostEditPage = () => {
                 if (!data.error) {
                     setCatData(data);
                     if (arg != "") {
-                        setValue(arg);
+                        console.log("set value", arg)
+                        console.log("set data", data)
+                        setValue(arg.toString());
                     }
                 }
                 return data;
             })
     );
 
-    // cat requests
+    // new cat requests
     const createCategorizeRequest = useSWRMutation(
         "/api/post/create_cat",
         (url, { arg }) =>
@@ -321,7 +338,7 @@ const PostEditPage = () => {
                     },
                 ]);
         },
-        onCanceled: () => {},
+        onCanceled: () => { },
     });
 
     return (
@@ -360,6 +377,7 @@ const PostEditPage = () => {
                             onChange={(value) => {
                                 setUnsavedChanges(true);
                                 setValue(value);
+                                console.log("value change", value)
                             }}
                             onCreate={(query) => {
                                 createCategorizeRequest.trigger(
@@ -369,7 +387,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => {}}
+                            onDropdownOpen={() => { }}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
