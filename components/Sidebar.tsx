@@ -52,6 +52,34 @@ const Sidebar = ({ children }: Props) => {
         });
     };
     const profileImage = "/profile.jpg";
+    const mobileMenu = (
+        <div className="navbar bg-base-100 fixed top-0 left-0 right-0 z-50 lg:hidden min-w-[100vh]">
+            <label
+                htmlFor="my-drawer-2"
+                className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden"
+            >
+                <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    className="inline-block w-5 h-5 stroke-current"
+                >
+                    <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M4 6h16M4 12h16M4 18h16"
+                    ></path>
+                </svg>
+            </label>
+
+            <div className="flex-1">
+                <Link href="../" className="btn btn-ghost normal-case text-xl">
+                    KOOKIE OFFICAL
+                </Link>
+            </div>
+        </div>
+    );
 
     return (
         <div className="drawer drawer-mobile">
@@ -62,38 +90,10 @@ const Sidebar = ({ children }: Props) => {
             />
             <div className="drawer-content flex flex-col relative">
                 {/* nav bar on */}
-                <div className="navbar bg-base-100 sticky top-0 z-50 lg:hidden min-w-[100vh]">
-                    <label
-                        htmlFor="my-drawer-2"
-                        className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden"
-                    >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            className="inline-block w-5 h-5 stroke-current"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth="2"
-                                d="M4 6h16M4 12h16M4 18h16"
-                            ></path>
-                        </svg>
-                    </label>
-
-                    <div className="flex-1">
-                        <Link
-                            href="../"
-                            className="btn btn-ghost normal-case text-xl"
-                        >
-                            KOOKIE OFFICAL
-                        </Link>
-                    </div>
-                </div>
-
+                {mobileMenu}
                 {children}
             </div>
+
             <div className="drawer-side">
                 <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
                 <ul className="menu w-72 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">

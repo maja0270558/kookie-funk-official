@@ -27,14 +27,14 @@ export const DetailLayout = ({
                 height="500"
                 onLoadingComplete={() => setImgIsLoading(false)}
                 sizes="100vw"
-                className="object-contain lg:object-left-bottom min-w-[368px] w-[70vh] h-auto aspect-auto max-h-[85vh]  drop-shadow-md"
+                className="object-contain w-[100vh] lg:object-left-bottom lg:w-[70vh] h-auto aspect-auto max-h-[80vh]  drop-shadow-md"
                 priority={true}
             />
         </Skeleton>
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
+        <TypographyStylesProvider className="text-base-content prose-lg">
             <div
                 dangerouslySetInnerHTML={{
                     __html: title,
@@ -44,7 +44,7 @@ export const DetailLayout = ({
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
+        <TypographyStylesProvider className="text-base-content prose-lg">
             <div
                 dangerouslySetInnerHTML={{
                     __html: content,
@@ -62,7 +62,7 @@ export const DetailLayout = ({
                             {compomentImage}
                         </div>
 
-                        <div className="flex flex-1 self-stretch min-w-[30%]">
+                        <div className=" mt-2 bg-slate-500 flex flex-1  min-w-[30%]">
                             <div className="flex flex-1 lg:items-end">
                                 {compomentTitle}
                             </div>
