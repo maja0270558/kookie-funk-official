@@ -21,6 +21,10 @@ module.exports = {
                 14: "repeat(14, minmax(0, 1fr))",
                 fill: "repeat(auto-fill, minmax(100px, 1fr))",
             },
+
+            screens: {
+                'superbig': '200000px'
+            }
         },
     },
     plugins: [
