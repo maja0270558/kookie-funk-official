@@ -36,18 +36,19 @@ const works = () => {
         const otherPostsSection =
             data.others instanceof Array && data.others.length > 0
                 ? data.others.map((value: { img: string; id: string }) => {
-                      return (
-                          <GalleryImage
-                              className={"h-[120px] w-[120px]"}
-                              path={value.img}
-                              id={value.id.toString()}
-                          />
-                      );
-                  })
+                    return (
+                        <GalleryImage
+                            className={"h-[120px] w-[120px]"}
+                            path={value.img}
+                            id={value.id.toString()}
+                        />
+                    );
+                })
                 : null;
 
         return (
             <DetailLayout
+                forceMobile={false}
                 image={data.post?.image ?? ""}
                 title={data.post.title ?? ""}
                 content={data.post.description ?? ""}

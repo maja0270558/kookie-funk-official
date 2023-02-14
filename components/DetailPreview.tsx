@@ -60,7 +60,7 @@ const DetailPreview = (props: {
                             <div className="artboard artboard-demo phone-2 flex">
                                 <div className="w-full flex flex-1 overflow-auto ">
                                     <DetailLayout
-                                        mediaQuery="superbig"
+                                        forceMobile={true}
                                         image={props.src}
                                         title={props.title ?? ""}
                                         content={props.desc ?? ""}
