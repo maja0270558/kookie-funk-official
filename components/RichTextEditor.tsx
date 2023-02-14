@@ -4,7 +4,6 @@ import { Editor } from "@tiptap/react";
 import React from "react";
 import { Popover, TextInput, NumberInput } from "@mantine/core";
 import { useState } from "react";
-// import "../styles/tiptap.module.scss";
 
 function ImageControl() {
     const { editor } = useRichTextEditorContext();
@@ -23,12 +22,6 @@ function ImageControl() {
         >
             <Popover.Target>
                 <RichTextEditor.Control
-                    onClick={() => {
-                        const url = window.prompt("URL");
-                        if (url) {
-                            editor.chain().focus().setImage({ src: url }).run();
-                        }
-                    }}
                     aria-label="Insert Image"
                     title="Insert Image"
                 >
@@ -68,8 +61,7 @@ function ImageControl() {
 
 function YoutubeControl() {
     const { editor } = useRichTextEditorContext();
-    const [width, setWidth] = useState<number>(320);
-    const [height, setHeight] = useState<number>(180);
+    const [height, setHeight] = useState<number | undefined>(NaN);
     const [url, setURL] = useState<string>("");
 
     return (
@@ -80,14 +72,13 @@ function YoutubeControl() {
             withArrow
             shadow="md"
             onClose={() => {
+                setHeight(NaN);
                 setURL("");
             }}
         >
             <Popover.Target>
                 <RichTextEditor.Control
-                    onClick={() => {
-                        const url = window.prompt("URL");
-                    }}
+                    onClick={() => {}}
                     aria-label="Insert Youtube"
                     title="Insert Youtube"
                 >
@@ -98,7 +89,7 @@ function YoutubeControl() {
                 <div className="flex flex-col">
                     <TextInput
                         className="flex-1"
-                        label="Image URL"
+                        label="Youtube URL"
                         placeholder="Link"
                         size="xs"
                         onChange={(e) => {
@@ -108,17 +99,7 @@ function YoutubeControl() {
                     <div className="flex flex-row gap-2">
                         <NumberInput
                             size="xs"
-                            defaultValue={320}
-                            placeholder="W"
-                            label="Width"
-                            onChange={(v) => {
-                                v && setWidth(v);
-                            }}
-                        />
-                        <NumberInput
-                            size="xs"
-                            defaultValue={180}
-                            placeholder="Height"
+                            placeholder="AUTO"
                             label="Height"
                             onChange={(v) => {
                                 v && setHeight(v);
@@ -132,7 +113,6 @@ function YoutubeControl() {
                             if (url) {
                                 editor.commands.setYoutubeVideo({
                                     src: url,
-                                    // width: width,
                                     height: height,
                                 });
                             }

@@ -29,3 +29,6 @@ figure img {
     outline: 3px solid #68CEF8;
 }
 
+.ProseMirror .ProseMirror-selectednode iframe {
+    outline: 3px solid #f88568;
+}

@@ -54,15 +54,14 @@ export const DetailLayout = ({
     );
 
     return (
-        <div className="flex flex-col p-8">
-            <div className="flex flex-col p-4 min-h-[85vh] justify-evenly ">
+        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8">
+            <div className="flex flex-col lg:min-h-[85vh] justify-evenly ">
                 <Center>
                     <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
-                        <div className="block align-middle m-auto min-w-[70vh] ">
+                        <div className="block align-middle m-auto w-full lg:w-auto lg:min-w-[70vh] ">
                             {compomentImage}
                         </div>
-
-                        <div className=" mt-2 flex flex-1  min-w-[30%]">
+                        <div className=" mt-2 flex flex-1  lg:min-w-[30%]">
                             <div className="flex flex-1 lg:items-end">
                                 {compomentTitle}
                             </div>
@@ -70,9 +69,7 @@ export const DetailLayout = ({
                     </div>
                 </Center>
             </div>
-
             <div className=" lg:items-end lg:mt-8">{compomentDesc}</div>
-
             <div className="place-self-end">
                 <Carousel
                     withIndicators
