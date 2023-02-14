@@ -340,9 +340,10 @@ const dashboard = () => {
     });
 
     const worksTable = (
-        <div>
+        <div className=" relative">
             <h1 className="prose-lg font-bold mt-2 mb-2">Manage your works</h1>
             <Input
+                className=" sticky z-50 top-14 lg:top-2"
                 icon={<IconSearch />}
                 placeholder="You can search 『title』, 『description』,『categorize』 here"
                 onChange={(t) => {
@@ -364,7 +365,7 @@ const dashboard = () => {
         </div>
     );
     return (
-        <div className="flex flex-col p-4 min-h-full">
+        <div className="mt-14 lg:mt-0 flex flex-col p-4 min-h-full">
             <Modal
                 opened={opened}
                 onClose={() => {
