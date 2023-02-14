@@ -27,7 +27,7 @@ export const DetailLayout = ({
                 height="500"
                 onLoadingComplete={() => setImgIsLoading(false)}
                 sizes="100vw"
-                className="object-contain lg:object-left-bottom min-w-[368px] w-[70vh] h-auto aspect-auto max-h-[85vh]  drop-shadow-md"
+                className="object-contain max-h-[90vh] lg:object-left-bottom w-full h-auto aspect-auto  drop-shadow-md"
                 priority={true}
             />
         </Skeleton>
@@ -54,23 +54,25 @@ export const DetailLayout = ({
     );
 
     return (
-        <div className=" relative flex flex-col p-4 lg:p-20 min-h-full justify-evenly ">
-            <div className=" flex flex-col grow place-content-center">
-                <div className="flex flex-row">
-                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-20">
-                        <div className="block align-middle m-auto">
+        <div className="flex flex-col p-8">
+            <div className="flex flex-col p-4 min-h-[85vh] justify-evenly ">
+                <Center>
+                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
+                        <div className="block align-middle m-auto min-w-[70vh] ">
                             {compomentImage}
                         </div>
 
-                        <div className=" mt-2 bg-slate-500 flex flex-1  min-w-[30%]">
+                        <div className=" mt-2 flex flex-1  min-w-[30%]">
                             <div className="flex flex-1 lg:items-end">
                                 {compomentTitle}
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className=" lg:items-end lg:mt-8">{compomentDesc}</div>
+                </Center>
             </div>
+
+            <div className=" lg:items-end lg:mt-8">{compomentDesc}</div>
+
             <div className="place-self-end">
                 <Carousel
                     withIndicators
