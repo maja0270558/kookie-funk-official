@@ -2,8 +2,9 @@ import { RichTextEditor, useRichTextEditorContext } from "@mantine/tiptap";
 import { IconPhoto, IconVideo } from "@tabler/icons";
 import { Editor } from "@tiptap/react";
 import React from "react";
-import { Popover, Button, TextInput, NumberInput } from "@mantine/core";
+import { Popover, TextInput, NumberInput } from "@mantine/core";
 import { useState } from "react";
+// import "../styles/tiptap.module.scss";
 
 function ImageControl() {
     const { editor } = useRichTextEditorContext();
@@ -131,7 +132,7 @@ function YoutubeControl() {
                             if (url) {
                                 editor.commands.setYoutubeVideo({
                                     src: url,
-                                    width: width,
+                                    // width: width,
                                     height: height,
                                 });
                             }

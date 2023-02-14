@@ -19,6 +19,7 @@
         "@tailwindcss/aspect-ratio": "^0.4.2",
         "@tailwindcss/typography": "^0.5.8",
         "@tiptap/extension-color": "^2.0.0-beta.209",
+        "@tiptap/extension-focus": "^2.0.0-beta.217",
         "@tiptap/extension-highlight": "^2.0.0-beta.209",
         "@tiptap/extension-image": "^2.0.0-beta.212",
         "@tiptap/extension-link": "^2.0.0-beta.209",
@@ -36,6 +37,7 @@
         "bcrypt": "^5.1.0",
         "classnames": "^2.3.2",
         "cloudinary": "^1.33.0",
+        "cssnano": "latest",
         "daisyui": "^2.47.0",
         "filepond": "^4.30.4",
         "filepond-plugin-file-encode": "^2.1.10",
@@ -46,6 +48,7 @@
         "next": "^13.1.5",
         "next-auth": "^4.19.0",
         "next-redux-wrapper": "^8.0.0",
+        "postcss": "^8.4.21",
         "prisma": "latest",
         "react-cropper": "^2.1.8",
         "react-filepond": "^7.1.2",
@@ -54,9 +57,7 @@
         "swr": "^2.0.1",
         "typescript": "4.9.5",
         "use-dropbox-chooser": "^0.0.6",
-        "yarn": "latest",
-        "cssnano": "latest",
-        "postcss": "^8.4.21"
+        "yarn": "latest"
     },
     "devDependencies": {
         "@mantine/core": "^5.10.3",
@@ -87,6 +88,7 @@
         "bcrypt": "^5.1.0",
         "classnames": "^2.3.2",
         "cloudinary": "^1.33.0",
+        "cssnano": "latest",
         "daisyui": "^2.47.0",
         "filepond": "^4.30.4",
         "filepond-plugin-file-encode": "^2.1.10",
@@ -97,16 +99,16 @@
         "next": "^13.1.5",
         "next-auth": "^4.19.0",
         "next-redux-wrapper": "^8.0.0",
+        "postcss": "^8.4.21",
         "prisma": "latest",
         "react-cropper": "^2.1.8",
         "react-filepond": "^7.1.2",
         "react-loader-spinner": "^5.3.4",
         "react-redux": "^8.0.5",
+        "sass": "^1.58.1",
         "swr": "^2.0.1",
         "typescript": "4.9.5",
         "use-dropbox-chooser": "^0.0.6",
-        "yarn": "latest",
-        "cssnano": "latest",
-        "postcss": "^8.4.21"
+        "yarn": "latest"
     }
 }
