@@ -302,14 +302,13 @@ const PostEditPage = () => {
 
     function handlePostStep(event: React.MouseEvent<HTMLElement>) {
         setUnsavedChanges(false);
-        console.log(cropData);
         const param = JSON.stringify({
             image_data_url: cropData,
             nail_image_data_url: thumbnailCropData,
             title: titleEditor?.getHTML() ?? "",
             cat_id: value,
             description: contentEditor?.getHTML() ?? "",
-            id: initData?.id,
+            id: initData?.id?.toString(),
         });
         if (initData?.id) {
             editPostRequest.trigger(param);
