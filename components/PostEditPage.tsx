@@ -110,7 +110,13 @@ const PostEditPage = () => {
         if (!router.isReady) return;
         if (!titleEditor) return;
         if (!contentEditor) return;
-        if (!data) return;
+
+        if (!data) {
+            if (!categorizeDataRequest.isMutating) {
+                categorizeDataRequest.trigger("");
+            }
+            return;
+        }
 
         const initData = {
             id: data.id,
