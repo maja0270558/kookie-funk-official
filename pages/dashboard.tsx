@@ -30,6 +30,7 @@ import Router from "next/router";
 import { useAppDispatch } from "../hook";
 import createFetcher from "../helper/Fetcher";
 import { useEffect } from "react";
+import { ColorSchemeToggle } from "../components/ThemeSwitcher";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -361,6 +362,10 @@ const dashboard = () => {
     );
     return (
         <div className="mt-14 lg:mt-0 flex flex-col p-4 min-h-full">
+            <div className=" absolute top-14 lg:top-0 right-4">
+                <ColorSchemeToggle />
+            </div>
+
             <Modal
                 opened={opened}
                 onClose={() => {
@@ -437,12 +442,13 @@ const dashboard = () => {
                         : "No categorize"}
                 </h1>
             }
+
             <div className="flex flex-row gap-4">
                 <Group className="flex-auto">
                     {catData.length > 0 &&
                         catData.map((element) => {
                             return (
-                                <div key={element.value} onClick={() => { }}>
+                                <div key={element.value} onClick={() => {}}>
                                     <Badge
                                         className=" cursor-pointer"
                                         variant={

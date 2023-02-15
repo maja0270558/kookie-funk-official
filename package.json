@@ -37,6 +37,7 @@
         "bcrypt": "^5.1.0",
         "classnames": "^2.3.2",
         "cloudinary": "^1.33.0",
+        "cookies-next": "^2.1.1",
         "cssnano": "latest",
         "daisyui": "^2.47.0",
         "filepond": "^4.30.4",
