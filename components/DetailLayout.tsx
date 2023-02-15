@@ -57,7 +57,7 @@ export const DetailLayout = ({
     );
 
     const mobileComponent = (
-        <div className="flex flex-col mt-14 p-4">
+        <div className="flex flex-col mt-14 p-4 min-h-[85vh]">
             <div className="flex flex-col justify-evenly">
                 <Center>
                     <div className="flex flex-col flex-1">
@@ -71,7 +71,7 @@ export const DetailLayout = ({
                 </Center>
             </div>
             <div className="">{compomentDesc}</div>
-            <div className="place-self-end">
+            <div className="place-self-end mt-auto">
                 <Carousel
                     withIndicators
                     height={120}
@@ -96,8 +96,8 @@ export const DetailLayout = ({
     );
 
     const desktopComponent = (
-        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8">
-            <div className="flex flex-col lg:min-h-[85vh] justify-evenly">
+        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8 min-h-[85vh]">
+            <div className="flex flex-col justify-evenly">
                 <Center>
                     <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
                         <div className="block align-middle m-auto w-full lg:w-auto lg:min-w-[70vh] ">
@@ -112,7 +112,7 @@ export const DetailLayout = ({
                 </Center>
             </div>
             <div className="lg:items-end lg:mt-8">{compomentDesc}</div>
-            <div className="place-self-end">
+            <div className="place-self-end mt-auto">
                 <Carousel
                     withIndicators
                     height={120}
