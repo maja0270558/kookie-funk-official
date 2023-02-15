@@ -20,7 +20,7 @@ export const DetailLayout = ({
 }: Props) => {
     const [imgIsLoading, setImgIsLoading] = useState(true);
 
-    const compomentImage = (
+    const compomentImage = (className: string) => (
         <Skeleton visible={imgIsLoading}>
             <Image
                 alt=""
@@ -30,7 +30,7 @@ export const DetailLayout = ({
                 height="500"
                 onLoadingComplete={() => setImgIsLoading(false)}
                 sizes="100vw"
-                className="object-contain max-h-[90vh] lg:object-left-bottom w-full h-auto aspect-auto  drop-shadow-md"
+                className={className}
                 priority={true}
             />
         </Skeleton>
@@ -57,12 +57,15 @@ export const DetailLayout = ({
     );
 
     const mobileComponent = (
-        <div className="flex flex-col mt-14 p-4 min-h-[85vh]">
-            <div className="flex flex-col justify-evenly">
-                <Center>
+        <div className="flex flex-col mt-14 p-4 min-h-[100vh]">
+            <></>
+            <div className="flex flex-col mt-auto mb-2 overflow-hidden">
+                <Center className="min-h-[80vh]">
                     <div className="flex flex-col flex-1">
-                        <div className="block align-middle m-auto w-full ">
-                            {compomentImage}
+                        <div className="block align-middle m-auto w-full">
+                            {compomentImage(
+                                "object-contain w-[100vw] h-auto drop-shadow-md"
+                            )}
                         </div>
                         <div className=" mt-2 flex flex-1">
                             <div className="flex flex-1">{compomentTitle}</div>
@@ -70,7 +73,7 @@ export const DetailLayout = ({
                     </div>
                 </Center>
             </div>
-            <div className="">{compomentDesc}</div>
+            <div className="mt-auto">{compomentDesc}</div>
             <div className="place-self-end mt-auto">
                 <Carousel
                     withIndicators
@@ -96,14 +99,17 @@ export const DetailLayout = ({
     );
 
     const desktopComponent = (
-        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8 min-h-[85vh]">
-            <div className="flex flex-col justify-evenly">
-                <Center>
+        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8 min-h-[100vh]">
+            <></>
+            <div className="flex flex-col mt-auto mb-2 overflow-hidden">
+                <Center className="min-h-[80vh]">
                     <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
-                        <div className="block align-middle m-auto w-full lg:w-auto lg:min-w-[70vh] ">
-                            {compomentImage}
+                        <div className="block align-middle m-auto w-full lg:w-auto  ">
+                            {compomentImage(
+                                "object-contain w-[100vw] lg:max-h-[80vh] lg:w-[40vw] h-auto drop-shadow-md"
+                            )}
                         </div>
-                        <div className=" mt-2 flex flex-1 lg:min-w-[30%]">
+                        <div className=" mt-2 flex flex-1 lg:min-w-[30vw]">
                             <div className="flex flex-1 lg:items-end">
                                 {compomentTitle}
                             </div>
@@ -111,7 +117,7 @@ export const DetailLayout = ({
                     </div>
                 </Center>
             </div>
-            <div className="lg:items-end lg:mt-8">{compomentDesc}</div>
+            <div className="lg:items-end mt-auto">{compomentDesc}</div>
             <div className="place-self-end mt-auto">
                 <Carousel
                     withIndicators
