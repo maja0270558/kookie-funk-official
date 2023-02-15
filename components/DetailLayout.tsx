@@ -4,7 +4,7 @@ import Image from "next/image";
 import { Carousel } from "@mantine/carousel";
 import { renderToHTML } from "next/dist/server/render";
 type Props = {
-    forceMobile?: boolean
+    forceMobile?: boolean;
     image: string;
     title: string;
     content: string;
@@ -37,7 +37,7 @@ export const DetailLayout = ({
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg">
+        <TypographyStylesProvider className="text-base-content prose-lg break-all">
             <div
                 dangerouslySetInnerHTML={{
                     __html: title,
@@ -47,7 +47,7 @@ export const DetailLayout = ({
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg">
+        <TypographyStylesProvider className="text-base-content prose-lg break-all">
             <div
                 dangerouslySetInnerHTML={{
                     __html: content,
@@ -56,85 +56,85 @@ export const DetailLayout = ({
         </TypographyStylesProvider>
     );
 
-    const mobileComponent = (<div className="flex flex-col mt-14 p-4">
-        <div className="flex flex-col justify-evenly">
-            <Center>
-                <div className="flex flex-col flex-1">
-                    <div className="block align-middle m-auto w-full ">
-                        {compomentImage}
-                    </div>
-                    <div className=" mt-2 flex flex-1">
-                        <div className="flex flex-1">
-                            {compomentTitle}
+    const mobileComponent = (
+        <div className="flex flex-col mt-14 p-4">
+            <div className="flex flex-col justify-evenly">
+                <Center>
+                    <div className="flex flex-col flex-1">
+                        <div className="block align-middle m-auto w-full ">
+                            {compomentImage}
+                        </div>
+                        <div className=" mt-2 flex flex-1">
+                            <div className="flex flex-1">{compomentTitle}</div>
                         </div>
                     </div>
-                </div>
-            </Center>
+                </Center>
+            </div>
+            <div className="">{compomentDesc}</div>
+            <div className="place-self-end">
+                <Carousel
+                    withIndicators
+                    height={120}
+                    slideSize="120px"
+                    slideGap="md"
+                    dragFree
+                    align="center"
+                    mx="auto"
+                    containScroll="trimSnaps"
+                    withControls={false}
+                >
+                    {otherSection?.map((element, index) => {
+                        return (
+                            <Carousel.Slide key={index}>
+                                {element}
+                            </Carousel.Slide>
+                        );
+                    })}
+                </Carousel>
+            </div>
         </div>
-        <div className="">{compomentDesc}</div>
-        <div className="place-self-end">
-            <Carousel
-                withIndicators
-                height={120}
-                slideSize="120px"
-                slideGap="md"
-                dragFree
-                align="center"
-                mx="auto"
-                containScroll="trimSnaps"
-                withControls={false}
-            >
-                {otherSection?.map((element, index) => {
-                    return (
-                        <Carousel.Slide key={index}>
-                            {element}
-                        </Carousel.Slide>
-                    );
-                })}
-            </Carousel>
-        </div>
-    </div>);
-
-    const desktopComponent = (<div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8">
-        <div className="flex flex-col lg:min-h-[85vh] justify-evenly">
-            <Center>
-                <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
-                    <div className="block align-middle m-auto w-full lg:w-auto lg:min-w-[70vh] ">
-                        {compomentImage}
-                    </div>
-                    <div className=" mt-2 flex flex-1 lg:min-w-[30%]">
-                        <div className="flex flex-1 lg:items-end">
-                            {compomentTitle}
-                        </div>
-                    </div>
-                </div>
-            </Center>
-        </div>
-        <div className="lg:items-end lg:mt-8">{compomentDesc}</div>
-        <div className="place-self-end">
-            <Carousel
-                withIndicators
-                height={120}
-                slideSize="120px"
-                slideGap="md"
-                dragFree
-                align="center"
-                mx="auto"
-                containScroll="trimSnaps"
-                withControls={false}
-            >
-                {otherSection?.map((element, index) => {
-                    return (
-                        <Carousel.Slide key={index}>
-                            {element}
-                        </Carousel.Slide>
-                    );
-                })}
-            </Carousel>
-        </div>
-    </div>);
-
-    return (
-        <div>{forceMobile ? mobileComponent : desktopComponent}</div>
     );
+
+    const desktopComponent = (
+        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8">
+            <div className="flex flex-col lg:min-h-[85vh] justify-evenly">
+                <Center>
+                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
+                        <div className="block align-middle m-auto w-full lg:w-auto lg:min-w-[70vh] ">
+                            {compomentImage}
+                        </div>
+                        <div className=" mt-2 flex flex-1 lg:min-w-[30%]">
+                            <div className="flex flex-1 lg:items-end">
+                                {compomentTitle}
+                            </div>
+                        </div>
+                    </div>
+                </Center>
+            </div>
+            <div className="lg:items-end lg:mt-8">{compomentDesc}</div>
+            <div className="place-self-end">
+                <Carousel
+                    withIndicators
+                    height={120}
+                    slideSize="120px"
+                    slideGap="md"
+                    dragFree
+                    align="center"
+                    mx="auto"
+                    containScroll="trimSnaps"
+                    withControls={false}
+                >
+                    {otherSection?.map((element, index) => {
+                        return (
+                            <Carousel.Slide key={index}>
+                                {element}
+                            </Carousel.Slide>
+                        );
+                    })}
+                </Carousel>
+            </div>
+        </div>
+    );
+
+    return <div>{forceMobile ? mobileComponent : desktopComponent}</div>;
 };
