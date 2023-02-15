@@ -78,7 +78,7 @@ function YoutubeControl() {
         >
             <Popover.Target>
                 <RichTextEditor.Control
-                    onClick={() => {}}
+                    onClick={() => { }}
                     aria-label="Insert Youtube"
                     title="Insert Youtube"
                 >
@@ -164,6 +164,8 @@ const PostEditor = (props: { editor: Editor | null }) => {
                     <RichTextEditor.H2 />
                     <RichTextEditor.H3 />
                     <RichTextEditor.H4 />
+                    <RichTextEditor.H5 />
+                    <RichTextEditor.H6 />
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>

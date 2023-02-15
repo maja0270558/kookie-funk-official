@@ -49,6 +49,7 @@ import { EditPostPara } from "../slices/editPostSlice";
 import createFetcher from "../helper/Fetcher";
 import Head from "next/head";
 import { useDropboxChooser } from "use-dropbox-chooser";
+import { errorNotification, waringNotification } from "./NotificationService";
 
 function NextButton(props: {
     title: string;
@@ -56,12 +57,13 @@ function NextButton(props: {
 }) {
     return (
         <div className="flex place-content-end mt-4">
-            <button
+            <a
+                href="#top"
                 className="uppercase btn btn-primary text-white"
                 onClick={props.click}
             >
                 {props.title}
-            </button>
+            </a>
         </div>
     );
 }
@@ -258,11 +260,13 @@ const PostEditPage = () => {
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
         console.log(active);
         if (!value) {
+            waringNotification("Missing field", "Categorize")
             setGloableError("Categorize not set");
             return;
         }
 
         if (titleEditor?.isEmpty) {
+            waringNotification("Missing field", "Title")
             setGloableError("Require Title");
             return;
         }
@@ -275,6 +279,7 @@ const PostEditPage = () => {
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
         if (!image) {
+            waringNotification("Missing field", "File not select")
             setGloableError("File not select");
             return;
         }
@@ -341,20 +346,20 @@ const PostEditPage = () => {
                     },
                 ]);
         },
-        onCanceled: () => {},
+        onCanceled: () => { },
     });
 
     return (
-        <div>
+        <div id="top"
+        >
             <div className="p-8 flex flex-col">
                 {gloableError && (
                     <Alert
                         className="text-xl mb-10"
                         icon={<IconAlertCircle size={16} />}
-                        title="😩🍆🍑💦 Something you forgot here"
+                        title={`😩🍆🍑💦  ${gloableError}`}
                         color="red"
                     >
-                        <p> {gloableError} </p>
                     </Alert>
                 )}
                 <Stepper
@@ -390,7 +395,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => {}}
+                            onDropdownOpen={() => { }}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
