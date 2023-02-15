@@ -156,7 +156,7 @@ const dashboard = () => {
 
     const ths = (
         <tr>
-            <th className="px-4 py-2 w-1/12">Image</th>
+            <th className="px-4 py-2 w-[200px]">Image</th>
             <th className="px-4 py-2 w-1/12">Categorize</th>
             <th className="px-4 py-2 w-1/4">Title</th>
             <th className="px-4 py-2 w-1/2">Description</th>
@@ -198,8 +198,8 @@ const dashboard = () => {
                             <Image
                                 src={element.nail_image_path}
                                 alt={""}
-                                width="50"
-                                height="50"
+                                width="100"
+                                height="100"
                                 placeholder="blur"
                                 blurDataURL="/placeholder.jpeg"
                                 className="rounded-lg"
@@ -448,16 +448,22 @@ const dashboard = () => {
                     {catData.length > 0 &&
                         catData.map((element) => {
                             return (
-                                <div key={element.value} onClick={() => {}}>
+                                <div key={element.value} onClick={() => { }}>
                                     <Badge
                                         className=" cursor-pointer"
+                                        // 'light' | 'filled' | 'outline' | 'dot' | 'gradient'
                                         variant={
                                             element.label == cateFilter
                                                 ? "light"
-                                                : "dot"
+                                                : "light"
                                         }
                                         size="lg"
-                                        color="teal"
+                                        // 'dark' | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'teal'
+                                        color={
+                                            element.label == cateFilter
+                                                ? "teal"
+                                                : "gray"
+                                        }
                                         sx={{ paddingRight: 3 }}
                                         rightSection={
                                             <ActionIcon
