@@ -83,7 +83,6 @@ const PostEditPage = () => {
         (url) => createFetcher(url)
     );
 
-
     useEffect(() => {
         const warningText =
             "Did you wash your ass today? Are you sure you wish to leave this page?";
@@ -111,15 +110,15 @@ const PostEditPage = () => {
         if (!router.isReady) return;
         if (!titleEditor) return;
         if (!contentEditor) return;
-        if (!data) return
+        if (!data) return;
 
         const initData = {
             id: data.id,
             title: data.title,
             content: data.desc,
             selectedCatId: data.cat_id,
-            imgSrc: data.image_path
-        }
+            imgSrc: data.image_path,
+        };
         const initDataEmpty = Object.keys(initData).length === 0;
         if (initDataEmpty) {
             categorizeDataRequest.trigger("");
@@ -136,9 +135,9 @@ const PostEditPage = () => {
             ]);
         }
 
-        console.log(data.cat_id)
+        console.log(data.cat_id);
         if (initData.selectedCatId) {
-            console.log("trigger request: ", initData.selectedCatId)
+            console.log("trigger request: ", initData.selectedCatId);
 
             categorizeDataRequest.trigger(initData.selectedCatId);
         }
@@ -153,8 +152,7 @@ const PostEditPage = () => {
                 contentEditor?.commands.setContent(initData.content);
         }
 
-        return
-
+        return;
     }, [router.isReady, titleEditor, contentEditor, data]);
 
     const [initData, setInitData] = useState<EditPostPara | null>(null);
@@ -184,8 +182,8 @@ const PostEditPage = () => {
                 if (!data.error) {
                     setCatData(data);
                     if (arg != "") {
-                        console.log("set value", arg)
-                        console.log("set data", data)
+                        console.log("set value", arg);
+                        console.log("set data", data);
                         setValue(arg.toString());
                     }
                 }
@@ -338,7 +336,7 @@ const PostEditPage = () => {
                     },
                 ]);
         },
-        onCanceled: () => { },
+        onCanceled: () => {},
     });
 
     return (
@@ -377,7 +375,7 @@ const PostEditPage = () => {
                             onChange={(value) => {
                                 setUnsavedChanges(true);
                                 setValue(value);
-                                console.log("value change", value)
+                                console.log("value change", value);
                             }}
                             onCreate={(query) => {
                                 createCategorizeRequest.trigger(
@@ -387,7 +385,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => { }}
+                            onDropdownOpen={() => {}}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
@@ -601,7 +599,7 @@ const PostEditPage = () => {
                                                     }
                                                 </h2>
                                             </div>
-                                            <div className="gap-y-4 gap-x-4 grid grid-cols-fill">
+                                            <div className="gap-y-2 gap-x-2 grid grid-cols-4 md:grid-cols-7 lg:flex lg:flex-wrap  p-2">
                                                 {Array(10)
                                                     .fill(0)
                                                     .map((v, i) => i)
@@ -609,7 +607,7 @@ const PostEditPage = () => {
                                                         return (
                                                             <div
                                                                 key={value}
-                                                                className="nail overflow-hidden bg-slate-400 w-full float-left h-52"
+                                                                className="nail w-[100%] aspect-1 lg:w-[15%] lg:max-w-[90px] overflow-hidden"
                                                             />
                                                         );
                                                     })}
