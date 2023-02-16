@@ -12,6 +12,28 @@ import Youtube from "@tiptap/extension-youtube";
 
 const content = "";
 
+import { mergeAttributes } from "@tiptap/react";
+
+export const AlignImage = Image.extend({
+    addOptions() {
+        return {
+            ...Image.options,
+            sizes: ["inline", "block", "left", "right"],
+        };
+    },
+    renderHTML({ HTMLAttributes }) {
+        const { style } = HTMLAttributes;
+        return [
+            "figure",
+            { style },
+            [
+                "img",
+                mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+            ],
+        ];
+    },
+});
+
 function editor(placeholder: string, contentChange?: () => void) {
     return useEditor({
         onUpdate({ editor }) {
@@ -24,11 +46,12 @@ function editor(placeholder: string, contentChange?: () => void) {
             Highlight,
             Color,
             TextStyle,
-            TextAlign.configure({ types: ["heading", "paragraph"] }),
+            TextAlign.configure({ types: ["heading", "paragraph", "image"] }),
             Placeholder.configure({ placeholder: placeholder }),
-            Image,
+            AlignImage,
             Youtube,
         ],
+        autofocus: true,
         content,
     });
 }

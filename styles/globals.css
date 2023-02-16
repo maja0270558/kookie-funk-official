@@ -1,3 +1,34 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+}
+
+.ProseMirror {
+    padding: 4px 8px;
+}
+
+.ProseMirror>*+* {
+    margin-top: 0.75em;
+}
+
+figure {
+    margin: 0;
+}
+
+figure img {
+    max-width: 100%;
+    height: auto;
+    display: inline-block;
+}
+
+.ProseMirror .ProseMirror-selectednode img {
+    outline: 3px solid #68CEF8;
+}
+
+.ProseMirror .ProseMirror-selectednode iframe {
+    outline: 3px solid #f88568;
+}

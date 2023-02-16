@@ -2,7 +2,9 @@ import { Center, Skeleton, TypographyStylesProvider } from "@mantine/core";
 import { ReactNode, useState } from "react";
 import Image from "next/image";
 import { Carousel } from "@mantine/carousel";
+import { renderToHTML } from "next/dist/server/render";
 type Props = {
+    forceMobile?: boolean;
     image: string;
     title: string;
     content: string;
@@ -10,6 +12,7 @@ type Props = {
 };
 
 export const DetailLayout = ({
+    forceMobile,
     image,
     title,
     content,
@@ -17,7 +20,7 @@ export const DetailLayout = ({
 }: Props) => {
     const [imgIsLoading, setImgIsLoading] = useState(true);
 
-    const compomentImage = (
+    const compomentImage = (className: string) => (
         <Skeleton visible={imgIsLoading}>
             <Image
                 alt=""
@@ -27,15 +30,16 @@ export const DetailLayout = ({
                 height="500"
                 onLoadingComplete={() => setImgIsLoading(false)}
                 sizes="100vw"
-                className="object-contain lg:object-left-bottom min-w-[368px] w-[70vh] h-auto aspect-auto max-h-[85vh]  drop-shadow-md"
+                className={className}
                 priority={true}
             />
         </Skeleton>
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
+        <TypographyStylesProvider className="text-base-content break-all max-w-none">
             <div
+                className="prose lg:prose-lg prose-img:rounded-sm max-w-none"
                 dangerouslySetInnerHTML={{
                     __html: title,
                 }}
@@ -44,8 +48,9 @@ export const DetailLayout = ({
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg lg:min-w-full">
+        <TypographyStylesProvider className="text-base-content break-all">
             <div
+                className="prose lg:prose-lg prose-img:rounded-sm max-w-none"
                 dangerouslySetInnerHTML={{
                     __html: content,
                 }}
@@ -53,25 +58,25 @@ export const DetailLayout = ({
         </TypographyStylesProvider>
     );
 
-    return (
-        <div className=" relative flex flex-col p-4 lg:p-20 min-h-full justify-evenly ">
-            <div className=" flex flex-col grow place-content-center">
-                <div className="flex flex-row">
-                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-20">
-                        <div className="block align-middle m-auto">
-                            {compomentImage}
+    const mobileComponent = (
+        <div className="flex flex-col mt-14 p-4 min-h-[100vh]">
+            <></>
+            <div className="flex flex-col mt-auto mb-2 overflow-hidden">
+                <Center className="min-h-[80vh]">
+                    <div className="flex flex-col flex-1">
+                        <div className="block align-middle m-auto w-full">
+                            {compomentImage(
+                                "object-contain w-[100vw] h-auto drop-shadow-md"
+                            )}
                         </div>
-
-                        <div className="flex flex-1 self-stretch min-w-[30%]">
-                            <div className="flex flex-1 lg:items-end">
-                                {compomentTitle}
-                            </div>
+                        <div className=" mt-2 flex flex-1">
+                            <div className="flex flex-1">{compomentTitle}</div>
                         </div>
                     </div>
-                </div>
-                <div className=" lg:items-end lg:mt-8">{compomentDesc}</div>
+                </Center>
             </div>
-            <div className="place-self-end">
+            <div className="mt-auto">{compomentDesc}</div>
+            <div className="place-self-end mt-auto">
                 <Carousel
                     withIndicators
                     height={120}
@@ -94,4 +99,50 @@ export const DetailLayout = ({
             </div>
         </div>
     );
+
+    const desktopComponent = (
+        <div className="flex flex-col mt-14 lg:mt-0 p-4 lg:p-8 min-h-[100vh]">
+            <></>
+            <div className="flex flex-col mt-auto mb-2 overflow-hidden">
+                <Center className="min-h-[80vh]">
+                    <div className="flex flex-col lg:flex-row flex-1 lg:gap-10 ">
+                        <div className="block align-middle m-auto w-full lg:w-auto  ">
+                            {compomentImage(
+                                "object-contain w-[100vw] lg:max-h-[80vh] lg:w-[40vw] h-auto drop-shadow-md"
+                            )}
+                        </div>
+                        <div className=" mt-2 flex flex-1 lg:min-w-[30vw]">
+                            <div className="flex flex-1 lg:items-end">
+                                {compomentTitle}
+                            </div>
+                        </div>
+                    </div>
+                </Center>
+            </div>
+            <div className="lg:items-end mt-auto">{compomentDesc}</div>
+            <div className="place-self-end mt-auto">
+                <Carousel
+                    withIndicators
+                    height={120}
+                    slideSize="120px"
+                    slideGap="md"
+                    dragFree
+                    align="center"
+                    mx="auto"
+                    containScroll="trimSnaps"
+                    withControls={false}
+                >
+                    {otherSection?.map((element, index) => {
+                        return (
+                            <Carousel.Slide key={index}>
+                                {element}
+                            </Carousel.Slide>
+                        );
+                    })}
+                </Carousel>
+            </div>
+        </div>
+    );
+
+    return <div>{forceMobile ? mobileComponent : desktopComponent}</div>;
 };

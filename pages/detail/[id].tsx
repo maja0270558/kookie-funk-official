@@ -9,9 +9,13 @@ import { Center, Loader } from "@mantine/core";
 import GalleryImage from "../../components/GalleryImage";
 import { DetailLayout } from "../../components/DetailLayout";
 import createFetcher from "../../helper/Fetcher";
+import { useEffect } from "react";
 
 const works = () => {
-    const cellSize = 120;
+    useEffect(() => {
+        window.history.scrollRestoration = 'manual'
+    }, []);
+
     const router = useRouter();
     const { id } = router.query;
     const { data, isLoading } = useSWR(
@@ -36,18 +40,19 @@ const works = () => {
         const otherPostsSection =
             data.others instanceof Array && data.others.length > 0
                 ? data.others.map((value: { img: string; id: string }) => {
-                      return (
-                          <GalleryImage
-                              className={"h-[120px] w-[120px]"}
-                              path={value.img}
-                              id={value.id.toString()}
-                          />
-                      );
-                  })
+                    return (
+                        <GalleryImage
+                            className={"h-[120px] w-[120px]"}
+                            path={value.img}
+                            id={value.id.toString()}
+                        />
+                    );
+                })
                 : null;
 
         return (
             <DetailLayout
+                forceMobile={false}
                 image={data.post?.image ?? ""}
                 title={data.post.title ?? ""}
                 content={data.post.description ?? ""}

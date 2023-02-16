@@ -8,15 +8,11 @@ export default async function handle(
 ) {
     switch (req.method) {
         case "POST":
-            console.log("POST in");
             let username = req.body.username;
             let password = req.body.password;
             let fieldsExisting = username && password;
-            console.log("CHECK FIELDS EXISTING");
 
             if (fieldsExisting) {
-                console.log("FIELDS EXISTING");
-
                 const result = await prisma.user.findFirst({
                     where: {
                         user_name: username,

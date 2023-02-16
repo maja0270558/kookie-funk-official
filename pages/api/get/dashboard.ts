@@ -22,6 +22,9 @@ export default async function handle(
             include: {
                 categorize: true, // Return all fields
             },
+            orderBy: [
+                { ts: "desc" }
+            ],
         });
 
         return res.json(works);

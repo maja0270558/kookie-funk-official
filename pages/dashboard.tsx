@@ -3,6 +3,7 @@ import {
     Badge,
     Button,
     Center,
+    Divider,
     Group,
     Input,
     LoadingOverlay,
@@ -30,6 +31,7 @@ import Router from "next/router";
 import { useAppDispatch } from "../hook";
 import createFetcher from "../helper/Fetcher";
 import { useEffect } from "react";
+import { ColorSchemeToggle } from "../components/ThemeSwitcher";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -155,13 +157,13 @@ const dashboard = () => {
 
     const ths = (
         <tr>
-            <th className="px-4 py-2 w-1/12">Image</th>
+            <th className="px-4 py-2 w-[50px]">Image</th>
             <th className="px-4 py-2 w-1/12">Categorize</th>
-            <th className="px-4 py-2 w-1/4">Title</th>
+            <th className="px-4 py-2 w-1/2">Title</th>
             <th className="px-4 py-2 w-1/2">Description</th>
             <th className="px-4 py-2">Public</th>
             <th className="px-4 py-2 w-1/12">Create Time</th>
-            <th className="px-4 py-2 w-1/12"></th>
+            <th className="px-4 py-2 w-[20px]"></th>
         </tr>
     );
 
@@ -197,8 +199,8 @@ const dashboard = () => {
                             <Image
                                 src={element.nail_image_path}
                                 alt={""}
-                                width="50"
-                                height="50"
+                                width="100"
+                                height="100"
                                 placeholder="blur"
                                 blurDataURL="/placeholder.jpeg"
                                 className="rounded-lg"
@@ -219,8 +221,9 @@ const dashboard = () => {
                             showLabel="Show more"
                             hideLabel="Hide"
                         >
-                            <TypographyStylesProvider className="text-base-content mt-4">
+                            <TypographyStylesProvider className="text-base-content mt-4 break-all min-w-[20vw]">
                                 <div
+                                    className="prose lg:prose-lg prose-img:rounded-sm"
                                     dangerouslySetInnerHTML={{
                                         __html: element.title,
                                     }}
@@ -234,8 +237,9 @@ const dashboard = () => {
                             showLabel="Show more"
                             hideLabel="Hide"
                         >
-                            <TypographyStylesProvider className="text-base-content">
+                            <TypographyStylesProvider className="text-base-content break-all">
                                 <div
+                                    className="prose lg:prose-lg prose-img:rounded-sm"
                                     dangerouslySetInnerHTML={{
                                         __html: element.desc,
                                     }}
@@ -272,11 +276,6 @@ const dashboard = () => {
 
                                         const data = {
                                             id: element.id.toString(),
-                                            title: encode(element.title),
-                                            content: encode(element.desc),
-                                            selectedCatId:
-                                                element.categorize.id.toString(),
-                                            imgSrc: element.image_path,
                                         };
                                         Router.push({
                                             pathname: "/edit_post",
@@ -340,9 +339,10 @@ const dashboard = () => {
     });
 
     const worksTable = (
-        <div>
+        <div className=" relative">
             <h1 className="prose-lg font-bold mt-2 mb-2">Manage your works</h1>
             <Input
+                className=" sticky z-50 top-14 lg:top-2"
                 icon={<IconSearch />}
                 placeholder="You can search 『title』, 『description』,『categorize』 here"
                 onChange={(t) => {
@@ -364,7 +364,11 @@ const dashboard = () => {
         </div>
     );
     return (
-        <div className="flex flex-col p-4 min-h-full">
+        <div className="mt-14 lg:mt-0 flex flex-col p-4 min-h-full">
+            <div className=" absolute top-14 lg:top-0 right-4">
+                <ColorSchemeToggle />
+            </div>
+
             <Modal
                 opened={opened}
                 onClose={() => {
@@ -441,6 +445,7 @@ const dashboard = () => {
                         : "No categorize"}
                 </h1>
             }
+
             <div className="flex flex-row gap-4">
                 <Group className="flex-auto">
                     {catData.length > 0 &&
@@ -449,13 +454,19 @@ const dashboard = () => {
                                 <div key={element.value} onClick={() => {}}>
                                     <Badge
                                         className=" cursor-pointer"
+                                        // 'light' | 'filled' | 'outline' | 'dot' | 'gradient'
                                         variant={
                                             element.label == cateFilter
                                                 ? "light"
-                                                : "dot"
+                                                : "light"
                                         }
                                         size="lg"
-                                        color="teal"
+                                        // 'dark' | 'gray' | 'red' | 'pink' | 'grape' | 'violet' | 'indigo' | 'blue' | 'cyan' | 'green' | 'lime' | 'yellow' | 'orange' | 'teal'
+                                        color={
+                                            element.label == cateFilter
+                                                ? "teal"
+                                                : "gray"
+                                        }
                                         sx={{ paddingRight: 3 }}
                                         rightSection={
                                             <ActionIcon
@@ -504,9 +515,11 @@ const dashboard = () => {
                 </Button>
             </div>
             {worksTable}
-            {worksRequest.data instanceof Array &&
-                (worksRequest.data.length <= 0 || !worksRequest.data) &&
-                emptyTableContent}
+            {(worksRequest.data instanceof Array &&
+                (worksRequest.data.length <= 0 ||
+                    !worksRequest.data ||
+                    !rows)) ||
+                ((rows as any[]).length <= 0 && emptyTableContent)}
         </div>
     );
 };
