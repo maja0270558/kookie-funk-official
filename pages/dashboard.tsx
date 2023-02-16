@@ -32,6 +32,7 @@ import { useAppDispatch } from "../hook";
 import createFetcher from "../helper/Fetcher";
 import { useEffect } from "react";
 import { ColorSchemeToggle } from "../components/ThemeSwitcher";
+import CustomTypographtProvider from "../components/CustomTypographtProvider";
 interface DashBoardData {
     id: number;
     image_path: string;
@@ -139,7 +140,7 @@ const dashboard = () => {
     if (worksRequest.isMutating) return <div className=""></div>;
 
     const emptyTableContent = (
-        <div className="flex flex-1  justify-center text-center rounded-lg">
+        <div className="flex flex-1 justify-center text-center rounded-lg">
             <Center>
                 <div className="max-w-md flex-auto">
                     <Image
@@ -188,150 +189,153 @@ const dashboard = () => {
                         .includes(filter.toLowerCase())
                 );
             })
-            .map((element: DashBoardData) => (
-                <tr key={element.id}>
-                    <td>
-                        <button
-                            onClick={() => {
-                                Router.push(`/detail/${element.id}`);
-                            }}
-                        >
-                            <Image
-                                src={element.nail_image_path}
-                                alt={""}
-                                width="100"
-                                height="100"
-                                placeholder="blur"
-                                blurDataURL="/placeholder.jpeg"
-                                className="rounded-lg"
-                                priority={true}
-                            ></Image>
-                        </button>
-                    </td>
-                    <td>
-                        <Badge>
-                            <p className="uppercase font-medium">
-                                {element.categorize.section}
-                            </p>
-                        </Badge>
-                    </td>
-                    <td>
-                        <Spoiler
-                            maxHeight={100}
-                            showLabel="Show more"
-                            hideLabel="Hide"
-                        >
-                            <TypographyStylesProvider className="text-base-content mt-4 break-all min-w-[20vw]">
-                                <div
-                                    className="prose lg:prose-lg prose-img:rounded-sm"
-                                    dangerouslySetInnerHTML={{
-                                        __html: element.title,
-                                    }}
+            .map((element: DashBoardData) => {
+                const date = new Date(element.ts);
+                const tsString = date.toLocaleDateString("sv");
+                return (
+                    <tr key={element.id}>
+                        <td>
+                            <button
+                                onClick={() => {
+                                    Router.push(`/detail/${element.id}`);
+                                }}
+                            >
+                                <Image
+                                    src={element.nail_image_path}
+                                    alt={""}
+                                    width="100"
+                                    height="100"
+                                    placeholder="blur"
+                                    blurDataURL="/placeholder.jpeg"
+                                    className="rounded-lg"
+                                    priority={true}
+                                ></Image>
+                            </button>
+                        </td>
+                        <td>
+                            <Badge>
+                                <p className="uppercase font-medium">
+                                    {element.categorize.section}
+                                </p>
+                            </Badge>
+                        </td>
+                        <td>
+                            <Spoiler
+                                maxHeight={100}
+                                showLabel="Show more"
+                                hideLabel="Hide"
+                                className="w-[20vw]"
+                            >
+                                <CustomTypographtProvider
+                                    content={element.title}
                                 />
-                            </TypographyStylesProvider>
-                        </Spoiler>
-                    </td>
-                    <td>
-                        <Spoiler
-                            maxHeight={100}
-                            showLabel="Show more"
-                            hideLabel="Hide"
-                        >
-                            <TypographyStylesProvider className="text-base-content break-all">
-                                <div
-                                    className="prose lg:prose-lg prose-img:rounded-sm"
-                                    dangerouslySetInnerHTML={{
-                                        __html: element.desc,
-                                    }}
+                            </Spoiler>
+                        </td>
+                        <td>
+                            <Spoiler
+                                maxHeight={100}
+                                showLabel="Show more"
+                                hideLabel="Hide"
+                                className="w-[20vw]"
+                            >
+                                <CustomTypographtProvider
+                                    content={element.desc}
                                 />
-                            </TypographyStylesProvider>
-                        </Spoiler>
-                    </td>
+                            </Spoiler>
+                        </td>
 
-                    <td>
-                        {element.display > 0 ? (
-                            <IconEye size={16} />
-                        ) : (
-                            <IconEyeOff size={16} />
-                        )}
-                    </td>
-                    <td className="">
-                        <p className="text-xs"> {element.ts}</p>
-                    </td>
-                    <td>
-                        <Menu width={200} shadow="md">
-                            <Menu.Target>
-                                <button>
-                                    <IconDots size={16} />
-                                </button>
-                            </Menu.Target>
+                        <td>
+                            {element.display > 0 ? (
+                                <IconEye size={16} />
+                            ) : (
+                                <IconEyeOff size={16} />
+                            )}
+                        </td>
+                        <td>
+                            <p className="text-xs break-word"> {tsString}</p>
+                        </td>
+                        <td>
+                            <Menu width={200} shadow="md">
+                                <Menu.Target>
+                                    <button>
+                                        <IconDots size={16} />
+                                    </button>
+                                </Menu.Target>
 
-                            <Menu.Dropdown>
-                                <Menu.Item
-                                    onClick={() => {
-                                        const encode = (str: string): string =>
-                                            Buffer.from(str, "binary").toString(
-                                                "base64"
+                                <Menu.Dropdown>
+                                    <Menu.Item
+                                        onClick={() => {
+                                            const encode = (
+                                                str: string
+                                            ): string =>
+                                                Buffer.from(
+                                                    str,
+                                                    "binary"
+                                                ).toString("base64");
+
+                                            const data = {
+                                                id: element.id.toString(),
+                                            };
+                                            Router.push({
+                                                pathname: "/edit_post",
+                                                query: data,
+                                            });
+                                        }}
+                                        icon={
+                                            <IconAdjustmentsHorizontal
+                                                size={14}
+                                            />
+                                        }
+                                    >
+                                        Edit
+                                    </Menu.Item>
+
+                                    <Menu.Item
+                                        onClick={() => {
+                                            const data = {
+                                                id: element.id.toString(),
+                                                display:
+                                                    element.display > 0
+                                                        ? "0"
+                                                        : "1",
+                                            };
+                                            editPostPublicRequest.trigger(
+                                                JSON.stringify(data)
                                             );
+                                        }}
+                                        icon={
+                                            element.display > 0 ? (
+                                                <IconEyeOff size={14} />
+                                            ) : (
+                                                <IconEye size={14} />
+                                            )
+                                        }
+                                    >
+                                        {element.display > 0
+                                            ? "Set private"
+                                            : "Set public"}
+                                    </Menu.Item>
 
-                                        const data = {
-                                            id: element.id.toString(),
-                                        };
-                                        Router.push({
-                                            pathname: "/edit_post",
-                                            query: data,
-                                        });
-                                    }}
-                                    icon={
-                                        <IconAdjustmentsHorizontal size={14} />
-                                    }
-                                >
-                                    Edit
-                                </Menu.Item>
-
-                                <Menu.Item
-                                    onClick={() => {
-                                        const data = {
-                                            id: element.id.toString(),
-                                            display:
-                                                element.display > 0 ? "0" : "1",
-                                        };
-                                        editPostPublicRequest.trigger(
-                                            JSON.stringify(data)
-                                        );
-                                    }}
-                                    icon={
-                                        element.display > 0 ? (
-                                            <IconEyeOff size={14} />
-                                        ) : (
-                                            <IconEye size={14} />
-                                        )
-                                    }
-                                >
-                                    {element.display > 0
-                                        ? "Set private"
-                                        : "Set public"}
-                                </Menu.Item>
-
-                                <Menu.Item
-                                    onClick={() => {
-                                        const data = {
-                                            id: element.id.toString(),
-                                        };
-                                        deletePostRequest.trigger(
-                                            JSON.stringify(data)
-                                        );
-                                    }}
-                                    color="red"
-                                    icon={<IconTrash size={14} />}
-                                >
-                                    Remove this post
-                                </Menu.Item>
-                            </Menu.Dropdown>
-                        </Menu>
-                    </td>
-                </tr>
-            ));
+                                    <Menu.Item
+                                        onClick={() => {
+                                            const data = {
+                                                id: element.id.toString(),
+                                            };
+                                            deletePostRequest.trigger(
+                                                JSON.stringify(data)
+                                            );
+                                        }}
+                                        color="red"
+                                        icon={<IconTrash size={14} />}
+                                    >
+                                        Remove this post
+                                    </Menu.Item>
+                                </Menu.Dropdown>
+                            </Menu>
+                        </td>
+                    </tr>
+                );
+            });
 
     const saveButtonClass = classNames("btn", {
         ["btn-primary text-white"]: editSaveButtonEnable,

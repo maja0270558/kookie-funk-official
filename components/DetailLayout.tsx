@@ -3,6 +3,7 @@ import { ReactNode, useState } from "react";
 import Image from "next/image";
 import { Carousel } from "@mantine/carousel";
 import { renderToHTML } from "next/dist/server/render";
+import CustomTypographtProvider from "./CustomTypographtProvider";
 type Props = {
     forceMobile?: boolean;
     image: string;
@@ -36,27 +37,9 @@ export const DetailLayout = ({
         </Skeleton>
     );
 
-    const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content break-all max-w-none">
-            <div
-                className="prose lg:prose-lg prose-img:rounded-sm max-w-none"
-                dangerouslySetInnerHTML={{
-                    __html: title,
-                }}
-            />
-        </TypographyStylesProvider>
-    );
+    const compomentTitle = <CustomTypographtProvider content={title} />;
 
-    const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content break-all">
-            <div
-                className="prose lg:prose-lg prose-img:rounded-sm max-w-none"
-                dangerouslySetInnerHTML={{
-                    __html: content,
-                }}
-            />
-        </TypographyStylesProvider>
-    );
+    const compomentDesc = <CustomTypographtProvider content={content} />;
 
     const mobileComponent = (
         <div className="flex flex-col mt-14 p-4 min-h-[100vh]">
