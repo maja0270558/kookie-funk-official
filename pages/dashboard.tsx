@@ -3,6 +3,7 @@ import {
     Badge,
     Button,
     Center,
+    Divider,
     Group,
     Input,
     LoadingOverlay,
@@ -156,13 +157,13 @@ const dashboard = () => {
 
     const ths = (
         <tr>
-            <th className="px-4 py-2 w-[200px]">Image</th>
+            <th className="px-4 py-2 w-[50px]">Image</th>
             <th className="px-4 py-2 w-1/12">Categorize</th>
-            <th className="px-4 py-2 w-1/4">Title</th>
+            <th className="px-4 py-2 w-1/2">Title</th>
             <th className="px-4 py-2 w-1/2">Description</th>
             <th className="px-4 py-2">Public</th>
             <th className="px-4 py-2 w-1/12">Create Time</th>
-            <th className="px-4 py-2 w-1/12"></th>
+            <th className="px-4 py-2 w-[20px]"></th>
         </tr>
     );
 
@@ -220,8 +221,9 @@ const dashboard = () => {
                             showLabel="Show more"
                             hideLabel="Hide"
                         >
-                            <TypographyStylesProvider className="text-base-content mt-4">
+                            <TypographyStylesProvider className="text-base-content mt-4 break-all min-w-[20vw]">
                                 <div
+                                    className="prose lg:prose-lg prose-img:rounded-sm"
                                     dangerouslySetInnerHTML={{
                                         __html: element.title,
                                     }}
@@ -235,8 +237,9 @@ const dashboard = () => {
                             showLabel="Show more"
                             hideLabel="Hide"
                         >
-                            <TypographyStylesProvider className="text-base-content">
+                            <TypographyStylesProvider className="text-base-content break-all">
                                 <div
+                                    className="prose lg:prose-lg prose-img:rounded-sm"
                                     dangerouslySetInnerHTML={{
                                         __html: element.desc,
                                     }}
@@ -448,7 +451,7 @@ const dashboard = () => {
                     {catData.length > 0 &&
                         catData.map((element) => {
                             return (
-                                <div key={element.value} onClick={() => { }}>
+                                <div key={element.value} onClick={() => {}}>
                                     <Badge
                                         className=" cursor-pointer"
                                         // 'light' | 'filled' | 'outline' | 'dot' | 'gradient'
@@ -512,9 +515,11 @@ const dashboard = () => {
                 </Button>
             </div>
             {worksTable}
-            {worksRequest.data instanceof Array &&
-                (worksRequest.data.length <= 0 || !worksRequest.data) &&
-                emptyTableContent}
+            {(worksRequest.data instanceof Array &&
+                (worksRequest.data.length <= 0 ||
+                    !worksRequest.data ||
+                    !rows)) ||
+                ((rows as any[]).length <= 0 && emptyTableContent)}
         </div>
     );
 };
