@@ -58,7 +58,7 @@ const DetailPreview = (props: {
                     <div className="mockup-phone">
                         <div className="camera"></div>
                         <div className="display">
-                            <div className="artboard phone-2 flex overflow-auto ">
+                            <div className="artboard phone-2 flex overflow-auto  bg-base-100">
                                 <div className="max-w-full">
                                     <DetailLayout
                                         forceMobile={true}
