@@ -4,6 +4,7 @@ import React from "react";
 import { DetailLayout } from "./DetailLayout";
 import GalleryImage from "./GalleryImage";
 import { useState } from "react";
+import classNames from "classnames";
 
 const DetailPreview = (props: {
     src: string;
@@ -57,8 +58,8 @@ const DetailPreview = (props: {
                     <div className="mockup-phone">
                         <div className="camera"></div>
                         <div className="display">
-                            <div className="artboard artboard-demo phone-2 flex">
-                                <div className="w-full flex flex-1 overflow-auto ">
+                            <div className="artboard phone-2 flex overflow-auto ">
+                                <div className="max-w-full">
                                     <DetailLayout
                                         forceMobile={true}
                                         image={props.src}

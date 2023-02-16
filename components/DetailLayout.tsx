@@ -64,7 +64,7 @@ export const DetailLayout = ({
             <div className="flex flex-col mt-auto mb-2 overflow-hidden">
                 <Center className="min-h-[80vh]">
                     <div className="flex flex-col flex-1">
-                        <div className="block align-middle m-auto w-full">
+                        <div className="block align-middle m-auto w-full ">
                             {compomentImage(
                                 "object-contain w-[100vw] h-auto drop-shadow-md"
                             )}
