@@ -18,7 +18,7 @@ const DetailPreview = (props: {
         .map((value, index) => {
             return (
                 <GalleryImage
-                    className={"h-[120px] w-[120px]"}
+                    className={"h-[120px] w-[120px] pointer-events-none"}
                     path={props.nailSrc}
                     id={index.toString()}
                 />
