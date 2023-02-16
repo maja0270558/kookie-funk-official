@@ -14,10 +14,12 @@ const content = "";
 
 import { mergeAttributes } from "@tiptap/react";
 
-export const MyImage = Image.extend({
-    defaultOptions: {
-        ...Image.options,
-        sizes: ["inline", "block", "left", "right"],
+export const AlignImage = Image.extend({
+    addOptions() {
+        return {
+            ...Image.options,
+            sizes: ["inline", "block", "left", "right"],
+        };
     },
     renderHTML({ HTMLAttributes }) {
         const { style } = HTMLAttributes;
@@ -46,7 +48,7 @@ function editor(placeholder: string, contentChange?: () => void) {
             TextStyle,
             TextAlign.configure({ types: ["heading", "paragraph", "image"] }),
             Placeholder.configure({ placeholder: placeholder }),
-            MyImage,
+            AlignImage,
             Youtube,
         ],
         autofocus: true,

@@ -55,6 +55,7 @@
         "react-filepond": "^7.1.2",
         "react-loader-spinner": "^5.3.4",
         "react-redux": "^8.0.5",
+        "sharp": "^0.31.3",
         "swr": "^2.0.1",
         "typescript": "4.9.5",
         "use-dropbox-chooser": "^0.0.6",
