@@ -4,6 +4,7 @@ import { Editor } from "@tiptap/react";
 import React from "react";
 import { Popover, TextInput, NumberInput } from "@mantine/core";
 import { useState } from "react";
+import classNames from "classnames";
 
 function ImageControl() {
     const { editor } = useRichTextEditorContext();
@@ -78,7 +79,7 @@ function YoutubeControl() {
         >
             <Popover.Target>
                 <RichTextEditor.Control
-                    onClick={() => { }}
+                    onClick={() => {}}
                     aria-label="Insert Youtube"
                     title="Insert Youtube"
                 >
@@ -128,7 +129,10 @@ function YoutubeControl() {
 
 const PostEditor = (props: { editor: Editor | null }) => {
     return (
-        <RichTextEditor editor={props.editor}>
+        <RichTextEditor
+            editor={props.editor}
+            className="prose lg:prose-lg prose-img:rounded-sm"
+        >
             <RichTextEditor.Toolbar sticky stickyOffset={0}>
                 <RichTextEditor.ColorPicker
                     colors={[
@@ -156,7 +160,7 @@ const PostEditor = (props: { editor: Editor | null }) => {
                     <RichTextEditor.Strikethrough />
                     <RichTextEditor.ClearFormatting />
                     <RichTextEditor.Highlight />
-                    <RichTextEditor.Code />
+                    {/* <RichTextEditor.Code /> */}
                 </RichTextEditor.ControlsGroup>
 
                 <RichTextEditor.ControlsGroup>
@@ -187,14 +191,12 @@ const PostEditor = (props: { editor: Editor | null }) => {
                     <RichTextEditor.AlignRight />
                 </RichTextEditor.ControlsGroup>
             </RichTextEditor.Toolbar>
-
             <RichTextEditor.Toolbar>
                 <RichTextEditor.ControlsGroup>
                     <ImageControl />
                     <YoutubeControl />
                 </RichTextEditor.ControlsGroup>
             </RichTextEditor.Toolbar>
-
             <RichTextEditor.Content />
         </RichTextEditor>
     );

@@ -37,8 +37,9 @@ export const DetailLayout = ({
     );
 
     const compomentTitle = (
-        <TypographyStylesProvider className="text-base-content prose-lg break-all">
+        <TypographyStylesProvider className="text-base-content break-all max-w-none">
             <div
+                className="prose lg:prose-lg prose-img:rounded-sm"
                 dangerouslySetInnerHTML={{
                     __html: title,
                 }}
@@ -47,8 +48,9 @@ export const DetailLayout = ({
     );
 
     const compomentDesc = (
-        <TypographyStylesProvider className="text-base-content prose-lg break-all">
+        <TypographyStylesProvider className="text-base-content break-all max-w-none">
             <div
+                className="prose lg:prose-lg prose-img:rounded-sm"
                 dangerouslySetInnerHTML={{
                     __html: content,
                 }}
