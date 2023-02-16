@@ -16,7 +16,6 @@ export const Layout = ({ children }: Props) => {
             if (fetcher) {
                 nextFetcher = (...args: unknown[]) => {
                     const started = Date.now();
-                    console.log(started);
                     const label =
                         typeof key === "function"
                             ? key()

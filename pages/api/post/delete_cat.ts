@@ -29,8 +29,6 @@ export default async function handle(
             }
 
             try {
-                console.log(body.id);
-
                 const publicIdObject = await prisma.works.findMany({
                     where: {
                         cat_id: parseInt(body.id),

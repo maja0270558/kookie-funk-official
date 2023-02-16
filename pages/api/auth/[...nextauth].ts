@@ -20,9 +20,6 @@ export const authOptions: NextAuthOptions = {
                 password: { label: "Password", type: "password" },
             },
             async authorize(credentials, req) {
-                console.log(JSON.stringify(credentials));
-                console.log("⛄️⛄️⛄️⛄️⛄️⛄️⛄️");
-                console.log(process.env.NEXTAUTH_URL);
                 const res = await fetch(
                     `${process.env.NEXTAUTH_URL}/api/post/user`,
                     {
@@ -31,19 +28,12 @@ export const authOptions: NextAuthOptions = {
                         headers: { "Content-Type": "application/json" },
                     }
                 );
-                console.log("⛄️⛄️⛄️⛄️⛄️⛄️⛄️🔥");
-                console.log(res);
 
                 const user = await res.json();
-                console.log(user);
 
                 if (res.ok && user.name === credentials?.username) {
-                    console.log("success");
-
                     return user;
                 } else {
-                    console.log("fail");
-
                     return null;
                 }
             },
@@ -69,7 +59,7 @@ export const authOptions: NextAuthOptions = {
         strategy: "jwt",
 
         // Seconds - How long until an idle session expires and is no longer valid.
-        // maxAge: 30 * 24 * 60 * 60, // 30 days
+        maxAge: 30 * 24 * 60 * 60, // 30 days
 
         // Seconds - Throttle how frequently to write to database to extend a session.
         // Use it to limit write operations. Set to 0 to always update the database.

@@ -30,7 +30,6 @@ export default async function handle(
 
     switch (req.method) {
         case "POST":
-            console.log("🦤🦤🦤🦤🦤");
             let body: BodyArgument = req.body;
             var postSchema = {
                 type: "object",

@@ -143,10 +143,7 @@ const PostEditPage = () => {
             ]);
         }
 
-        console.log(data.cat_id);
         if (initData.selectedCatId) {
-            console.log("trigger request: ", initData.selectedCatId);
-
             categorizeDataRequest.trigger(initData.selectedCatId);
         }
 
@@ -190,8 +187,6 @@ const PostEditPage = () => {
                 if (!data.error) {
                     setCatData(data);
                     if (arg != "") {
-                        console.log("set value", arg);
-                        console.log("set data", data);
                         setValue(arg.toString());
                     }
                 }
@@ -258,15 +253,14 @@ const PostEditPage = () => {
 
     // MARK: step
     function handleContextStep(event: React.MouseEvent<HTMLElement>) {
-        console.log(active);
         if (!value) {
-            waringNotification("Missing field", "Categorize")
+            waringNotification("Missing field", "Categorize");
             setGloableError("Categorize not set");
             return;
         }
 
         if (titleEditor?.isEmpty) {
-            waringNotification("Missing field", "Title")
+            waringNotification("Missing field", "Title");
             setGloableError("Require Title");
             return;
         }
@@ -274,12 +268,11 @@ const PostEditPage = () => {
         setGloableError(null);
         const step = active + 1;
         setActive(step);
-        console.log(step);
     }
 
     function handleFileStep(event: React.MouseEvent<HTMLElement>) {
         if (!image) {
-            waringNotification("Missing field", "File not select")
+            waringNotification("Missing field", "File not select");
             setGloableError("File not select");
             return;
         }
@@ -346,12 +339,11 @@ const PostEditPage = () => {
                     },
                 ]);
         },
-        onCanceled: () => { },
+        onCanceled: () => {},
     });
 
     return (
-        <div id="top"
-        >
+        <div id="top">
             <div className="p-8 flex flex-col">
                 {gloableError && (
                     <Alert
@@ -360,6 +352,7 @@ const PostEditPage = () => {
                         title={`😩🍆🍑💦  ${gloableError}`}
                         color="red"
                     >
+                        {}
                     </Alert>
                 )}
                 <Stepper
@@ -385,7 +378,6 @@ const PostEditPage = () => {
                             onChange={(value) => {
                                 setUnsavedChanges(true);
                                 setValue(value);
-                                console.log("value change", value);
                             }}
                             onCreate={(query) => {
                                 createCategorizeRequest.trigger(
@@ -395,7 +387,7 @@ const PostEditPage = () => {
                                 );
                                 return value;
                             }}
-                            onDropdownOpen={() => { }}
+                            onDropdownOpen={() => {}}
                             dropdownComponent="div"
                             inputContainer={(child: React.ReactNode) => {
                                 if (categorizeDataRequest.isMutating) {
