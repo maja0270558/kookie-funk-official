@@ -131,7 +131,7 @@ const PostEditor = (props: { editor: Editor | null }) => {
     return (
         <RichTextEditor
             editor={props.editor}
-            className="prose lg:prose-lg prose-img:rounded-sm"
+            className="prose lg:prose-lg prose-img:rounded-sm max-w-none"
         >
             <RichTextEditor.Toolbar sticky stickyOffset={0}>
                 <RichTextEditor.ColorPicker
