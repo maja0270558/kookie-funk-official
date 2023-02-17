@@ -103,16 +103,16 @@ export const DetailLayout = ({
                 </Center>
             </div>
             <div className="lg:items-end mt-auto">{compomentDesc}</div>
-            <div className="place-self-end mt-auto">
+            <div className="mt-auto pt-4">
                 <Carousel
+                    className=""
                     withIndicators
-                    height={120}
-                    slideSize="120px"
                     slideGap="md"
+                    mx={"auto"}
+                    slideSize={120}
                     dragFree
-                    align="center"
-                    mx="auto"
-                    containScroll="trimSnaps"
+                    align="start"
+                    containScroll="keepSnaps"
                     withControls={false}
                 >
                     {otherSection?.map((element, index) => {
