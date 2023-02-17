@@ -60,7 +60,7 @@ export const Layout = ({ children }: Props) => {
                 overlayBlur={1}
             />
             <Sidebar>
-                <div className="relative min-h-full">
+                <div className="relative min-h-full top-14 lg:top-0">
                     <SWRConfig value={{ use: [logger] }}>{children}</SWRConfig>
                 </div>
             </Sidebar>

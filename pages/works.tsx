@@ -43,7 +43,7 @@ const works = () => {
         data instanceof Array &&
         data.map((workData: WorksData) => {
             return (
-                <div className="mx-auto px-4 py-8" key={workData.section_name}>
+                <div className="mx-auto px-4" key={workData.section_name}>
                     <div className="uppercase pb-4 text-lg font-economica">
                         <h1>{workData.section_name}</h1>
                     </div>
@@ -61,7 +61,6 @@ const works = () => {
                             })}
                         </div>
                     </div>
-
                 </div>
             );
         });

@@ -368,7 +368,7 @@ const dashboard = () => {
         </div>
     );
     return (
-        <div className="mt-14 lg:mt-0 flex flex-col p-4 min-h-full">
+        <div className="flex flex-col p-4 min-h-full">
             <div className=" absolute top-14 lg:top-0 right-4">
                 <ColorSchemeToggle />
             </div>

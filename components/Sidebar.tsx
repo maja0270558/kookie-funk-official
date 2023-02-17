@@ -6,6 +6,7 @@ import classNames from "classnames";
 
 /// Next-auth
 import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 type Props = {
     children: ReactNode;
@@ -16,6 +17,7 @@ const Sidebar = ({ children }: Props) => {
     const { data: session } = useSession();
     // get path router
     const router = useRouter();
+    const [drawerOpen, setDrawerOpen] = useState(false);
 
     interface MenuItem {
         label: string;
@@ -57,6 +59,9 @@ const Sidebar = ({ children }: Props) => {
             <label
                 htmlFor="my-drawer-2"
                 className="flex-none btn btn-primary btn-ghost drawer-button lg:hidden"
+                onClick={() => {
+                    setDrawerOpen(true);
+                }}
             >
                 <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -86,16 +91,23 @@ const Sidebar = ({ children }: Props) => {
             <input
                 id="my-drawer-2"
                 type="checkbox"
-                className="drawer-toggle "
+                className="drawer-toggle"
+                checked={drawerOpen}
             />
-            <div className="drawer-content flex flex-col relative">
+            <div className="drawer-content flex flex-col relative ">
                 {/* nav bar on */}
                 {mobileMenu}
                 {children}
             </div>
 
             <div className="drawer-side">
-                <label htmlFor="my-drawer-2" className="drawer-overlay"></label>
+                <label
+                    htmlFor="my-drawer-2"
+                    className="drawer-overlay"
+                    onClick={() => {
+                        setDrawerOpen(false);
+                    }}
+                ></label>
                 <ul className="menu w-72 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content">
                     {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
@@ -118,6 +130,9 @@ const Sidebar = ({ children }: Props) => {
                             return (
                                 <div key={menu.label}>
                                     <Link
+                                        onClick={() => {
+                                            setDrawerOpen(false);
+                                        }}
                                         as={`${menu.link}`}
                                         href={`${menu.link}`}
                                     >
