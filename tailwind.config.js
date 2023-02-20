@@ -24,8 +24,8 @@ module.exports = {
                 'superbig': '200000px'
             },
             backgroundImage: {
-                'sidebar-texture-light': "url('/sidebar_texture.jpg')",
-                'sidebar-texture-dark': "url('/sidebar_texture_dark.png')",
+                'sidebar-texture-light': "url('https://res.cloudinary.com/dg3zcpbkz/image/upload/v1676877835/bg/sidebar_texture_light_xtdl9s.jpg')",
+                'sidebar-texture-dark': "url('https://res.cloudinary.com/dg3zcpbkz/image/upload/v1676877834/bg/sidebar_texture_dark_wb3h4d.jpg')",
       }
         },
     },
