@@ -11,7 +11,7 @@ const home = () => {
             </Head>
             <div className="flex flex-row  min-h-[100vh]">
                 <div className="flex flex-col lg:flex-row-reverse flex-1 ">
-                    <div className="flex flex-auto justify-center min-w-[368] lg:max-w-[50vw]">
+                    <div className="flex flex-auto justify-center min-w-[368] lg:max-w-[50vw] max-h-[100vh]">
                         {
                             <Image
                                 alt=""
@@ -24,9 +24,9 @@ const home = () => {
                         }
                     </div>
 
-                    <div className="flex flex-1 pt-4 justify-center lg:justify-end">
+                    <div className="flex flex-1 lg:m-10 justify-center lg:justify-end lg:place-self-end">
                         <div className="flex lg:flex-auto">
-                            <div className=" text-gray-500 grow-1 prose-lg lg:prose-xl xl:prose-2xl lg:pb-8 m-auto">
+                            <div className=" text-gray-500 grow-1 prose-lg lg:prose-xl lg:pb-8 m-auto">
                                 <h1 className="font-bold text-center lg:text-left">
                                     曲奇放克
                                 </h1>
