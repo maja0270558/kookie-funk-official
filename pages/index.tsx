@@ -24,9 +24,9 @@ const home = () => {
                         }
                     </div>
 
-                    <div className="flex flex-1 lg:m-10 justify-center lg:justify-end lg:place-self-end">
+                    <div className="flex flex-1 m-10 justify-center lg:justify-end lg:place-self-end">
                         <div className="flex lg:flex-auto">
-                            <div className=" text-gray-500 grow-1 prose-lg lg:prose-xl lg:pb-8 m-auto">
+                            <div className=" text-gray-500 grow-1 prose-lg lg:prose-xl lg:font-bold lg:pb-8 m-auto">
                                 <h1 className="font-bold text-center lg:text-left">
                                     曲奇放克
                                 </h1>
