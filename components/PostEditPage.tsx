@@ -291,12 +291,7 @@ const PostEditPage = () => {
         }
         if (typeof thumbnailCropper !== "undefined") {
             setThumbnailCropData(
-                thumbnailCropper
-                    .getCroppedCanvas({
-                        maxWidth: 500,
-                        maxHeight: 500,
-                    })
-                    .toDataURL("image/jpeg", 0.9)
+                thumbnailCropper.getCroppedCanvas().toDataURL("image/jpeg", 0.9)
             );
         }
         // setOpened(true);
