@@ -43,12 +43,12 @@ const works = () => {
         data instanceof Array &&
         data.map((workData: WorksData) => {
             return (
-                <div className="mx-auto px-4" key={workData.section_name}>
-                    <div className="uppercase pb-4 text-lg font-economica">
+                <div className="mx-auto px-4 mb-10" key={workData.section_name}>
+                    <div className="uppercase pb-4 text-xs font-economica">
                         <h1>{workData.section_name}</h1>
                     </div>
                     <div className="p-2">
-                        <div className=" gap-y-2 gap-x-2 grid grid-cols-4 md:grid-cols-7 lg:flex lg:flex-wrap  p-2">
+                        <div className="gap-y-2 gap-x-2 grid grid-cols-4 md:grid-cols-7 lg:flex lg:flex-wrap  p-2">
                             {workData.imgs.map((value) => {
                                 return (
                                     <GalleryImage
@@ -65,7 +65,7 @@ const works = () => {
             );
         });
 
-    return compoment ? <div className="m-8">{compoment}</div> : emptyView;
+    return compoment ? <div className="mt-14 lg:ml-12">{compoment}</div> : emptyView;
 };
 
 export default works;

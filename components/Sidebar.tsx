@@ -53,7 +53,7 @@ const Sidebar = ({ children }: Props) => {
         return classNames(menuItemClassName, {
             ["text-white bg-primary"]: isSelected && enable,
             ["btn-ghost"]: !isSelected && enable,
-            ["text-gray-500"]: !enable,
+            ["text-gray-400"]: !enable,
         });
     };
     const profileImage = "/profile.png";
@@ -112,11 +112,10 @@ const Sidebar = ({ children }: Props) => {
                     }}
                 ></label>
                 <ul
-                    className={`bg-100% ${
-                        colorScheme == "light"
-                            ? "bg-sidebar-texture-light"
-                            : "bg-sidebar-texture-dark"
-                    }  menu w-72 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content`}
+                    className={`bg-100% ${colorScheme == "light"
+                        ? "bg-sidebar-texture-light"
+                        : "bg-sidebar-texture-dark"
+                        }  menu w-72 pl-20 pt-20 pr-[100px] bg-base-100 text-base-content`}
                 >
                     {/* <!-- Sidebar content here --> */}
                     <div className="pb-16">
@@ -154,6 +153,9 @@ const Sidebar = ({ children }: Props) => {
                                             {menu.label}
                                         </button>
                                     </Link>
+
+
+
                                 </div>
                             );
                         })}

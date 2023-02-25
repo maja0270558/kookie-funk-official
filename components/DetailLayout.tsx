@@ -103,13 +103,13 @@ export const DetailLayout = ({
                 </Center>
             </div>
             <div className="lg:items-end mt-auto">{compomentDesc}</div>
-            <div className="mt-auto pt-4">
+            <div className="mt-auto pt-24">
                 <Carousel
                     className=""
                     withIndicators
                     slideGap="md"
                     mx={"auto"}
-                    slideSize={120}
+                    slideSize={100}
                     dragFree
                     align="start"
                     containScroll="keepSnaps"
