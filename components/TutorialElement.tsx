@@ -15,12 +15,12 @@ function TutorialElement(props: TutorialProps) {
         <Link href={props.link} target="_blank">
             <div className="flex flex-col lg:flex-row p-8">
                 <img
-                    className=" w-full object-cover lg:w-[60vh] lg:h-auto"
+                    className=" w-full object-cover lg:w-[50vh] lg:h-auto"
                     src={props.src}
                     alt=""
                 />
-                <div className="p-6 flex flex-col justify-center">
-                    <h5 className="text-base-content text-xl font-bold mb-2">
+                <div className="p-6 flex flex-col justify-center text-gray-500">
+                    <h5 className="text-xl font-bold mb-2">
                         {props.title}
                     </h5>
                     <p className="text-inherit text-sm mb-4">{props.desc}</p>

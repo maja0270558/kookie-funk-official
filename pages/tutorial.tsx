@@ -3,7 +3,7 @@ import TutorialElement from "../components/TutorialElement";
 
 const course = () => {
     return (
-        <div className="flex flex-col lg:justify-evenly min-h-screen">
+        <div className="flex flex-col lg:justify-evenly min-h-screen text-gray-500">
             <TutorialElement
                 src="/corse.jpg"
                 link="https://hahow.in/cr/kookiefunk"

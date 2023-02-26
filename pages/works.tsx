@@ -44,7 +44,7 @@ const works = () => {
         data.map((workData: WorksData) => {
             return (
                 <div className="mx-auto px-4 mb-10" key={workData.section_name}>
-                    <div className="uppercase pb-4 text-xs font-economica">
+                    <div className="pb-4 text-xs font-economica text-gray-500">
                         <h1>{workData.section_name}</h1>
                     </div>
                     <div className="p-2">
