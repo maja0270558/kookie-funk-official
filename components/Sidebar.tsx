@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import Router, { useRouter } from "next/router";
 import Link from "next/link";
 import classNames from "classnames";
 
@@ -53,7 +53,7 @@ const Sidebar = ({ children }: Props) => {
         return classNames(menuItemClassName, {
             ["text-white bg-primary"]: isSelected && enable,
             ["btn-ghost"]: !isSelected && enable,
-            ["text-gray-400"]: !enable,
+            ["text-gray-400 pointer-events-none"]: !enable,
         });
     };
     const profileImage = "/profile.png";
@@ -135,27 +135,34 @@ const Sidebar = ({ children }: Props) => {
                     <div className="flex-grow">
                         {menuItems.map(({ ...menu }) => {
                             const isSelected = router.pathname == menu.link;
+                            const wraper = menu.enable === true ? ({ children }: Props) => (<Link
+                                onClick={() => {
+                                    setDrawerOpen(false);
+                                }}
+                                as={`${menu.link}`}
+                                href={`${menu.link}`}
+                            >
+                                {children}
+                            </Link>) : <div>
+                                {children}
+                            </div>
+
                             return (
                                 <div key={menu.label}>
-                                    <Link
+                                    <button
                                         onClick={() => {
-                                            setDrawerOpen(false);
+                                            if (menu.enable) {
+                                                setDrawerOpen(false);
+                                                Router.push(menu.link)
+                                            }
                                         }}
-                                        as={`${menu.link}`}
-                                        href={`${menu.link}`}
+                                        className={getLinkItemClasses(
+                                            isSelected,
+                                            menu.enable
+                                        )}
                                     >
-                                        <button
-                                            className={getLinkItemClasses(
-                                                isSelected,
-                                                menu.enable
-                                            )}
-                                        >
-                                            {menu.label}
-                                        </button>
-                                    </Link>
-
-
-
+                                        {menu.label}
+                                    </button>
                                 </div>
                             );
                         })}

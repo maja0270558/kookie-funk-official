@@ -55,7 +55,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
             >
                 <Provider store={store}>
                     <div className="relative" data-theme={colorScheme}>
-                        <Head>{}</Head>
+                        <Head>
+                            <title>KookieFunk</title>
+                            <meta name="description" content="KOOKIE FUNK 曲奇放克 插畫 / 動畫
+                                        / 繪畫教學 / Youtube相關 歡迎各種合作來信詢問 a88115146@gmail.com" key="desc" />
+                        </Head>
                         <MantineProvider
                             withGlobalStyles
                             withNormalizeCSS

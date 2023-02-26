@@ -5,10 +5,6 @@ import Head from "next/head";
 const home = () => {
     return (
         <div className="flex flex-col">
-            <Head>
-                <title>KookieFunk</title>
-                <meta name="description" content="KOOKIE FUNK" key="desc" />
-            </Head>
             <div className="flex flex-row  min-h-[100vh]">
                 <div className="flex flex-col lg:flex-row-reverse flex-1 ">
                     <div className="flex flex-auto justify-center min-w-[368] lg:max-w-[50vw] max-h-[100vh]">
