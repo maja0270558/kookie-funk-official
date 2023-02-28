@@ -9,7 +9,7 @@ function CustomTypographtProvider({ content }: CustomTypographtProps) {
     return (
         <TypographyStylesProvider className="text-base-content w-full">
             <div
-                className="prose-img:rounded-sm break-all"
+                className="prose-img:rounded-sm break-all custom-render-html"
                 dangerouslySetInnerHTML={{
                     __html: content,
                 }}

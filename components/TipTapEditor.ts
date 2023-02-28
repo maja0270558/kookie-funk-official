@@ -9,6 +9,7 @@ import { Link } from "@mantine/tiptap";
 import Placeholder from "@tiptap/extension-placeholder";
 import Image from "@tiptap/extension-image";
 import Youtube from "@tiptap/extension-youtube";
+import HardBreak from "@tiptap/extension-hard-break"
 
 const content = "";
 
@@ -39,6 +40,9 @@ function editor(placeholder: string, contentChange?: () => void) {
         onUpdate({ editor }) {
             contentChange && contentChange();
         },
+        parseOptions: {
+            preserveWhitespace: 'full'
+        },
         extensions: [
             StarterKit,
             Underline,
@@ -50,6 +54,11 @@ function editor(placeholder: string, contentChange?: () => void) {
             Placeholder.configure({ placeholder: placeholder }),
             AlignImage,
             Youtube,
+            HardBreak.configure({
+                HTMLAttributes: {
+                    class: 'custom-render-html',
+                },
+            })
         ],
         autofocus: true,
         content,
