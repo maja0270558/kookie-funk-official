@@ -13,17 +13,25 @@ type TutorialProps = {
 function TutorialElement(props: TutorialProps) {
     return (
         <Link href={props.link} target="_blank">
-            <div className="flex flex-col lg:flex-row p-8">
-                <img
-                    className=" w-full object-cover lg:w-[50vh] lg:h-auto"
+            <div className="flex flex-col pt-6 pl-6 pr-6 ">
+                <Image
                     src={props.src}
-                    alt=""
-                />
-                <div className="p-6 flex flex-col justify-center text-gray-500">
-                    <h5 className="text-xl font-bold mb-2">
+                    alt={""}
+                    width="500"
+                    height="500"
+                    placeholder="blur"
+                    blurDataURL="/placeholder.jpeg"
+                    className=" object-fill w-full aspect-[16/9]"
+                    priority={true}
+                ></Image>
+
+                <div className="pt-6 flex flex-col text-gray-500">
+                    <h5 className="text-xl font-semibold mb-4">
                         {props.title}
                     </h5>
-                    <p className="text-inherit text-sm mb-4">{props.desc}</p>
+                    <p className="text-inherit text-xs mb-4 tracking-[0.28em] font-sans">
+                        {props.desc}
+                    </p>
                 </div>
             </div>
         </Link>
