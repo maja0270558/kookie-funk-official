@@ -21,6 +21,7 @@ export default async function handle(
             where: {
                 display: 1,
             },
+            orderBy: [{ ts: "desc" }],
         });
         const worksById = _.groupBy(works, "cat_id");
 
